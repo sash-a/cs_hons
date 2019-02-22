@@ -1,4 +1,4 @@
-#Questions
+## Questions
 
 1. Define a function product that produces the product of a list of numbers. For example: product [2,3,4], should produce the solution: 24. (20%)
 
