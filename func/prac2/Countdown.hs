@@ -1,5 +1,13 @@
-data Expr = Val Int | App Op Expr Expr deriving (Show)
-data Op = Add | Mul deriving (Show)
+data Expr = Val Int | App Op Expr Expr
+data Op = Add | Mul
+
+instance Show Expr where
+    show (Val i) = (show i)
+    show (App o l r) = (show l) ++ " " ++ (show o) ++ " " ++ (show r)
+
+instance Show Op where
+    show (Add) = "+"
+    show (Mul) = "*"
 
 eval :: Expr -> Int
 eval (Val x) = x
@@ -30,4 +38,4 @@ exprs [x] = [Val x]
 exprs xs = [e | (ls, rs) <- split xs, l <- exprs ls, r <- exprs rs, e <- allops l r]
 
 solve :: [Int] -> Int -> [Expr]
-solve xs t = [e | p <- perms xs, e <- exprs p, eval e == t]
+solve xs t = [e | p <- perms xs, e <- exprs p, (eval e) == t]
