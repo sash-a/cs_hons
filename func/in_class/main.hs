@@ -22,5 +22,16 @@ reverse' [] = []
 reverse' (x:xs) = reverse xs ++ [x]
 
 -- min
-min' :: [Int] -> Int
-min (x:xs) = min ([a | a <- xs, a <= x])
+min' :: Ord a => [a] -> a -- Ord means that <= is defined for a
+min' [] = error "Empty list"
+min' [x] = x
+min' (x:y:xs) = min' ((if x < y then x else y):xs)
+
+-- higher order functions
+addone x = x + 1
+twice f x = f (f x)
+
+-- example map
+mapex = map (*2) [1,2,3,4,5]
+filterex = filter (>5) mapex
+
