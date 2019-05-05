@@ -35,7 +35,7 @@ allops a b = [App Add a b, App Mul a b]
 
 exprs :: [Int] -> [Expr]
 exprs [x] = [Val x]
-exprs xs = [e | (ls, rs) <- split xs, l <- exprs ls, r <- exprs rs, e <- allops l r]
-
+exprs xs = [e | (ls, rs) <- split xs, l_expr <- exprs ls, r_expr <- exprs rs, e <- allops l_expr r_expr]
+ 
 solve :: [Int] -> Int -> [Expr]
 solve xs t = [e | p <- perms xs, e <- exprs p, (eval e) == t]
