@@ -1,8 +1,16 @@
 from pymongo import MongoClient
+from Container.Container import Container
+import datetime
+
 
 client = MongoClient()
-db = client.test
-print(db.list_collection_names())
-col = db.people
-# col.insert_one({'date' : "1/2/2001"})
-print(col.find_one({'date': "1/2/2001"}))
+db = client.Reddit
+containers = db.containers
+
+# adding one
+# container = Container('user', 'sasha', datetime.datetime.now(), False)
+# container.db_insert(containers)
+# print(containers.find_one({'_id': ObjectId('5cd0a2810a244d2e255842de')}))
+
+# getting one
+# print(Container.from_dict(containers, '5cd0a2810a244d2e255842de'))

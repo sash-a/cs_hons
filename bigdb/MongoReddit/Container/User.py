@@ -1,18 +1,20 @@
 from Container import Container
 from Points import Guilds
 
+from bson.objectid import ObjectId
+
 
 class User(Container):
-    def __init__(self, container_type, name, date, deleted):
+    def __init__(self, container_type, name, date, deleted, content=[], karma=0, guilds=Guilds(), subs=[], mod_subs=[]):
         if container_type != 'user':
             raise Exception('Not of type user')
 
-        super().__init__(container_type, name, date, deleted)
-        self.karma = 0
-        self.guilds = Guilds()
+        super().__init__(container_type, name, date, deleted, content)
+        self.karma = karma
+        self.guilds = guilds
 
-        subs = []
-        mod_subs = []
+        self.subs = subs
+        self.mod_subs = mod_subs
 
     def add_subs(self, id, name):
         self.subs.append((id, name))
@@ -25,8 +27,8 @@ class User(Container):
             {
                 "type": super().container_type,
                 "name": super().name,
-                "dateCreated": super().date,
-                "deleted": super().date,
+                "dateCreated": super().date_created,
+                "deleted": super().deleted,
 
                 "content": [
                     {
@@ -48,5 +50,10 @@ class User(Container):
                 }
             }
 
-    def from_dict(self):
-        pass
+    @staticmethod
+    def from_dict(collection, id):
+        user = collection.find_one({'_id': ObjectId(id)})
+        return User(user['type'], user['name'], user['dateCreated'], user['deleted'], user['content'], user['user']['karma'],
+                    Guilds(user['user']['silver'], user['user']['gold'], user['user']['platinum']),
+                    [(id, name) for (id, name) in user['user']['subscriptions']],
+                    [(id, name) for (id, name) in user['user']['mod']])
