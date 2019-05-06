@@ -1,5 +1,52 @@
 from bson.objectid import ObjectId
 
+# "containers": {
+#    "type": "user|subreddit",
+#    "containerID": "",
+#    "name": "",
+#    "dateCreated": "",
+#    "deleted": "bool",
+#
+#    "content":[
+#          {
+#            "userContent": {
+#              "postLink": "contentID #only held by users",
+#              "quickText": "",
+#              "interactionType": "create|upvotes|downvotes|guild|saved|hidden"
+#            },
+#            "subredditContent": {
+#              "post": "$Content_Object$ #only held by subreddits"
+#            }
+#          }
+#    ],
+#
+#    "user": {
+#      "karma": "",
+#      "guilding": {
+#        "gold": "",
+#        "silver": "",
+#        "bronze": ""
+#      },
+#      "subscriptions": [{
+#        "containerID": "",
+#        "name": ""
+#      }],
+#
+#      "mod": {
+#        "subreddits": ["containerID"]
+#      }
+#    },
+#
+#    "subreddit": {
+#      "rules": "",
+#      "mods": ["containerID"],
+#      "subscribers": ["containerID"],
+#      "numberSubscribers": "",
+#      "creator": "containerID"
+#    }
+#  }
+
+
 class Container:
     def __init__(self, container_type, name, date, deleted, content=[]):
         self.container_type = container_type
@@ -25,29 +72,3 @@ class Container:
 
     def db_insert(self, collection):
         collection.insert_one(self.to_dict())
-
-        # {
-        #     "type": super().container_type,
-        #     "name": super().name,
-        #     "dateCreated": super().date,
-        #     "deleted": super().date,
-        #
-        #     "content": [
-        #         {
-        #             "userContent": {
-        #                 "postLink": content.link,
-        #                 "quickText": content.quick_text,
-        #                 "interactionType": content.interaction_type
-        #             }
-        #         } for content in super().content],
-        #     "user": {
-        #         "karma": self.karma,
-        #         "guilding": {
-        #             "gold": self.guilds.gold,
-        #             "silver": self.guilds.silver,
-        #             "platinum": self.guilds.platinum
-        #         },
-        #         "subscriptions": [{"containerID": sub[0], "name": sub[1]} for sub in self.subs],
-        #         "mod": [{"containerID": mod[0], "name": mod[1]} for mod in self.mod_subs]
-        #     }
-        # }

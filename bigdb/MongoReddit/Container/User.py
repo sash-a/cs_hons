@@ -16,7 +16,7 @@ class User(Container):
         self.subs = subs
         self.mod_subs = mod_subs
 
-    def add_subs(self, id, name):
+    def add_sub(self, id, name):
         self.subs.append((id, name))
 
     def add_mod_sub(self, id, name):
