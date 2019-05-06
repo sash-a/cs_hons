@@ -44,7 +44,7 @@ class User(Container):
                         "platinum": self.guilds.platinum
                     },
                     "subscriptions": [{"containerID": sub[0], "name": sub[1]} for sub in self.subs],
-                    "mod": [{"containerID": sub[0], "name": sub[1]} for sub in self.subs]
+                    "mod": [{"containerID": mod[0], "name": mod[1]} for mod in self.mod_subs]
                 }
             }
 
