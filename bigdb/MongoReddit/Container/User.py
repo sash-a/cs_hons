@@ -22,6 +22,12 @@ class User(Container):
     def add_mod_sub(self, id, name):
         self.mod_subs.append((id, name))
 
+    def post(self, subreddit):
+        pass
+
+    def comment(self, content):
+        pass
+
     def to_dict(self):
         return \
             {

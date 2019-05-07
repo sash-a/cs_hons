@@ -52,10 +52,11 @@ from bson.objectid import ObjectId
 
 
 class Subreddit(Container):
-    def __init__(self, container_type, name, date, deleted, content=[], rules='', mods=[], subs=[], num_subs=0,
+    # does this empty content obj work?
+    def __init__(self, container_type, name, date, deleted, content=None, rules='', mods=[], subs=[], num_subs=0,
                  creator=None):
-        if container_type != 'user':
-            raise Exception('Not of type user')
+        if container_type != 'subreddit':
+            raise Exception('Not of type subreddit')
 
         super().__init__(container_type, name, date, deleted, content)
         self.rules = rules
@@ -72,35 +73,51 @@ class Subreddit(Container):
     def add_mod(self, id, name):
         self.mods.append((id, name))
 
+    # TODO
+    def add_post(self, content, collection):
+        super().content.append(content)
+        collection.update_one({'name': self.name},
+                              {'content': {
+                                  '$push': {
+                                      'subredditContent': {
+                                          'post': content.to_dict
+                                      }
+                                  }
+                              }})
+
+    def db_insert(self, collection):
+        collection.insert_one(self.to_dict())
+
     def to_dict(self):
         return \
             {
-                "type": super().container_type,
-                "name": super().name,
-                "dateCreated": super().date_created,
-                "deleted": super().deleted,
+                "type": self.container_type,
+                "name": self.name,
+                "dateCreated": self.date_created,
+                "deleted": self.deleted,
 
                 "content": [
                     {
                         "subredditContent": {
                             "post": post
                         }
-                    } for post in super().content],
-                "subreddit":{
+                    } for post in self.content],
+                "subreddit": {
                     "rules": self.rules,
-                    "mods": [{"contentID": id, "name": name} for id, name in self.mods],
-                    "subscribers": [{"contentID": id, "name": name} for id, name in self.subs],
+                    "mods": [{"contentID": mod[0], "name": mod[1]} for mod in self.mods],
+                    "subscribers": [{"contentID": sub[0], "name": sub[1]} for sub in self.subs],
                     "numberSubscribers": self.nsubs,
-                    "creator": {"id": self.creator[0], "name": self.creator[1]}
+                    "creator": {"contentID": self.creator[0], "name": self.creator[1]}
                 }
             }
 
-    # TODO
     @staticmethod
     def from_dict(collection, id):
         sub = collection.find_one({'_id': ObjectId(id)})
-        return Subreddit(sub['type'], sub['name'], sub['dateCreated'], sub['deleted'], sub['content'],
-                         sub['user']['karma'],
-                         Guilds(sub['user']['silver'], sub['user']['gold'], sub['user']['platinum']),
-                         [(id, name) for (id, name) in sub['user']['subscriptions']],
-                         [(id, name) for (id, name) in sub['user']['mod']])
+        return Subreddit(sub['type'], sub['name'], sub['dateCreated'], sub['deleted'],
+                         Content(**sub['content']['subredditContent']['post']),
+                         sub['subreddit']['rules'],
+                         sub['subreddit']['mods'],
+                         sub['subreddit']['subscribers'],
+                         sub['subreddit']['numberSubscribers'],
+                         ((id, name) for id, name in sub['subreddit']['creator']))  # think the will gen as ((id, name))
