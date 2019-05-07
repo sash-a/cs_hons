@@ -66,14 +66,23 @@ class Container:
         }
 
     @staticmethod
-    def from_dict(collection, id):
+    def from_db_by_id(collection, id):
         container = collection.find_one({"_id": ObjectId(id)})
+        if container is None:
+            raise Exception('Container not found')
+        return Container(container['type'], container['name'], container['dateCreated'], container['deleted'])
+
+    @staticmethod
+    def from_db(collection, search_dict):
+        container = collection.find_one(search_dict)
+        if container is None:
+            raise Exception('Container not found')
 
         return Container(container['type'], container['name'], container['dateCreated'], container['deleted'])
 
-    # TODO gets ID from db or adds to db and gets id
     def get_id(self, collection):
-        self._id = collection.find_one(self.to_dict()).get('_id')
+        db_container = collection.find_one(self.to_dict())
+        self._id = db_container['_id']
         return self._id
 
     def db_insert(self, collection):

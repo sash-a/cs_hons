@@ -112,12 +112,16 @@ class Subreddit(Container):
             }
 
     @staticmethod
-    def from_dict(collection, id):
-        sub = collection.find_one({'_id': ObjectId(id)})
-        return Subreddit(sub['type'], sub['name'], sub['dateCreated'], sub['deleted'],
-                         Content(**sub['content']['subredditContent']['post']),
-                         sub['subreddit']['rules'],
-                         sub['subreddit']['mods'],
-                         sub['subreddit']['subscribers'],
-                         sub['subreddit']['numberSubscribers'],
-                         ((id, name) for id, name in sub['subreddit']['creator']))  # think the will gen as ((id, name))
+    def from_db_by_id(collection, id):
+        db_sub = collection.find_one({'_id': ObjectId(id)})
+
+        sub = Subreddit(db_sub['type'], db_sub['name'], db_sub['dateCreated'], db_sub['deleted'],
+                        [Content(**content['subredditContent']['post']) for content in db_sub['content']],
+                        db_sub['subreddit']['rules'],
+                        db_sub['subreddit']['mods'],
+                        db_sub['subreddit']['subscribers'],
+                        db_sub['subreddit']['numberSubscribers'],
+                        # think will gen as ((id, name))
+                        ((creator[0], creator[1]) for creator in db_sub['subreddit']['creator']))
+        sub._id = db_sub['_id']
+        return sub
