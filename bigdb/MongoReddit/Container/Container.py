@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 
+
 # "containers": {
 #    "type": "user|subreddit",
 #    "containerID": "",
@@ -81,9 +82,13 @@ class Container:
         return Container(container['type'], container['name'], container['dateCreated'], container['deleted'])
 
     def get_id(self, collection):
-        db_container = collection.find_one(self.to_dict())
+        db_container = collection.find_one({'name': self.name})
         self._id = db_container['_id']
+
         return self._id
 
     def db_insert(self, collection):
+        if collection.find_one({'name': self.name, 'type': self.container_type}) is not None:
+            raise Exception('name already in use')
+
         collection.insert_one(self.to_dict())

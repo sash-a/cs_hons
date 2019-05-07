@@ -75,7 +75,7 @@ class Subreddit(Container):
 
     # TODO
     def add_post(self, content, collection):
-        super().content.append(content)
+        self.content.append(content)
         collection.update_one({'name': self.name},
                               {'content': {
                                   '$push': {
@@ -84,9 +84,6 @@ class Subreddit(Container):
                                       }
                                   }
                               }})
-
-    def db_insert(self, collection):
-        collection.insert_one(self.to_dict())
 
     def to_dict(self):
         return \
