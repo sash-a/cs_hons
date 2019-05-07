@@ -31,9 +31,6 @@ from Points import Votes, Guilds
 
 class Content:
     def __init__(self, **kwargs):
-        if kwargs is None:
-            return
-
         self._id = kwargs['_id']
         self.content_type = kwargs['type']
         self.date_created = kwargs['dateCreated']
@@ -43,16 +40,16 @@ class Content:
                              kwargs['votes']['guilding']['gold'],
                              kwargs['votes']['guilding']['platinum'])
 
+        self.title = None
         if self.ispost():
             self.title = kwargs['post']['title']
-        else:
-            self.title = None
 
         self.comments = [Content(**comment) for comment in kwargs['comments']]
 
         self.value = kwargs['value']
         self.edited = kwargs['edited']
         self.deleted = kwargs['deleted']
+
 
     def ispost(self):
         return self.content_type == 'post'

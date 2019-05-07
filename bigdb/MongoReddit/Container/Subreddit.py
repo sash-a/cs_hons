@@ -53,12 +53,13 @@ from bson.objectid import ObjectId
 
 class Subreddit(Container):
     # does this empty content obj work?
-    def __init__(self, container_type, name, date, deleted, content=None, rules='', mods=[], subs=[], num_subs=0,
+    def __init__(self, db_collection, container_type, name, date, deleted, content=None, rules='', mods=[], subs=[],
+                 num_subs=0,
                  creator=None):
         if container_type != 'subreddit':
             raise Exception('Not of type subreddit')
 
-        super().__init__(container_type, name, date, deleted, content)
+        super().__init__(db_collection, container_type, name, date, deleted, content)
         self.rules = rules
 
         self.subs = subs
@@ -67,30 +68,29 @@ class Subreddit(Container):
         self.nsubs = num_subs
         self.creator = creator
 
-    def add_sub(self, collection, id, name):
+    def add_sub(self, id, name):
         self.subs.append((id, name))
         self.nsubs += 1
 
-        collection.update_one({'_id': ObjectId(self.get_id(collection))},
-                              {'$push': {'subreddit.subscribers': {'containerID': id, 'name': name}}})
-        collection.update_one({'_id': ObjectId(self.get_id(collection))},
-                              {'$set': {'subreddit.numberSubscribers': self.nsubs}})
-
+        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
+                                      {'$push': {'subreddit.subscribers': {'containerID': id, 'name': name}}})
+        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
+                                      {'$set': {'subreddit.numberSubscribers': self.nsubs}})
 
     def add_mod(self, id, name):
         self.mods.append((id, name))
 
     # TODO
-    def add_post(self, content, collection):
+    def post(self, content):
         self.content.append(content)
-        collection.update_one({'name': self.name},
-                              {'content': {
-                                  '$push': {
-                                      'subredditContent': {
-                                          'post': content.to_dict
-                                      }
-                                  }
-                              }})
+        self.db_collection.update_one({'name': self.name, 'type': self.container_type},
+                                      {'$push': {
+                                          'content':
+                                              {'subredditContent': {
+                                                  'post': content.to_dict()
+                                              }
+                                          }
+                                      }})
 
     def to_dict(self):
         return \
@@ -119,13 +119,12 @@ class Subreddit(Container):
     def from_db(collection, search_dict):
         db_sub = collection.find_one(search_dict)
 
-        sub = Subreddit(db_sub['type'], db_sub['name'], db_sub['dateCreated'], db_sub['deleted'],
+        sub = Subreddit(collection, db_sub['type'], db_sub['name'], db_sub['dateCreated'], db_sub['deleted'],
                         [Content(**content['subredditContent']['post']) for content in db_sub['content']],
                         db_sub['subreddit']['rules'],
                         db_sub['subreddit']['mods'],
                         db_sub['subreddit']['subscribers'],
                         db_sub['subreddit']['numberSubscribers'],
-                        # think will gen as ((id, name))
                         ((creator[0], creator[1]) for creator in db_sub['subreddit']['creator']))
         sub._id = db_sub['_id']
         return sub

@@ -49,13 +49,13 @@ from bson.objectid import ObjectId
 
 
 class Container:
-    def __init__(self, container_type, name, date, deleted, _id=None, content=[]):
+    def __init__(self, db_collection, container_type, name, date, deleted, _id=None, content=[]):
+        self.db_collection = db_collection
         self._id = _id
         self.container_type = container_type
         self.name = name
         self.date_created = date
         self.deleted = deleted
-
         self.content = content
 
     def to_dict(self):
@@ -71,7 +71,8 @@ class Container:
         container = collection.find_one({"_id": ObjectId(id)})
         if container is None:
             raise Exception('Container not found')
-        return Container(container['type'], container['name'], container['dateCreated'], container['deleted'])
+        return Container(collection, container['type'], container['name'], container['dateCreated'],
+                         container['deleted'])
 
     @staticmethod
     def from_db(collection, search_dict):
@@ -79,16 +80,17 @@ class Container:
         if container is None:
             raise Exception('Container not found')
 
-        return Container(container['type'], container['name'], container['dateCreated'], container['deleted'])
+        return Container(collection, container['type'], container['name'], container['dateCreated'],
+                         container['deleted'])
 
-    def get_id(self, collection):
-        db_container = collection.find_one({'name': self.name})
+    def get_id(self):
+        db_container = self.db_collection.find_one({'name': self.name})
         self._id = db_container['_id']
 
         return self._id
 
-    def db_insert(self, collection):
-        if collection.find_one({'name': self.name, 'type': self.container_type}) is not None:
+    def db_insert(self):
+        if self.db_collection.find_one({'name': self.name, 'type': self.container_type}) is not None:
             raise Exception('name already in use')
 
-        collection.insert_one(self.to_dict())
+        self.db_collection.insert_one(self.to_dict())

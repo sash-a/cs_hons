@@ -1,62 +1,69 @@
 from Container.Container import Container
 from Container.Subreddit import Subreddit
-from Points import Guilds
+from Content import Content
+from Points import Guilds, Votes
 
 import datetime
 from bson.objectid import ObjectId
 
 
-# TODO remove type from here and subreddit
 class User(Container):
-    def __init__(self, container_type, name, date, deleted, content=[], karma=0, guilds=Guilds(), subs=[], mod_subs=[]):
+    def __init__(self, db_collection, container_type, name, date, deleted, content=[], karma=0, guilds=Guilds(),
+                 subs=[], mod_subs=[]):
         if container_type != 'user':
             raise Exception('Not of type user')
 
-        super().__init__(container_type, name, date, deleted, content)
+        super().__init__(db_collection, container_type, name, date, deleted, content)
         self.karma = karma
         self.guilds = guilds
 
         self.subs = subs
         self.mod_subs = mod_subs
 
-    def subscribe(self, collection, name):
+    def subscribe(self, name):
         try:
-            sub = Subreddit.from_db(collection, {'name': name, 'type': 'subreddit'})
-            sub_id = sub.get_id(collection)
-            self.add_sub(collection, sub_id, name)
-            sub.add_sub(collection, sub_id, self.name)
+            sub = Subreddit.from_db(self.db_collection, {'name': name, 'type': 'subreddit'})
+            sub_id = sub.get_id()
+            self.add_sub(sub_id, name)
+            sub.add_sub(sub_id, self.name)
         except Exception:
             raise Exception('Subreddit does not exist')
 
-    def add_sub(self, collection, id, name):
+    def add_sub(self, id, name):
         self.subs.append((id, name))
-        collection.update_one({'_id': ObjectId(self.get_id(collection))},
-                              {'$push': {'user.subscriptions': {'containerID': id, 'name': name}}})
+        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
+                                      {'$push': {'user.subscriptions': {'containerID': id, 'name': name}}})
 
-    # TODO add to db
-    def add_mod_sub(self, collection, id, name):
+    def add_mod_sub(self, id, name):
         self.mod_subs.append((id, name))
-        collection.update_one({'_id': ObjectId(self.get_id(collection))},
-                              {'$push': {'user.mod': {'containerID': id, 'name': name}}})
+        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
+                                      {'$push': {'user.mod': {'containerID': id, 'name': name}}})
 
-    def post(self, subreddit):
-        pass
+    def post(self, sub_name, title, text):
+        post = Content(_id=None, title='post', dateCreated=datetime.datetime.now(), type='subreddit',
+                       creator={'containerID': self.get_id(), 'name': self.name},
+                       votes={'upvotes': 0, 'downvotes': 0, 'guilding': {'silver': 0, 'gold': 0, 'platinum': 0}},
+                       value=text, edited=False, deleted=False, comments=[], post={'title': title})
+        sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
+        sub.post(post)
+        self.db_collection.update_one({'name': self.name, 'type': 'user'},
+                                      {'$push': {'content': {'quickText': title, 'interactionType': 'post'}}})
 
     def comment(self, content):
         pass
 
-    def create_sub(self, collection, name, rules):
+    def create_sub(self, name, rules):
         if self._id is None:
-            self.get_id(collection)
+            self.get_id()
 
-        sub = Subreddit('subreddit', name, datetime.datetime.now(), False, rules=rules,
-                        mods=[(self._id, self.name)],
-                        subs=[(self._id, self.name)], num_subs=1, creator=(self._id, self.name))
-        sub.db_insert(collection)
-        sub_id = sub.get_id(collection)
+        sub = Subreddit(self.db_collection, 'subreddit', name, datetime.datetime.now(), False, rules=rules,
+                        mods=[(self._id, self.name)], subs=[(self._id, self.name)], num_subs=1,
+                        creator=(self._id, self.name))
+        sub.db_insert()
+        sub_id = sub.get_id()
 
-        self.add_sub(collection, sub_id, name)
-        self.add_mod_sub(collection, sub_id, name)
+        self.add_sub(sub_id, name)
+        self.add_mod_sub(sub_id, name)
 
         return sub
 
@@ -71,9 +78,8 @@ class User(Container):
                 "content": [
                     {
                         "userContent": {
-                            "postLink": content.link,
-                            "quickText": content.quick_text,
-                            "interactionType": content.interaction_type
+                            "quickText": content[0],
+                            "interactionType": content[1]
                         }
                     } for content in self.content],
                 "user": {
@@ -94,7 +100,8 @@ class User(Container):
         if user is None:
             raise Exception('User not found')
 
-        return User(user['type'], user['name'], user['dateCreated'], user['deleted'], user['content'],
+        return User(collection, user['type'], user['name'], user['dateCreated'], user['deleted'],
+                    [(content['quicktext'], content['interactionType']) for content in user['content']],
                     user['user']['karma'],
                     Guilds(user['user']['guilding']['silver'], user['user']['guilding']['gold'],
                            user['user']['guilding']['platinum']),

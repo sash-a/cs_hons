@@ -1,5 +1,5 @@
 class Votes:
-    def __init__(self, up, down):
+    def __init__(self, up=0, down=1):
         self.up = up
         self.down = down
 
