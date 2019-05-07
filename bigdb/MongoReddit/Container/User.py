@@ -19,6 +19,15 @@ class User(Container):
         self.subs = subs
         self.mod_subs = mod_subs
 
+    def subscribe(self, collection, name):
+        try:
+            sub = Subreddit.from_db(collection, {'name': name, 'type': 'subreddit'})
+            sub_id = sub.get_id(collection)
+            self.add_sub(collection, sub_id, name)
+            sub.add_sub(collection, sub_id, self.name)
+        except Exception:
+            raise Exception('Subreddit does not exist')
+
     def add_sub(self, collection, id, name):
         self.subs.append((id, name))
         collection.update_one({'_id': ObjectId(self.get_id(collection))},

@@ -18,3 +18,9 @@ def create_and_add_user(name, subs=[], mods=[]):
     user.db_insert(containers)
     user.get_id(containers)
     return user
+
+sasha = create_and_add_user('sasha')
+liron = create_and_add_user('liron')
+
+sub = sasha.create_sub(containers, 'gifs', 'be nice')
+liron.subscribe(containers, 'gifs')

@@ -67,8 +67,15 @@ class Subreddit(Container):
         self.nsubs = num_subs
         self.creator = creator
 
-    def add_sub(self, id, name):
+    def add_sub(self, collection, id, name):
         self.subs.append((id, name))
+        self.nsubs += 1
+
+        collection.update_one({'_id': ObjectId(self.get_id(collection))},
+                              {'$push': {'subreddit.subscribers': {'containerID': id, 'name': name}}})
+        collection.update_one({'_id': ObjectId(self.get_id(collection))},
+                              {'$set': {'subreddit.numberSubscribers': self.nsubs}})
+
 
     def add_mod(self, id, name):
         self.mods.append((id, name))
@@ -109,8 +116,8 @@ class Subreddit(Container):
             }
 
     @staticmethod
-    def from_db_by_id(collection, id):
-        db_sub = collection.find_one({'_id': ObjectId(id)})
+    def from_db(collection, search_dict):
+        db_sub = collection.find_one(search_dict)
 
         sub = Subreddit(db_sub['type'], db_sub['name'], db_sub['dateCreated'], db_sub['deleted'],
                         [Content(**content['subredditContent']['post']) for content in db_sub['content']],
@@ -122,3 +129,7 @@ class Subreddit(Container):
                         ((creator[0], creator[1]) for creator in db_sub['subreddit']['creator']))
         sub._id = db_sub['_id']
         return sub
+
+    @staticmethod
+    def from_db_by_id(collection, id):
+        return Subreddit.from_db(collection, {'_id': ObjectId(id)})
