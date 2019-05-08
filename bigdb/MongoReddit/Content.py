@@ -21,8 +21,8 @@ from Points import Votes, Guilds
 #         },
 #
 #         "comments": ["$Content_Objects$"],
-#
 #         "value": "",
+#         "level" : int
 #         "edited": "bool"
 #         "deleted" : bool
 #     }
@@ -35,6 +35,7 @@ class Content:
         self.content_type = kwargs['type']
         self.date_created = kwargs['dateCreated']
         self.creator = (kwargs['creator']['containerID'], kwargs['creator']['name'])
+
         self.votes = Votes(kwargs['votes']['upvotes'], kwargs['votes']['downvotes'])
         self.guilds = Guilds(kwargs['votes']['guilding']['silver'],
                              kwargs['votes']['guilding']['gold'],
@@ -44,18 +45,18 @@ class Content:
         if self.ispost():
             self.title = kwargs['post']['title']
 
-        self.comments = [Content(**comment) for comment in kwargs['comments']]
-
         self.value = kwargs['value']
+        self.comments = [Content(**comment) for comment in kwargs['comments']]
+        self.index = kwargs['index']
+
         self.edited = kwargs['edited']
         self.deleted = kwargs['deleted']
-
 
     def ispost(self):
         return self.content_type == 'post'
 
-    def add_comment(self):
-        pass
+    def add_comment(self, comment):
+        self.comments.append(comment)
 
     def get_id(self, collection):
         self._id = collection.find_one(self.to_dict())['_id']
@@ -63,6 +64,7 @@ class Content:
 
     def to_dict(self):
         return {
+            "_id": self._id,
             "type": self.content_type,
             "dateCreated": self.date_created,
             "creator": {'containerID': self.creator[0], 'name': self.creator[1]},
@@ -80,8 +82,8 @@ class Content:
             },
 
             "comments": [comment.to_dict() for comment in self.comments],
-
             "value": self.value,
+            "index": self.index,
             "edited": self.edited,
             "deleted": self.deleted
         }

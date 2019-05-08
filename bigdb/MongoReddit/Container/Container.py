@@ -94,3 +94,13 @@ class Container:
             raise Exception('name already in use')
 
         self.db_collection.insert_one(self.to_dict())
+
+    # TODO votes
+    def __repr__(self):
+        if self.deleted:
+            print('deleted')
+            return
+        pref = '/u/' if self.container_type == 'user' else '/r/'
+
+        print(pref + self.name, self.content, sep='\n')
+

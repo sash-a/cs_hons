@@ -12,6 +12,8 @@ client = MongoClient()
 db = client.Reddit
 containers = db.containers
 
+containers.delete_many({})
+
 
 def create_and_add_user(name, subs=[], mods=[]):
     user = User(containers, 'user', name, datetime.datetime.now(), False, subs=subs, mod_subs=mods)
@@ -28,4 +30,8 @@ liron.subscribe('gifs')
 
 print('setup done')
 
-sasha.post('gifs', 'wow if this works', 'abcd test 123')
+post = sasha.post('gifs', 'wow if this works', 'abcd test 123')
+lc0 = liron.comment('gifs', post, 'this is a comment')
+lp0 = liron.post('gifs', 'index1', 'index1')
+lc1 = liron.comment('gifs', post, 'index0.1')
+sc0 = sasha.comment('gifs', lc0, 'index0.0.0')

@@ -52,7 +52,6 @@ from bson.objectid import ObjectId
 
 
 class Subreddit(Container):
-    # does this empty content obj work?
     def __init__(self, db_collection, container_type, name, date, deleted, content=None, rules='', mods=[], subs=[],
                  num_subs=0,
                  creator=None):
@@ -77,19 +76,25 @@ class Subreddit(Container):
         self.db_collection.update_one({'_id': ObjectId(self.get_id())},
                                       {'$set': {'subreddit.numberSubscribers': self.nsubs}})
 
+    # TODO
     def add_mod(self, id, name):
         self.mods.append((id, name))
 
-    # TODO
     def post(self, content):
         self.content.append(content)
         self.db_collection.update_one({'name': self.name, 'type': self.container_type},
                                       {'$push': {
-                                          'content':
-                                              {'subredditContent': {
-                                                  'post': content.to_dict()
-                                              }
-                                          }
+                                          'content': content.to_dict()
+
+                                      }})
+
+    def comment(self, content):
+        post_pos = content.index[0:2]
+        pos = '.'.join(['comments.' + str(i) for i in content.index[2:-2].split('.') if i != ''])
+        pos += 'comments' if pos == '' else '.comments'
+        self.db_collection.update_one({'name': self.name, 'type': self.container_type},
+                                      {'$push': {
+                                          'content.' + str(post_pos) + str(pos): content.to_dict()
                                       }})
 
     def to_dict(self):
@@ -120,7 +125,7 @@ class Subreddit(Container):
         db_sub = collection.find_one(search_dict)
 
         sub = Subreddit(collection, db_sub['type'], db_sub['name'], db_sub['dateCreated'], db_sub['deleted'],
-                        [Content(**content['subredditContent']['post']) for content in db_sub['content']],
+                        [Content(**content) for content in db_sub['content']],
                         db_sub['subreddit']['rules'],
                         db_sub['subreddit']['mods'],
                         db_sub['subreddit']['subscribers'],
