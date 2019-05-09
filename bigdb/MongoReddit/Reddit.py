@@ -6,7 +6,8 @@ client = MongoClient()
 db = client.Reddit
 containers = db.containers
 
-containers.delete_many({})
+# this deletes the previous DB so that no duplicated users get in the way of the program
+# containers.delete_many({})
 
 
 def create_and_add_user(name, subs=[], mods=[]):
