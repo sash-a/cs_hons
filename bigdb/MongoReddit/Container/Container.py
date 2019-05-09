@@ -47,10 +47,11 @@ from bson.objectid import ObjectId
 #    }
 #  }
 
-
+# This is the base class for a User and a subreddit
 class Container:
     def __init__(self, db_collection, container_type, name, date, deleted, _id=None, content=[]):
-        self.db_collection = db_collection
+
+        self.db_collection = db_collection  # used to access the database
         self._id = _id
         self.container_type = container_type
         self.name = name
@@ -68,6 +69,9 @@ class Container:
 
     @staticmethod
     def from_db_by_id(collection, id):
+        """
+        Returns a container object from the db given an ID
+        """
         container = collection.find_one({"_id": ObjectId(id)})
         if container is None:
             raise Exception('Container not found')
@@ -76,6 +80,9 @@ class Container:
 
     @staticmethod
     def from_db(collection, search_dict):
+        """
+        Returns a container object from the db given a query as a dictionary
+        """
         container = collection.find_one(search_dict)
         if container is None:
             raise Exception('Container not found')
@@ -95,12 +102,10 @@ class Container:
 
         self.db_collection.insert_one(self.to_dict())
 
-    # TODO votes
-    def __repr__(self):
+    def __str__(self):
         if self.deleted:
-            print('deleted')
-            return
+            return 'deleted'
+
         pref = '/u/' if self.container_type == 'user' else '/r/'
 
-        print(pref + self.name, self.content, sep='\n')
-
+        return pref + self.name

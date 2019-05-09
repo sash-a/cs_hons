@@ -20,53 +20,8 @@ class User(Container):
         self.subs = subs
         self.mod_subs = mod_subs
 
-    def subscribe(self, sub_name):
-        try:
-            sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
-            sub_id = sub.get_id()
-            self.add_sub(sub_id, sub_name)
-            sub.add_sub(sub_id, self.name)
-        except Exception:
-            raise Exception('Subreddit does not exist')
-
-    def add_sub(self, id, sub_name):
-        self.subs.append((id, sub_name))
-        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
-                                      {'$push': {'user.subscriptions': {'containerID': id, 'name': sub_name}}})
-
-    def add_mod_sub(self, id, sub_name):
-        self.mod_subs.append((id, sub_name))
-        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
-                                      {'$push': {'user.mod': {'containerID': id, 'name': sub_name}}})
-
-    def post(self, sub_name, title, text):
-        sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
-        post = Content(_id=ObjectId(), type='post', dateCreated=datetime.datetime.now(),
-                       creator={'containerID': self.get_id(), 'name': self.name},
-                       votes={'upvotes': 0, 'downvotes': 0, 'guilding': {'silver': 0, 'gold': 0, 'platinum': 0}},
-                       edited=False, deleted=False, value=text, comments=[], index=len(sub.content),
-                       post={'title': title})
-        sub.post(post)
-        self.db_collection.update_one({'name': self.name, 'type': 'user'},
-                                      {'$push': {'content': {'quickText': title, 'interactionType': 'post'}}})
-
-        return post
-
-    def comment(self, sub_name, parent_content, text):
-        comment = Content(_id=ObjectId(), type='comment', dateCreated=datetime.datetime.now(),
-                          creator={'containerID': self.get_id(), 'name': self.name},
-                          votes={'upvotes': 0, 'downvotes': 0, 'guilding': {'silver': 0, 'gold': 0, 'platinum': 0}},
-                          edited=False, deleted=False, value=text, comments=[],
-                          index=(str(parent_content.index) + '.' + str(len(parent_content.comments))), post={'title': None})
-        sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
-        sub.comment(comment)
-        self.db_collection.update_one({'name': self.name, 'type': 'user'},
-                                      {'$push': {'content': {'quickText': text, 'interactionType': 'comment'}}})
-        parent_content.add_comment(comment)
-
-        return comment
-
     def create_sub(self, name, rules):
+        """Adds subreddit to the database as a new document and makes this user a moderator and subscriber"""
         if self._id is None:
             self.get_id()
 
@@ -81,7 +36,60 @@ class User(Container):
 
         return sub
 
+    def subscribe(self, sub_name):
+        """Subscribes this users to a subreddit and inserts the information into the db"""
+        try:
+            sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
+            sub_id = sub.get_id()
+            self.add_sub(sub_id, sub_name)
+            sub.add_sub(sub_id, self.name)
+        except Exception:
+            raise Exception('Subreddit does not exist')
+
+    def post(self, sub_name, title, text):
+        """Adds a post to the db and makes this user the creator"""
+        sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
+        post = Content(_id=ObjectId(), type='post', dateCreated=datetime.datetime.now(),
+                       creator={'containerID': self.get_id(), 'name': self.name},
+                       votes={'upvotes': 0, 'downvotes': 0, 'guilding': {'silver': 0, 'gold': 0, 'platinum': 0}},
+                       edited=False, deleted=False, value=text, comments=[], index=len(sub.content),
+                       post={'title': title})
+        sub.post(post)
+        self.db_collection.update_one({'name': self.name, 'type': 'user'},
+                                      {'$push': {'content': {'quickText': title, 'interactionType': 'post'}}})
+
+        return post
+
+    def comment(self, sub_name, parent_content, text):
+        """Adds a comment to the db and makes this user the creator"""
+        comment = Content(_id=ObjectId(), type='comment', dateCreated=datetime.datetime.now(),
+                          creator={'containerID': self.get_id(), 'name': self.name},
+                          votes={'upvotes': 0, 'downvotes': 0, 'guilding': {'silver': 0, 'gold': 0, 'platinum': 0}},
+                          edited=False, deleted=False, value=text, comments=[],
+                          index=(str(parent_content.index) + '.' + str(len(parent_content.comments))),
+                          post={'title': None})
+        sub = Subreddit.from_db(self.db_collection, {'name': sub_name, 'type': 'subreddit'})
+        sub.comment(comment)
+        self.db_collection.update_one({'name': self.name, 'type': 'user'},
+                                      {'$push': {'content': {'quickText': text, 'interactionType': 'comment'}}})
+        parent_content.add_comment(comment)
+
+        return comment
+
+    def add_sub(self, id, sub_name):
+        """Puts some info for subscribed sub into the user document"""
+        self.subs.append((id, sub_name))
+        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
+                                      {'$push': {'user.subscriptions': {'containerID': id, 'name': sub_name}}})
+
+    def add_mod_sub(self, id, sub_name):
+        """Puts some info for moderated sub into the user document"""
+        self.mod_subs.append((id, sub_name))
+        self.db_collection.update_one({'_id': ObjectId(self.get_id())},
+                                      {'$push': {'user.mod': {'containerID': id, 'name': sub_name}}})
+
     def to_dict(self):
+        """Returns this as a dictionary"""
         return \
             {
                 "type": self.container_type,

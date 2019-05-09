@@ -81,9 +81,16 @@ class Content:
                 "title": '' if self.title is None else self.title
             },
 
-            "comments": [comment.to_dict() for comment in self.comments],
             "value": self.value,
             "index": self.index,
             "edited": self.edited,
-            "deleted": self.deleted
+            "deleted": self.deleted,
+
+            "comments": [comment.to_dict() for comment in self.comments]
         }
+
+    def __str__(self):
+        if self.deleted:
+            return 'deleted'
+
+        return str(self.creator) + ' karma: ' + str(self.votes.up - self.votes.down) + '\n' + str(self.comments)

@@ -1,0 +1,281 @@
+Adding a subreddit: 
+
+Need to create the new document. Then make the creator a moderator and subscriber.
+
+db.containers.insert({'type': 'subreddit',
+                    'name': 'gifs',
+                    'dateCreated': ISODate("2019-05-08T19:22:33.187Z"),
+                    'deleted': false,
+                    'subreddit': {
+                        'rules': 'be nice',
+                        'mods': [{'contentID': ObjectId('5cd3f0eb122848d370bbe23f'), 'name': 'sasha'}],
+                        'subscribers': [{'contentID': ObjectId('5cd3f0eb122848d370bbe23f'), 'name': 'sasha'}],
+                        'numberSubscribers': 1,
+                        'creator': {'contentID': ObjectId('5cd3f0eb122848d370bbe23f'), 'name': 'sasha'}
+                        },
+					'content': []
+
+                    })
+
+# output
+WriteResult({ "nInserted" : 1 })
+
+# This is the new document added
+{
+	"_id" : ObjectId("5cd3f0eb122848d370bbe23f"),
+	"type" : "subreddit",
+	"name" : "gifs",
+	"dateCreated" : ISODate("2019-05-08T19:22:33.187Z"),
+	"deleted" : false,
+	"subreddit" : {
+		"rules" : "be nice",
+		"mods" : [
+			{
+				"contentID" : ObjectId("5cd3f0eb122848d370bbe23f"),
+				"name" : "sasha"
+			}
+		],
+		"subscribers" : [
+			{
+				"contentID" : ObjectId("5cd3f0eb122848d370bbe23f"),
+				"name" : "sasha"
+			}
+		],
+		"numberSubscribers" : 1,
+		"creator" : {
+			"contentID" : ObjectId("5cd3f0eb122848d370bbe23f"),
+			"name" : "sasha"
+		}
+	},
+	"content" : [ ]
+}
+
+Make the creator a subscriber and a moderator
+
+db.containers.update({'type': 'user', 'name': 'liron'}, {'$push': 
+					 {'user.subscriptions': {'containerID': ObjectId('5cd3f336cb368c1ae6d33f28'), 'name': 'gifs'}}})
+
+db.containers.update({'type': 'user', 'name': 'liron'}, {'$push': {'user.mods': {'containerID': ObjectId('5cd3f336cb368c1ae6d33f28'), 'name': 'gifs'}}})
+
+# output
+
+This is added to the subreddit and mod list in the embeded user document inside sasha's document
+{'containerID': ObjectId('5cd3f336cb368c1ae6d33f28'), 'name': 'gifs'}
+
+--------------------------------------------------
+
+Subscribing to the new gifs subreddit
+
+The containerID and name of the subreddit must be added to user. While the containerID and name of the must be added to the subreddit, as well as incrementing the numberSubscribers by one. 
+
+# updating subreddit subscribers
+db.containers.update({'type': 'subreddit', 'name': 'gifs'}, {'$push': {'subreddit.subscribers': {'containerID': ObjectId("5cd3f0eb122848d370bbe240"), 'name': 'liron'}}})
+
+# output
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Below is what is written to the subscibers list inside the embeded user document
+{
+	"containerID" : ObjectId("5cd3f0eb122848d370bbe240"),
+	"name" : "liron"
+}
+
+# updating number subscibers
+db.containers.update({'type': 'subreddit', 'name': 'gifs'}, {'$inc': {'subreddit.numberSubscribers': 1}})
+
+# output
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+This increases the numberSubscriber value to 2
+numberSubscribers : 2
+
+# updating user
+db.containers.update({'type': 'user', 'name': 'liron'}, {'$push': {'user.subscriptions': 
+					 {'containerID': ObjectId('5cd3f336cb368c1ae6d33f28'), 'name': 'gifs'}}})
+
+# output
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Below is what is written to Liron's subscription array in his embeded user document
+{
+	"containerID" : ObjectId("5cd3f336cb368c1ae6d33f28"),
+	"name" : "gifs"
+}
+
+--------------------------------------------
+
+Posting
+
+ContentID and title of post must be added to user, while post must be added to content list of correct subreddit
+
+Liron posts in r/gifs
+
+# adding post to subreddit
+db.containers.update({'type': 'subreddit', 'name': 'gifs'}, {'$push' : {'content': 
+					{
+						'type': 'post', 
+						'dateCreated': ISODate("2019-05-08T19:22:33.187Z"), 
+						'creator': {
+						'containerID': ObjectId('5cd3f0eb122848d370bbe240'), 
+						'name': 'liron'
+					},
+					'votes': {
+						'upvotes': 0,
+						'downvotes': 0, 
+						'guilding': {
+							'gold': 0, 
+							'silver': 0, 
+							'platinum': 0
+							}
+						}, 
+						'post': {'title': 'This is a dog'}, 
+						'value': 'imgur.com.dog', 
+						'index': 1, 
+						'edited': false, 
+						'deleted': false,
+						'comments': []
+					}}})
+
+# output
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Below is written to the content array of r/gifs
+{
+	"type" : "post",
+	"dateCreated" : ISODate("2019-05-08T23:24:55.451Z"),
+	"creator" : {
+		"containerID" : ObjectId("5cd349274213be459eeaddb9"),
+		"name" : "liron"
+	},
+	"votes" : {
+		"upvotes" : 0,
+		"downvotes" : 0,
+		"guilding" : {
+			"gold" : 0,
+			"silver" : 0,
+			"platinum" : 0
+		}
+	},
+	"post" : {
+		"title" : "This is a dog"
+	},
+	"value" : "imgur.com.dog",
+	"index" : 0,
+	"edited" : false,
+	"deleted" : false,
+	"comments" : [ ]
+}
+
+# adding ID to user
+
+db.containers.update({'type': 'user', 'name': 'liron'}, 
+					 {'$push': {'content': {'index': '0', 'quickText': 'This is a dog', "interactionType" : "post"}}})
+
+# output
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Below is what is written to liron's content array
+{
+	"index" : "0",
+	"quickText" : "This is a dog",
+	"interactionType" : "post"
+}
+
+----------------------------------------
+
+Commenting
+
+Sasha comments on Lirons's post in r/gifs
+db.containers.update({'type': 'subreddit', 'name': 'gifs'}, {'$push': {'content.0.comments' : 
+					  {
+					    "type" : "comment",
+						"dateCreated" : ISODate("2019-05-08T23:24:55.451Z"),
+						"creator" : {
+							"containerID" : ObjectId("5cd349274213be459eeaddb9"),
+							"name" : "sasha"
+						},
+						"votes" : {
+							"upvotes" : 0,
+							"downvotes" : 0,
+							"guilding" : {
+								"gold" : 0,
+								"silver" : 0,
+								"platinum" : 0
+							}
+						},
+						"value" : "Cool dog",
+						"index" : 0.0,
+						"edited" : false,
+						"deleted" : false,
+						"comments" : [ ]
+					}}})
+
+# output
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Below is what was added to the comment list of the 0th item of the content list of the gifs subreddit document
+i.e {'name': 'gifs'
+	 ...
+	 'content': [
+	 {'type': 'post'
+	  ...
+	  'comments': [
+	  	{<INSERTED HERE>}
+	  ]}
+	]}
+
+
+updating sasha
+
+db.containers.update({'type': 'user', 'name': 'sasha'}, 
+					 {'$push': {'content': {'index': '0.0', 'quickText': 'Cool dog', "interactionType" : "comment"}}})
+
+# output
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Written to the content list in sasha's document:
+{
+	"index" : "0.0",
+	"quickText" : "Cool dog",
+	"interactionType" : "comment"
+}
+
+
+Liron upvotes Sasha's comment
+
+Must increase the upvotes for that comment and add upvoting as an interaction for liron
+
+# updating comment
+db.containers.update({'type': 'subreddit', 'name': 'gifs'}, {'$inc': 
+					 {'content.0.comments.0.votes.upvotes' : 1}})
+
+# output
+
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+
+Embeded votes documents after update:
+"votes" : {
+	"upvotes" : 1,
+	"downvotes" : 0,
+	"guilding" : {
+		"gold" : 0,
+		"silver" : 0,
+		"platinum" : 0
+	}
+}
+
+# updating user
+db.containers.update({'type': 'user', 'name': 'liron'}, 
+					 {'$push': {'content': {'index': '0.0', 'quickText': 'Cool dog', "interactionType" : "upvote"}}})
+
+# output
+
+Added to Lirons content list:
+
+{
+	"index" : "0.0",
+	"quickText" : "Cool dog",
+	"interactionType" : "upvote"
+}

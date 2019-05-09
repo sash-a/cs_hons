@@ -1,0 +1,36 @@
+{
+	"_id" : ObjectId("5cd3f0eb122848d370bbe23f"),
+	"type" : "user",
+	"name" : "sasha",
+	"dateCreated" : ISODate("2019-05-09T11:20:43.009Z"),
+	"deleted" : false,
+	"content" : [ ],
+	"user" : {
+		"karma" : 0,
+		"guilding" : {
+			"gold" : 0,
+			"silver" : 0,
+			"platinum" : 0
+		},
+		"subscriptions" : [ ],
+		"mod" : [ ]
+	}
+}
+{
+	"_id" : ObjectId("5cd3f0eb122848d370bbe240"),
+	"type" : "user",
+	"name" : "liron",
+	"dateCreated" : ISODate("2019-05-09T11:20:43.012Z"),
+	"deleted" : false,
+	"content" : [ ],
+	"user" : {
+		"karma" : 0,
+		"guilding" : {
+			"gold" : 0,
+			"silver" : 0,
+			"platinum" : 0
+		},
+		"subscriptions" : [ ],
+		"mod" : [ ]
+	}
+}

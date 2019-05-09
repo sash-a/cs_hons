@@ -1,12 +1,6 @@
 from pymongo import MongoClient
-
-from Container.Container import Container
-from Container.Subreddit import Subreddit
 from Container.User import User
-
-import pprint
 import datetime
-from bson.objectid import ObjectId
 
 client = MongoClient()
 db = client.Reddit
@@ -22,16 +16,22 @@ def create_and_add_user(name, subs=[], mods=[]):
     return user
 
 
+# creating two users
 sasha = create_and_add_user('sasha')
 liron = create_and_add_user('liron')
 
+# sasha creates r/gifs
 sub = sasha.create_sub('gifs', 'be nice')
+print(sub)
+# liron subscribes to r/gifs
 liron.subscribe('gifs')
 
-print('setup done')
-
-post = sasha.post('gifs', 'wow if this works', 'abcd test 123')
-lc0 = liron.comment('gifs', post, 'this is a comment')
-lp0 = liron.post('gifs', 'index1', 'index1')
-lc1 = liron.comment('gifs', post, 'index0.1')
-sc0 = sasha.comment('gifs', lc0, 'index0.0.0')
+# Posting and commenting
+sasha_post_0 = sasha.post('gifs', 'This is a cat', 'imgur.com/cat')
+print(sasha_post_0)
+liron_comment_0 = liron.comment('gifs', sasha_post_0, 'lol nice cat')
+print(liron_comment_0)
+liron_post_0 = liron.post('gifs', 'This is a dog', 'imgur.com.dog')
+print(liron_post_0)
+sasha_comment_0 = sasha.comment('gifs', liron_comment_0, 'thanks!')
+print(sasha_comment_0)
