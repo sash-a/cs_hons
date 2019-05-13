@@ -1,6 +1,8 @@
-#include <iostream>
-#include <cmath>
 #include <omp.h>
+#include <time.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
 
 using namespace std;
 
