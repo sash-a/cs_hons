@@ -20,65 +20,40 @@ namespace omp
 {
     int cores[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
-    int selectPivot(vector<int> &v, const int &l, const int &h)
+    void qs_itter(int v[], const int &thresh, int l, int h)
     {
-        return v[l];
-    }
+        pair stack[10];
+        int top = -1;
+        stack[++top] = pair(l, h);
 
-    int partition(vector<int> &v, const int &l, const int &h)
-    {
-        // probably not needed
-        int lt_pos = l; // position one past the last element smaller than pivot
-        int pivot = v[h];
-
-        for (int i = l; i < h; ++i)
+        while (top >= 0)
         {
-            if (v[i] < pivot)
-            {
-                if (i > lt_pos)
-                    swap(v[i], v[lt_pos]); // swap vs iter_swap?
+            tie(l, h) = stack[top--];
 
-                ++lt_pos;
-            }
-        }
-        swap(v[h], v[lt_pos]); // final swap to put pivot in correct position
-        return lt_pos;
-    }
-
-    void insertionsort(vector<int> &v, const int &l, const int &h)
-    {
-        for (int i = l + 1; i < h; ++i)
-        {
-            int j = i;
-            while (j > 0 && v[j - 1] > v[j])
+            if (h - l < thresh)
+                utils::insertionsort(v, l, h);
+            else
             {
-                swap(v[j - 1], v[j]);
-                --j;
+                int pivot = utils::partition(v, l, h);
+                stack[++top] = pair(l, pivot - 1);
+                stack[++top] = pair(pivot + 1, h);
             }
         }
     }
 
-    void quicksort(vector<int> &v, const int &thresh, int l, int h)
+    void qs_rec(int v[], const int &thresh, int l, int h)
     {
+//        omp_set_nested(true);
         if (h - l < thresh)
-            insertionsort(v, l, h);
+            utils::insertionsort(v, l, h);
         else
         {
-            int pivot = partition(v, l, h);
+            int pivot = utils::partition(v, l, h);
 
-#pragma omp parallel sections private(pivot, l, h) shared(v)
-            {
-#pragma omp section
-                {
-                    cores[omp_get_thread_num()]++;
-                    quicksort(v, thresh, l, pivot - 1);
-                }
-#pragma omp section
-                {
-                    cores[omp_get_thread_num()]++;
-                    quicksort(v, thresh, pivot + 1, h);
-                }
-            }
+            #pragma omp task default(none) shared(thresh) firstprivate(v, l, pivot)
+            qs_rec(v, thresh, l, pivot - 1);
+            #pragma omp task default(none) shared(thresh) firstprivate(v, h, pivot)
+            qs_rec(v, thresh, pivot + 1, h);
         }
     }
 }

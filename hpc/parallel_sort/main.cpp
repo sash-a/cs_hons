@@ -8,18 +8,27 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     srand(100);
-    int n_vals = 100000;
+    int n_vals = 1000;
+    int v[n_vals];
+    utils::rand_arr(v, n_vals);
 
-    vector<int> v = utils::random_vec(n_vals);
+    printf("initial:\n");
+    utils::print_vec(v, n_vals);
+    printf("\n");
 
     double start = omp_get_wtime();
-    omp::quicksort(v, 7, 0, n_vals);
+    #pragma omp parallel default(none) shared(v, n_vals)
+    {
+        #pragma omp single nowait
+        omp::qs_rec(v, 7, 0, n_vals-1);
+    }
+//    seq::qs(v, 7, 0, n_vals-1);
     double end = omp_get_wtime();
 
-    printf("time taken %f\n", end - start);
-    cout << "is sorted " << utils::is_sorted(v) << endl;
+    printf("\ntime taken %f\n", end - start);
+    printf("is sorted: %d\n\n", utils::is_sorted(v,n_vals));
+    printf("new arr: \n");
+    utils::print_vec(v, n_vals);
 
-    for (int i : omp::cores)
-        cout << i << endl;
     return 0;
 }
