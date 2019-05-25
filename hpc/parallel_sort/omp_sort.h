@@ -41,9 +41,8 @@ namespace omp
         }
     }
 
-    void qs_rec(int v[], const int &thresh, int l, int h)
+    void qs_rec_tasks(int *v, const int &thresh, int l, int h)
     {
-//        omp_set_nested(true);
         if (h - l < thresh)
             utils::insertionsort(v, l, h);
         else
@@ -51,9 +50,28 @@ namespace omp
             int pivot = utils::partition(v, l, h);
 
             #pragma omp task default(none) shared(thresh) firstprivate(v, l, pivot)
-            qs_rec(v, thresh, l, pivot - 1);
+            qs_rec_tasks(v, thresh, l, pivot - 1);
             #pragma omp task default(none) shared(thresh) firstprivate(v, h, pivot)
-            qs_rec(v, thresh, pivot + 1, h);
+            qs_rec_tasks(v, thresh, pivot + 1, h);
+        }
+    }
+
+    void qs_rec_section(int *v, const int &thresh, int l, int h)
+    {
+        if (h - l < thresh)
+            utils::insertionsort(v, l, h);
+        else
+        {
+            int pivot = utils::partition(v, l, h);
+            #pragma omp parallel sections default(none) shared(thresh) firstprivate(v, l, h, pivot)
+            {
+                #pragma omp section
+                qs_rec_tasks(v, thresh, l, pivot - 1);
+
+                #pragma omp section
+                qs_rec_tasks(v, thresh, pivot + 1, h);
+
+            }
         }
     }
 }

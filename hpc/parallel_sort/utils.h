@@ -21,10 +21,10 @@ namespace utils
             printf("%d, ", v[i]);
     }
 
-    int* rand_arr(int v[], const int &size)
+    void rand_arr(int v[], const int &size)
     {
         for (int i = 0; i < size; ++i)
-            v[i] = int(rand() % 100);
+            v[i] = int(rand());
 
     }
 
