@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
     printf("num vals, %llu\n", n_vals);
     printf("type, is_sorted, time\n");
 
-
     int *orig = new int[n_vals]; // original array so that all tests use the same
     int *v = new int[n_vals];
     utils::rand_arr(orig, n_vals);
