@@ -1,5 +1,5 @@
-main: main.cpp seq_sort.h omp_sort.h
-	g++ -o main -fopenmp main.cpp
+main: main.cpp seq_sort.h omp_sort.h utils.h
+	g++ -o main -fopenmp main.cpp --std=c++11
 
 mpi: mpi_sort.c
 	mpicc -o mpi mpi_sort.c

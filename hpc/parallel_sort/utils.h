@@ -7,7 +7,6 @@
 
 
 #include <iostream>
-#include <vector>
 #include <algorithm>
 #include <tuple>
 #include <omp.h>
@@ -23,9 +22,8 @@ namespace utils
 
     void rand_arr(int v[], const int &size)
     {
-        for (int i = 0; i < size; + +i)
+        for (int i = 0; i < size; ++i)
             v[i] = int(rand());
-
     }
 
     bool is_sorted(int v[], const int &size)

@@ -4,13 +4,7 @@
 #define PARALLEL_SORT_SEQ_SORT_H
 
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <tuple>
-#include <omp.h>
 #include "utils.h"
-
-#define pair pair<int, int>
 
 using namespace std;
 namespace seq
