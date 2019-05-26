@@ -30,7 +30,7 @@ int validate(int arr[], int size)
     return 1;
 }
 
-int *merge(int arr[], int n_arr[], int local_len, int n_procs)
+int *merge(int arr[], int n_arr[], long local_len, int n_procs)
 {
     int arr_counter[n_procs];
     for (int i = 0; i < n_procs; ++i) arr_counter[i] = 0;
@@ -106,12 +106,12 @@ void qs(int v[], int thresh, int l, int h)
 int main(int argc, char *argv[])
 {
     int rank, num_procs;
-    int n_vals;
+    long n_vals;
 
     int *global_arr;
     int *local_arr;
 
-    int local_len;
+    long local_len;
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
