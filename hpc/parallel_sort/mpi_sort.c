@@ -16,7 +16,8 @@ int *read_values(int *arr, int size)
 
 void print_arr(int *arr, int size)
 {
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < size; ++i)
+    {
         printf("%d, ", arr[i]);
     }
     printf("\n");
@@ -24,23 +25,27 @@ void print_arr(int *arr, int size)
 
 int validate(int arr[], int size)
 {
-    for (int i = 1; i < size; ++i) {
+    for (int i = 1; i < size; ++i)
+    {
         if (arr[i - 1] > arr[i]) return 0;
     }
     return 1;
 }
 
-int *merge(int arr[], int n_arr[], long local_len, int n_procs)
+int *merge_all(int *arr, int *n_arr, long local_len, int n_procs)
 {
     int arr_counter[n_procs];
     for (int i = 0; i < n_procs; ++i) arr_counter[i] = 0;
 
-    for (int i = 0; i < local_len * n_procs; ++i) {
+    for (int i = 0; i < local_len * n_procs; ++i)
+    {
         int mn = INT_MAX;
         int mn_proc = -1;
 
-        for (int j = 0; j < n_procs; ++j) {
-            if (arr_counter[j] < local_len && arr[arr_counter[j] + (local_len * j)] < mn) {
+        for (int j = 0; j < n_procs; ++j)
+        {
+            if (arr_counter[j] < local_len && arr[arr_counter[j] + (local_len * j)] < mn)
+            {
                 mn = arr[arr_counter[j] + (local_len * j)];
                 mn_proc = j;
             }
@@ -51,6 +56,31 @@ int *merge(int arr[], int n_arr[], long local_len, int n_procs)
     }
 
     return n_arr;
+}
+
+int *merge_arr(int *new_arr, int *arr_a, int *arr_b, int alen, int blen)
+{
+    new_arr = malloc((alen + blen) * sizeof(int));
+    int acount = 0;
+    int bcount = 0;
+
+    printf("arrays:\n");
+    print_arr(arr_a, alen);
+    print_arr(arr_b, blen);
+
+    for (int i = 0; i < (alen + blen); ++i)
+    {
+        if (bcount >= blen || (acount < alen && arr_a[acount] < arr_b[bcount]))
+        {
+            new_arr[i] = arr_a[acount];
+            ++acount;
+        } else
+        {
+            new_arr[i] = arr_b[bcount];
+            ++bcount;
+        }
+    }
+    return new_arr;
 }
 
 void swap(int arr[], int a, int b)
@@ -69,8 +99,10 @@ int partition(int v[], int l, int h)
     swap(v, l, h);
     int pivot = v[h];
 
-    for (int i = l; i < h; ++i) {
-        if (v[i] < pivot) {
+    for (int i = l; i < h; ++i)
+    {
+        if (v[i] < pivot)
+        {
             if (i > lt_pos)
                 swap(v, i, lt_pos); // swap vs iter_swap?
 
@@ -83,9 +115,11 @@ int partition(int v[], int l, int h)
 
 void insertionsort(int v[], int l, int h)
 {
-    for (int i = l + 1; i <= h; ++i) {
+    for (int i = l + 1; i <= h; ++i)
+    {
         int j = i;
-        while (j > 0 && v[j - 1] > v[j]) {
+        while (j > 0 && v[j - 1] > v[j])
+        {
             swap(v, j - 1, j);
             --j;
         }
@@ -96,7 +130,8 @@ void qs(int v[], int thresh, int l, int h)
 {
     if (h - l < thresh)
         insertionsort(v, l, h);
-    else {
+    else
+    {
         int pivot = partition(v, l, h);
         qs(v, thresh, l, pivot - 1);
         qs(v, thresh, pivot + 1, h);
@@ -125,7 +160,8 @@ int main(int argc, char *argv[])
         printf("nv %d\n", n_vals);
 
         global_arr = read_values(global_arr, n_vals);
-        if (n_vals % num_procs != 0) {
+        if (n_vals % num_procs != 0)
+        {
             printf("Invalid array size!");
             return 0;
         }
@@ -139,20 +175,36 @@ int main(int argc, char *argv[])
     MPI_Scatter(global_arr, local_len, MPI_INT, local_arr, local_len, MPI_INT, 0, MPI_COMM_WORLD);
 
     //qs
-    qs(local_arr, 1, 0, local_len - 1);
+    qs(local_arr, 7, 0, local_len - 1);
 
-    MPI_Gather(local_arr, local_len, MPI_INT, global_arr, local_len, MPI_INT, 0, MPI_COMM_WORLD);
-    free(local_arr);
+    //MPI_Gather(local_arr, local_len, MPI_INT, global_arr, local_len, MPI_INT, 0, MPI_COMM_WORLD);
+    if (rank != 0)
+    {
+        MPI_Send(local_arr, local_len, MPI_INT, 0, 0, MPI_COMM_WORLD);
+    }
 
-    if (rank == 0) {
+    if (rank == 0)
+    {
         int n_arr[local_len * num_procs];
-        merge(global_arr, n_arr, local_len, num_procs);
 
+        global_arr = local_arr;
+        print_arr(global_arr, local_len);
+        for (int i = 1; i < num_procs; ++i)
+        {
+            int recvd[local_len];
+            MPI_Status status;
+            MPI_Recv(recvd, local_len, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+            print_arr(recvd, local_len);
+            global_arr = merge_arr(n_arr, recvd, global_arr, local_len, local_len * i);
+        }
+        // merge_all(n_arr, global_arr, local_len, num_procs);
+        // qs(global_arr, 7, 0, n_vals - 1);
         double end = MPI_Wtime();
 
-        printf("time taken: %f, valid: %d\n", end - start, validate(n_arr, n_vals));
+        printf("time taken: %f, valid: %d\n", end - start, validate(global_arr, n_vals));
         free(global_arr);
     }
+    free(local_arr);
 
 
     MPI_Finalize();

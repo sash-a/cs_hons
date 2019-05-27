@@ -34,19 +34,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/clion/bin/cmake/linux/bin/cmake
+CMAKE_COMMAND = /snap/clion/70/bin/cmake/linux/bin/cmake
 
 # The command to remove a file.
-RM = /opt/clion/bin/cmake/linux/bin/cmake -E remove -f
+RM = /snap/clion/70/bin/cmake/linux/bin/cmake -E remove -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/sasha/Documents/cs_hons/hpc/parallel_sort
+CMAKE_SOURCE_DIR = /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug
+CMAKE_BINARY_DIR = /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/parallel_sort.dir/depend.make
@@ -59,29 +59,29 @@ include CMakeFiles/parallel_sort.dir/flags.make
 
 CMakeFiles/parallel_sort.dir/mpi_sort.c.o: CMakeFiles/parallel_sort.dir/flags.make
 CMakeFiles/parallel_sort.dir/mpi_sort.c.o: ../mpi_sort.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/parallel_sort.dir/mpi_sort.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/parallel_sort.dir/mpi_sort.c.o   -c /home/sasha/Documents/cs_hons/hpc/parallel_sort/mpi_sort.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/parallel_sort.dir/mpi_sort.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/parallel_sort.dir/mpi_sort.c.o   -c /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c
 
 CMakeFiles/parallel_sort.dir/mpi_sort.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/parallel_sort.dir/mpi_sort.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/sasha/Documents/cs_hons/hpc/parallel_sort/mpi_sort.c > CMakeFiles/parallel_sort.dir/mpi_sort.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c > CMakeFiles/parallel_sort.dir/mpi_sort.c.i
 
 CMakeFiles/parallel_sort.dir/mpi_sort.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/parallel_sort.dir/mpi_sort.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/sasha/Documents/cs_hons/hpc/parallel_sort/mpi_sort.c -o CMakeFiles/parallel_sort.dir/mpi_sort.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c -o CMakeFiles/parallel_sort.dir/mpi_sort.c.s
 
 CMakeFiles/parallel_sort.dir/main.cpp.o: CMakeFiles/parallel_sort.dir/flags.make
 CMakeFiles/parallel_sort.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/parallel_sort.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/parallel_sort.dir/main.cpp.o -c /home/sasha/Documents/cs_hons/hpc/parallel_sort/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/parallel_sort.dir/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/parallel_sort.dir/main.cpp.o -c /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp
 
 CMakeFiles/parallel_sort.dir/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/parallel_sort.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/sasha/Documents/cs_hons/hpc/parallel_sort/main.cpp > CMakeFiles/parallel_sort.dir/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp > CMakeFiles/parallel_sort.dir/main.cpp.i
 
 CMakeFiles/parallel_sort.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/parallel_sort.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/sasha/Documents/cs_hons/hpc/parallel_sort/main.cpp -o CMakeFiles/parallel_sort.dir/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp -o CMakeFiles/parallel_sort.dir/main.cpp.s
 
 # Object files for target parallel_sort
 parallel_sort_OBJECTS = \
@@ -95,7 +95,7 @@ parallel_sort: CMakeFiles/parallel_sort.dir/mpi_sort.c.o
 parallel_sort: CMakeFiles/parallel_sort.dir/main.cpp.o
 parallel_sort: CMakeFiles/parallel_sort.dir/build.make
 parallel_sort: CMakeFiles/parallel_sort.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable parallel_sort"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable parallel_sort"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/parallel_sort.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -108,6 +108,6 @@ CMakeFiles/parallel_sort.dir/clean:
 .PHONY : CMakeFiles/parallel_sort.dir/clean
 
 CMakeFiles/parallel_sort.dir/depend:
-	cd /home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/sasha/Documents/cs_hons/hpc/parallel_sort /home/sasha/Documents/cs_hons/hpc/parallel_sort /home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug /home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug /home/sasha/Documents/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/parallel_sort.dir/depend
 
