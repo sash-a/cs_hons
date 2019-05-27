@@ -6,7 +6,7 @@
 #include <limits.h>
 #include <mpi.h>
 
-int *read_values(int *arr, int size)
+int *read_values(int *arr, long size)
 {
     arr = malloc(size * sizeof(int));
     for (int i = 0; i < size; ++i)
@@ -14,7 +14,7 @@ int *read_values(int *arr, int size)
     return arr;
 }
 
-void print_arr(int *arr, int size)
+void print_arr(int *arr, long size)
 {
     for (int i = 0; i < size; ++i)
     {
@@ -23,7 +23,7 @@ void print_arr(int *arr, int size)
     printf("\n");
 }
 
-int validate(int arr[], int size)
+int validate(int arr[], long size)
 {
     for (int i = 1; i < size; ++i)
     {
@@ -58,7 +58,7 @@ int *merge_all(int *arr, int *n_arr, long local_len, int n_procs)
     return n_arr;
 }
 
-int *merge_arr(int *new_arr, int *arr_a, int *arr_b, int alen, int blen)
+int *merge_arr(int *new_arr, int *arr_a, int *arr_b, long alen, long blen)
 {
     new_arr = malloc((alen + blen) * sizeof(int));
     int acount = 0;
@@ -86,7 +86,7 @@ void swap(int arr[], int a, int b)
     arr[b] = t;
 }
 
-int partition(int v[], int l, int h)
+int partition(int v[], int l, long h)
 {
 
     int lt_pos = l; // position one past the last element smaller than pivot
@@ -122,7 +122,7 @@ void insertionsort(int v[], int l, int h)
     }
 }
 
-void qs(int v[], int thresh, int l, int h)
+void qs(int v[], int thresh, int l, long h)
 {
     if (h - l < thresh)
         insertionsort(v, l, h);
