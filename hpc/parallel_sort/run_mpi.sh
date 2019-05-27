@@ -11,4 +11,20 @@ module load mpi/openmpi-4.0.1
 cd /home/hpc24/cs_hons/hpc/parallel_sort
 
 make mpi
-mpirun -n 4 --quiet ./mpi 10000000
+
+for i in {1..20}; do
+	mpirun -n 4 --quiet ./mpi 1000000
+done
+
+for i in {1..20}; do
+        mpirun -n 4 --quiet ./mpi 100000
+done
+
+for i in {1..20}; do
+        mpirun -n 4 --quiet ./mpi 10000
+done
+
+for i in {1..20}; do
+        mpirun -n 4 --quiet ./mpi 1000
+done
+
