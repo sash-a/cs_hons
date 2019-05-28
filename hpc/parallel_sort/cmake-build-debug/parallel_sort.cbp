@@ -96,6 +96,9 @@
 		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/psrs/mpi_psrs.c">
 			<Option target="parallel_sort"/>
 		</Unit>
+		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/psrs/omp_psrs.c">
+			<Option target="parallel_sort"/>
+		</Unit>
 		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/seq_sort.h">
 			<Option target="parallel_sort"/>
 		</Unit>

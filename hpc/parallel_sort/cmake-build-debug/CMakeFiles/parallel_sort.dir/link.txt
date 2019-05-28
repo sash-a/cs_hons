@@ -1,1 +1,1 @@
-/usr/bin/c++   -std=c++11 -fopenmp -g   CMakeFiles/parallel_sort.dir/mpi_sort.c.o CMakeFiles/parallel_sort.dir/main.cpp.o CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o  -o parallel_sort 
+/usr/bin/c++   -std=c++11 -fopenmp -g   CMakeFiles/parallel_sort.dir/mpi_sort.c.o CMakeFiles/parallel_sort.dir/main.cpp.o CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.o  -o parallel_sort 

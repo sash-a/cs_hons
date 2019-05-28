@@ -204,6 +204,33 @@ psrs/mpi_psrs.c.s:
 	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.s
 .PHONY : psrs/mpi_psrs.c.s
 
+psrs/omp_psrs.o: psrs/omp_psrs.c.o
+
+.PHONY : psrs/omp_psrs.o
+
+# target to build an object file
+psrs/omp_psrs.c.o:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.o
+.PHONY : psrs/omp_psrs.c.o
+
+psrs/omp_psrs.i: psrs/omp_psrs.c.i
+
+.PHONY : psrs/omp_psrs.i
+
+# target to preprocess a source file
+psrs/omp_psrs.c.i:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.i
+.PHONY : psrs/omp_psrs.c.i
+
+psrs/omp_psrs.s: psrs/omp_psrs.c.s
+
+.PHONY : psrs/omp_psrs.s
+
+# target to generate assembly for a file
+psrs/omp_psrs.c.s:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.s
+.PHONY : psrs/omp_psrs.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -222,6 +249,9 @@ help:
 	@echo "... psrs/mpi_psrs.o"
 	@echo "... psrs/mpi_psrs.i"
 	@echo "... psrs/mpi_psrs.s"
+	@echo "... psrs/omp_psrs.o"
+	@echo "... psrs/omp_psrs.i"
+	@echo "... psrs/omp_psrs.s"
 .PHONY : help
 
 
