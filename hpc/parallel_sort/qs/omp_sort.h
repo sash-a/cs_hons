@@ -6,41 +6,29 @@
 #define PARALLEL_SORT_OMP_SORT_H
 
 #include <iostream>
-#include <vector>
-#include <algorithm>
-#include <tuple>
 #include <omp.h>
 #include <cmath>
 #include "utils.h"
-
-#define pair pair<int, int>
+#include "seq_sort.h"
 
 using namespace std;
 
 namespace omp
 {
-    void qs_itter(int v[], const int &thresh, long l, long h)
+    void qs_rec_balanced(int *v, int thresh, long len)
     {
-        pair stack[10];
-        int top = -1;
-        stack[++top] = pair(l, h);
-
-        while (top >= 0)
+        long local_size = len / omp_get_max_threads();
+        for (int i = 0; i < omp_get_max_threads(); ++i)
         {
-            tie(l, h) = stack[top--];
-
-            if (h - l < thresh)
-                utils::insertionsort(v, l, h);
-            else
-            {
-                int pivot = utils::partition(v, l, h);
-                stack[++top] = pair(l, pivot - 1);
-                stack[++top] = pair(pivot + 1, h);
-            }
+            #pragma omp task
+            seq::qs(v, thresh, i * local_size, i * local_size + local_size - 1);
         }
+        #pragma omp taskwait
+        v = utils::merge_all(v, len / omp_get_max_threads(), omp_get_max_threads());
     }
 
-    void qs_rec_tasks(int *v, int thresh, int l, int h)
+
+    void qs_rec_tasks(int *v, int thresh, long l, long h)
     {
         if (h - l < thresh)
             utils::insertionsort(v, l, h);
@@ -49,14 +37,13 @@ namespace omp
             int pivot = utils::partition(v, l, h);
 
             if (true)
-            //if (omp_get_num_threads() <= omp_get_max_threads())
+                //if (omp_get_num_threads() <= omp_get_max_threads())
             {
                 #pragma omp task
                 qs_rec_tasks(v, thresh, l, pivot - 1);
-                 #pragma omp task
+                #pragma omp task
                 qs_rec_tasks(v, thresh, pivot + 1, h);
-            }
-            else
+            } else
             {
                 qs_rec_tasks(v, thresh, l, pivot - 1);
                 qs_rec_tasks(v, thresh, pivot + 1, h);

@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
      * 1 = tasks
      * 2 = sections
      * 3 = sequential
+     * 4 = balanced
      */
     int type = 0;
     if (argc > 2) type = atoi(argv[2]);
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
 
     if (type == 1 || type == 0)
     {
-	start = omp_get_wtime();
+        start = omp_get_wtime();
 #pragma omp parallel //default(none) shared(v, n_vals)
         {
 #pragma omp single nowait
@@ -45,7 +46,7 @@ int main(int argc, char *argv[])
         }
         end = omp_get_wtime();
 
-        printf("%ld, %d, %d %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
+        printf("%ld, %d, %d, %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
     }
     //-------------------------------------------------
     // parallel recursive using sections
@@ -58,7 +59,7 @@ int main(int argc, char *argv[])
         omp::qs_rec_section(v, 100, 0, n_vals - 1);
         end = omp_get_wtime();
 
-        printf("%ld, %d, %d %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
+        printf("%ld, %d, %d, %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
     }
     //-------------------------------------------------
     // sequential recursive
@@ -68,10 +69,25 @@ int main(int argc, char *argv[])
     if (type == 3 || type == 0)
     {
         start = omp_get_wtime();
-        seq::qs(v, 7, 0, n_vals - 1);
+        seq::qs(v, 100, 0, n_vals - 1);
         end = omp_get_wtime();
 
-        printf("%ld, %d, %d %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
+        printf("%ld, %d, %d, %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
+    }
+
+    if (type == 4 || type == 0)
+    {
+        start = omp_get_wtime();
+        #pragma omp parallel
+        {
+            #pragma omp single nowait
+            {
+                omp::qs_rec_balanced(v, 1, n_vals);
+            }
+        }
+        end = omp_get_wtime();
+
+        printf("%ld, %d, %d, %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
     }
 
     delete[] v;

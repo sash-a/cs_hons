@@ -10,6 +10,11 @@
 #include <algorithm>
 #include <tuple>
 #include <omp.h>
+#include <climits>
+#include <tuple>
+#include <algorithm>
+
+#define pair pair<int, int>
 
 using namespace std;
 namespace utils
@@ -18,6 +23,7 @@ namespace utils
     {
         for (int i = 0; i < size; ++i)
             printf("%d, ", v[i]);
+        printf("\n");
     }
 
     void rand_arr(int v[], const int &size)
@@ -40,6 +46,35 @@ namespace utils
     int selectPivot(int v[], const int &l, const int &h)
     {
         return l;
+    }
+
+    int *merge_all(int *arr, long local_len, int n_procs)
+    {
+        int *arr_cpy = new int[local_len * n_procs];
+        copy(arr, arr + local_len * n_procs, arr_cpy);
+        int arr_counter[n_procs];
+        for (int i = 0; i < n_procs; ++i) arr_counter[i] = 0;
+
+        for (int i = 0; i < local_len * n_procs; ++i)
+        {
+            int mn = INT_MAX;
+            int mn_proc = -1;
+
+            for (int j = 0; j < n_procs; ++j)
+            {
+                if (arr_counter[j] < local_len && arr_cpy[arr_counter[j] + (local_len * j)] < mn)
+                {
+                    mn = arr_cpy[arr_counter[j] + (local_len * j)];
+                    mn_proc = j;
+                }
+            }
+
+            arr[i] = mn;
+            ++arr_counter[mn_proc];
+        }
+
+        delete[] arr_cpy;
+        return arr;
     }
 
     int partition(int v[], const int &l, const int &h, bool debug = false)
