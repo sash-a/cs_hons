@@ -7,7 +7,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-//    srand(100);
+    srand(100);
     unsigned long long n_vals = 1000000; // default
     if (argc == 2)
         n_vals = stoull(argv[1]);
