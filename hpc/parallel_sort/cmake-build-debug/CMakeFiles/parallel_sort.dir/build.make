@@ -57,31 +57,31 @@ include CMakeFiles/parallel_sort.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/parallel_sort.dir/flags.make
 
-CMakeFiles/parallel_sort.dir/mpi_sort.c.o: CMakeFiles/parallel_sort.dir/flags.make
-CMakeFiles/parallel_sort.dir/mpi_sort.c.o: ../mpi_sort.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/parallel_sort.dir/mpi_sort.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/parallel_sort.dir/mpi_sort.c.o   -c /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c
+CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o: CMakeFiles/parallel_sort.dir/flags.make
+CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o: ../qs/mpi_sort.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o   -c /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/mpi_sort.c
 
-CMakeFiles/parallel_sort.dir/mpi_sort.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/parallel_sort.dir/mpi_sort.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c > CMakeFiles/parallel_sort.dir/mpi_sort.c.i
+CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/mpi_sort.c > CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.i
 
-CMakeFiles/parallel_sort.dir/mpi_sort.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/parallel_sort.dir/mpi_sort.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c -o CMakeFiles/parallel_sort.dir/mpi_sort.c.s
+CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/mpi_sort.c -o CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.s
 
-CMakeFiles/parallel_sort.dir/main.cpp.o: CMakeFiles/parallel_sort.dir/flags.make
-CMakeFiles/parallel_sort.dir/main.cpp.o: ../main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/parallel_sort.dir/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/parallel_sort.dir/main.cpp.o -c /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp
+CMakeFiles/parallel_sort.dir/qs/main.cpp.o: CMakeFiles/parallel_sort.dir/flags.make
+CMakeFiles/parallel_sort.dir/qs/main.cpp.o: ../qs/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/parallel_sort.dir/qs/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/parallel_sort.dir/qs/main.cpp.o -c /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/main.cpp
 
-CMakeFiles/parallel_sort.dir/main.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/parallel_sort.dir/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp > CMakeFiles/parallel_sort.dir/main.cpp.i
+CMakeFiles/parallel_sort.dir/qs/main.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/parallel_sort.dir/qs/main.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/main.cpp > CMakeFiles/parallel_sort.dir/qs/main.cpp.i
 
-CMakeFiles/parallel_sort.dir/main.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/parallel_sort.dir/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp -o CMakeFiles/parallel_sort.dir/main.cpp.s
+CMakeFiles/parallel_sort.dir/qs/main.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/parallel_sort.dir/qs/main.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/main.cpp -o CMakeFiles/parallel_sort.dir/qs/main.cpp.s
 
 CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o: CMakeFiles/parallel_sort.dir/flags.make
 CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o: ../psrs/mpi_psrs.c
@@ -111,16 +111,16 @@ CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.s: cmake_force
 
 # Object files for target parallel_sort
 parallel_sort_OBJECTS = \
-"CMakeFiles/parallel_sort.dir/mpi_sort.c.o" \
-"CMakeFiles/parallel_sort.dir/main.cpp.o" \
+"CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o" \
+"CMakeFiles/parallel_sort.dir/qs/main.cpp.o" \
 "CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o" \
 "CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.o"
 
 # External object files for target parallel_sort
 parallel_sort_EXTERNAL_OBJECTS =
 
-parallel_sort: CMakeFiles/parallel_sort.dir/mpi_sort.c.o
-parallel_sort: CMakeFiles/parallel_sort.dir/main.cpp.o
+parallel_sort: CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o
+parallel_sort: CMakeFiles/parallel_sort.dir/qs/main.cpp.o
 parallel_sort: CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o
 parallel_sort: CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.o
 parallel_sort: CMakeFiles/parallel_sort.dir/build.make

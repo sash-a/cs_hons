@@ -5,9 +5,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c" "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/mpi_sort.c.o"
   "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/psrs/mpi_psrs.c" "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o"
   "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/psrs/omp_psrs.c" "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.o"
+  "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/mpi_sort.c" "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 
@@ -15,7 +15,7 @@ set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_TARGET_INCLUDE_PATH
   )
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp" "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/main.cpp.o"
+  "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/main.cpp" "/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/cmake-build-debug/CMakeFiles/parallel_sort.dir/qs/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

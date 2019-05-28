@@ -84,25 +84,25 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/main.cpp">
-			<Option target="parallel_sort"/>
-		</Unit>
-		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/mpi_sort.c">
-			<Option target="parallel_sort"/>
-		</Unit>
-		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/omp_sort.h">
-			<Option target="parallel_sort"/>
-		</Unit>
 		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/psrs/mpi_psrs.c">
 			<Option target="parallel_sort"/>
 		</Unit>
 		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/psrs/omp_psrs.c">
 			<Option target="parallel_sort"/>
 		</Unit>
-		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/seq_sort.h">
+		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/main.cpp">
 			<Option target="parallel_sort"/>
 		</Unit>
-		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/utils.h">
+		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/mpi_sort.c">
+			<Option target="parallel_sort"/>
+		</Unit>
+		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/omp_sort.h">
+			<Option target="parallel_sort"/>
+		</Unit>
+		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/seq_sort.h">
+			<Option target="parallel_sort"/>
+		</Unit>
+		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/qs/utils.h">
 			<Option target="parallel_sort"/>
 		</Unit>
 		<Unit filename="/home/sasha/Documents/uni/cs_hons/hpc/parallel_sort/CMakeLists.txt">

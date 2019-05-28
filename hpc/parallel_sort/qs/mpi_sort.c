@@ -23,7 +23,7 @@ void print_arr(int *arr, long size)
     printf("\n");
 }
 
-int validate(int arr[], long size)
+int is_sorted(int *arr, long size)
 {
     for (int i = 1; i < size; ++i)
     {
@@ -137,7 +137,7 @@ void qs(int v[], int thresh, int l, long h)
 int main(int argc, char *argv[])
 {
     int rank, num_procs;
-    long n_vals;
+    long n_vals = 1000; // default
 
     int *global_arr;
     int *local_arr;
@@ -195,8 +195,9 @@ int main(int argc, char *argv[])
         // qs(global_arr, 7, 0, n_vals - 1);
         double end = MPI_Wtime();
 
-        printf("%f, %d ,%d, %d\n", end - start, validate(global_arr, n_vals), n_vals, num_procs);
-        free(global_arr);
+        printf("%ld, %d, %d %f\n", n_vals, num_procs, is_sorted(global_arr, n_vals), end - start);
+//        free(global_arr);
+
     }
     free(local_arr);
 

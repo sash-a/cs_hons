@@ -9,26 +9,26 @@
 /* headers */
 int lcompare(const void *ptr2num1, const void *ptr2num2);
 
-long long *merge(long long *left, long long *right, int l_end, int r_end);
+int *merge(int *left, int *right, int l_end, int r_end);
 
-long long *merge_sort(long long *arr, int size);
+int *merge_sort(int *arr, int size);
 
-void insertion_sort(long long *arr, int n);
+void insertion_sort(int *arr, int n);
 
-void calc_partition_borders(long long array[],
+void calc_partition_borders(int array[],
                             int start,
                             int end,
                             int sublist_sizes[],
                             int at,
-                            long long pivots[],
+                            int pivots[],
                             int first_p,
                             int last_p);
 
-void psrs_sort(long long *a, int n);
+void psrs_sort(int *a, int n);
 
-void sortll(long long *a, int len);
+void sortll(int *a, int len);
 
-int is_sorted(long long arr[], int size)
+int is_sorted(int arr[], int size)
 {
     for (int i = 1; i < size; ++i)
     {
@@ -39,7 +39,7 @@ int is_sorted(long long arr[], int size)
 }
 
 /* sort an array in non-descending order */
-void psrs_sort(long long *a, int n)
+void psrs_sort(int *a, int n)
 {
     if (n > 1)
     {
@@ -55,9 +55,9 @@ void psrs_sort(long long *a, int n)
         {
             // Testing shows that our algorithm is now the quickest
             int p, size, rsize, sample_size;
-            long long *sample, *pivots;
+            int *sample, *pivots;
             int *partition_borders, *bucket_sizes, *result_positions;
-            long long **loc_a_ptrs;
+            int **loc_a_ptrs;
 
             // Determine the appropriate number of threads to use
             // p^3 <= n - We need this to hold true
@@ -78,17 +78,17 @@ void psrs_sort(long long *a, int n)
             rsize = (size + p - 1) / p;
             sample_size = p * (p - 1);
 
-            loc_a_ptrs = malloc(p * sizeof(long long *));
-            sample = malloc(sample_size * sizeof(long long));
+            loc_a_ptrs = malloc(p * sizeof(int *));
+            sample = malloc(sample_size * sizeof(int));
             partition_borders = malloc(p * (p + 1) * sizeof(int));
             bucket_sizes = malloc(p * sizeof(int));
             result_positions = malloc(p * sizeof(int));
-            pivots = malloc((p - 1) * sizeof(long long));
+            pivots = malloc((p - 1) * sizeof(int));
 
 #pragma omp parallel
             {
                 int i, j, max, thread_num, start, end, loc_size, offset, this_result_size;
-                long long *loc_a, *this_result, *current_a;
+                int *loc_a, *this_result, *current_a;
 
                 thread_num = omp_get_thread_num();
                 start = thread_num * size;
@@ -97,8 +97,8 @@ void psrs_sort(long long *a, int n)
                 loc_size = (end - start + 1);
                 end = end % size;
 
-                loc_a = malloc(loc_size * sizeof(long long));
-                memcpy(loc_a, a + start, loc_size * sizeof(long long));
+                loc_a = malloc(loc_size * sizeof(int));
+                memcpy(loc_a, a + start, loc_size * sizeof(int));
                 loc_a_ptrs[thread_num] = loc_a;
 
                 sortll(loc_a, loc_size); // Testing shows that this sequential sort is quickest in this instance
@@ -179,7 +179,7 @@ void psrs_sort(long long *a, int n)
                     partition_size = (high - low);
                     if (partition_size > 0)
                     {
-                        memcpy(this_result + j, &(loc_a_ptrs[i][low]), partition_size * sizeof(long long));
+                        memcpy(this_result + j, &(loc_a_ptrs[i][low]), partition_size * sizeof(int));
                         j += partition_size;
                     }
                 }
@@ -204,17 +204,17 @@ void psrs_sort(long long *a, int n)
 
 
 /* determine the boundaries for the sublists of an local array */
-void calc_partition_borders(long long array[],    // array being sorted
+void calc_partition_borders(int array[],    // array being sorted
                             int start,
                             int end,              // separate the array into current process range
                             int result[],
                             int at,               // this process start point in result
-                            long long pivots[],   // the pivot values
+                            int pivots[],   // the pivot values
                             int first_pv,         // first pivot
                             int last_pv)          // last pivot
 {
     int mid, lowerbound, upperbound, center;
-    long long pv;
+    int pv;
 
     mid = (first_pv + last_pv) / 2;
     pv = pivots[mid - 1];
@@ -244,11 +244,11 @@ void calc_partition_borders(long long array[],    // array being sorted
 }
 
 
-/* Compare long longs (lifted from the harness) */
+/* Compare ints (lifted from the harness) */
 int lcompare(const void *ptr2num1, const void *ptr2num2)
 {
-    long long num1 = *((long long *) ptr2num1);
-    long long num2 = *((long long *) ptr2num2);
+    int num1 = *((int *) ptr2num1);
+    int num2 = *((int *) ptr2num2);
 
     if (num1 > num2)
         return 1;
@@ -263,21 +263,21 @@ int lcompare(const void *ptr2num1, const void *ptr2num2)
   Sort a portion of an array
   @todo: see if merge sort might be better in some cases
 */
-void sortll(long long *a, int len)
+void sortll(int *a, int len)
 {
-    qsort(a, len, sizeof(long long), lcompare);
+    qsort(a, len, sizeof(int), lcompare);
 }
 
 /*
   Standard merge sort
 */
-long long *merge_sort(long long *arr, int size)
+int *merge_sort(int *arr, int size)
 {
     // Arrays shorter than 1 are already sorted
     if (size > 1)
     {
         int middle = size / 2, i;
-        long long *left, *right;
+        int *left, *right;
         left = arr;
         right = arr + middle;
 
@@ -288,10 +288,10 @@ long long *merge_sort(long long *arr, int size)
     { return arr; }
 }
 
-long long *merge(long long *left, long long *right, int l_end, int r_end)
+int *merge(int *left, int *right, int l_end, int r_end)
 {
     int temp_off, l_off, r_off, size = l_end + r_end;
-    long long *temp = malloc(sizeof(long long) * l_end);
+    int *temp = malloc(sizeof(int) * l_end);
 
     // Copy lower half into temp buffer
     for (l_off = 0, temp_off = 0; left + l_off != right; l_off++, temp_off++)
@@ -343,7 +343,7 @@ long long *merge(long long *left, long long *right, int l_end, int r_end)
 /*
   Standard insertion sort
 */
-void insertion_sort(long long *arr, int n)
+void insertion_sort(int *arr, int n)
 {
     int i, j, k, temp;
 
@@ -367,14 +367,14 @@ void insertion_sort(long long *arr, int n)
 
 int main(int argc, char *argv[])
 {
-    long long *arr;
+    int *arr;
 
-    int n = 1000; // default
+    long n = 1000; // default
     if (argc > 1)
         n = atoi(argv[1]);
 
     srand(100);
-    arr = malloc(n * sizeof(long long));
+    arr = malloc(n * sizeof(int));
     for (int i = 0; i < n; ++i)
         arr[i] = rand();
 
@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
     psrs_sort(arr, n);
     double end = omp_get_wtime();
 
-    printf("%d, %d, %f\n", n, is_sorted(arr, n), end - start);
+    printf("%ld, %d, %d, %f\n", n, omp_get_num_threads(), is_sorted(arr, n), end - start);
 
     return 0;
 }

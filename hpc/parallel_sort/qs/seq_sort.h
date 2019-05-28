@@ -9,7 +9,7 @@
 using namespace std;
 namespace seq
 {
-    void qs(int v[], const int &thresh, int l, int h)
+    void qs(int v[], const int &thresh, long l, long h)
     {
         if (h - l < thresh)
             utils::insertionsort(v, l, h);

@@ -2,64 +2,79 @@
 
 #include "seq_sort.h"
 #include "omp_sort.h"
+#include <sys/resource.h>
+
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     srand(100);
-    unsigned long long n_vals = 1000000; // default
-    if (argc == 2)
-        n_vals = stoull(argv[1]);
-    printf("num vals, %llu\n", n_vals);
-    printf("type, is_sorted, time\n");
+    long n_vals = 1000000; // default
+    if (argc > 1) n_vals = stoull(argv[1]);
+
+    /*
+     * Determines what will be run
+     * 0 = all
+     * 1 = tasks
+     * 2 = sections
+     * 3 = sequential
+     */
+    int type = 0;
+    if (argc > 2) type = atoi(argv[2]);
+
+
+    double start, end;
 
     int *orig = new int[n_vals]; // original array so that all tests use the same
     int *v = new int[n_vals];
     utils::rand_arr(orig, n_vals);
-
     copy(orig, orig + n_vals, v);
 
-    for (int i = 0; i < n_vals; ++i)
-    {
-        if (orig[i] != v[i]) printf("not coppied properly! %d\n", i);
-    }
     omp_set_nested(1);
+    cout << getrlimit() << endl;
 
     //-------------------------------------------------
     // parallel recursive using tasks
 
-    double start = omp_get_wtime();
-    #pragma omp parallel default(none) shared(v, n_vals)
+    if (type == 1 || type == 0)
     {
-        #pragma omp single nowait
-        omp::qs_rec_tasks(v, 10, 0, n_vals - 1);
+        start = omp_get_wtime();
+#pragma omp parallel default(none) shared(v, n_vals)
+        {
+#pragma omp single nowait
+            omp::qs_rec_tasks(v, 100, 0, n_vals - 1);
+        }
+        end = omp_get_wtime();
+
+        printf("%ld, %d, %d %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
     }
-    double end = omp_get_wtime();
-
-    printf("tasks, %d, %f\n", utils::is_sorted(v, n_vals), end - start);
-
     //-------------------------------------------------
     // parallel recursive using sections
 
     copy(orig, orig + n_vals, v);
 
-    start = omp_get_wtime();
-    omp::qs_rec_tasks(v, 7, 0, n_vals - 1);
-    end = omp_get_wtime();
+    if (type == 2 || type == 0)
+    {
+        start = omp_get_wtime();
+        omp::qs_rec_section(v, 100, 0, n_vals - 1);
+        end = omp_get_wtime();
 
-    printf("sections, %d, %f\n", utils::is_sorted(v, n_vals), end - start);
-
+        printf("%ld, %d, %d %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
+    }
     //-------------------------------------------------
     // sequential recursive
 
     copy(orig, orig + n_vals, v);
 
-    start = omp_get_wtime();
-    seq::qs(v, 7, 0, n_vals-1);
-    end = omp_get_wtime();
+    if (type == 3 || type == 0)
+    {
+        start = omp_get_wtime();
+        seq::qs(v, 7, 0, n_vals - 1);
+        end = omp_get_wtime();
 
-    printf("sequential, %d, %f\n", utils::is_sorted(v, n_vals), end - start);
+        printf("%ld, %d, %d %f\n", n_vals, omp_get_max_threads(), utils::is_sorted(v, n_vals), end - start);
+    }
 
     delete[] v;
     delete[] orig;

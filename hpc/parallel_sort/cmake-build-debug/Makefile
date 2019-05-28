@@ -123,60 +123,6 @@ parallel_sort/fast:
 	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/build
 .PHONY : parallel_sort/fast
 
-main.o: main.cpp.o
-
-.PHONY : main.o
-
-# target to build an object file
-main.cpp.o:
-	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/main.cpp.o
-.PHONY : main.cpp.o
-
-main.i: main.cpp.i
-
-.PHONY : main.i
-
-# target to preprocess a source file
-main.cpp.i:
-	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/main.cpp.i
-.PHONY : main.cpp.i
-
-main.s: main.cpp.s
-
-.PHONY : main.s
-
-# target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/main.cpp.s
-.PHONY : main.cpp.s
-
-mpi_sort.o: mpi_sort.c.o
-
-.PHONY : mpi_sort.o
-
-# target to build an object file
-mpi_sort.c.o:
-	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/mpi_sort.c.o
-.PHONY : mpi_sort.c.o
-
-mpi_sort.i: mpi_sort.c.i
-
-.PHONY : mpi_sort.i
-
-# target to preprocess a source file
-mpi_sort.c.i:
-	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/mpi_sort.c.i
-.PHONY : mpi_sort.c.i
-
-mpi_sort.s: mpi_sort.c.s
-
-.PHONY : mpi_sort.s
-
-# target to generate assembly for a file
-mpi_sort.c.s:
-	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/mpi_sort.c.s
-.PHONY : mpi_sort.c.s
-
 psrs/mpi_psrs.o: psrs/mpi_psrs.c.o
 
 .PHONY : psrs/mpi_psrs.o
@@ -231,6 +177,60 @@ psrs/omp_psrs.c.s:
 	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.s
 .PHONY : psrs/omp_psrs.c.s
 
+qs/main.o: qs/main.cpp.o
+
+.PHONY : qs/main.o
+
+# target to build an object file
+qs/main.cpp.o:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/qs/main.cpp.o
+.PHONY : qs/main.cpp.o
+
+qs/main.i: qs/main.cpp.i
+
+.PHONY : qs/main.i
+
+# target to preprocess a source file
+qs/main.cpp.i:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/qs/main.cpp.i
+.PHONY : qs/main.cpp.i
+
+qs/main.s: qs/main.cpp.s
+
+.PHONY : qs/main.s
+
+# target to generate assembly for a file
+qs/main.cpp.s:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/qs/main.cpp.s
+.PHONY : qs/main.cpp.s
+
+qs/mpi_sort.o: qs/mpi_sort.c.o
+
+.PHONY : qs/mpi_sort.o
+
+# target to build an object file
+qs/mpi_sort.c.o:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o
+.PHONY : qs/mpi_sort.c.o
+
+qs/mpi_sort.i: qs/mpi_sort.c.i
+
+.PHONY : qs/mpi_sort.i
+
+# target to preprocess a source file
+qs/mpi_sort.c.i:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.i
+.PHONY : qs/mpi_sort.c.i
+
+qs/mpi_sort.s: qs/mpi_sort.c.s
+
+.PHONY : qs/mpi_sort.s
+
+# target to generate assembly for a file
+qs/mpi_sort.c.s:
+	$(MAKE) -f CMakeFiles/parallel_sort.dir/build.make CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.s
+.PHONY : qs/mpi_sort.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -240,18 +240,18 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... parallel_sort"
 	@echo "... edit_cache"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
-	@echo "... mpi_sort.o"
-	@echo "... mpi_sort.i"
-	@echo "... mpi_sort.s"
 	@echo "... psrs/mpi_psrs.o"
 	@echo "... psrs/mpi_psrs.i"
 	@echo "... psrs/mpi_psrs.s"
 	@echo "... psrs/omp_psrs.o"
 	@echo "... psrs/omp_psrs.i"
 	@echo "... psrs/omp_psrs.s"
+	@echo "... qs/main.o"
+	@echo "... qs/main.i"
+	@echo "... qs/main.s"
+	@echo "... qs/mpi_sort.o"
+	@echo "... qs/mpi_sort.i"
+	@echo "... qs/mpi_sort.s"
 .PHONY : help
 
 

@@ -9,14 +9,14 @@
 #include "mpi.h"
 
 int i, j, k;
-int N = 1000000;
+long N = 10000000;
 
-int is_sorted(int arr[], int size)
+int is_sorted(const int arr[], int size)
 {
-    for (int i = 1; i < size; ++i)
+    for (int l = 1; l < size; ++l)
     {
-	if (arr[i-1] > arr[i])
-	    return 0;
+        if (arr[l - 1] > arr[l])
+            return 0;
     }
     return 1;
 }
@@ -180,10 +180,10 @@ void phase4(int *partitions, int *partitionSizes, int p, int myId, int *array)
 }
 
 //PSRS排序函数，调用了4个过程函数
-void psrs_mpi(int *array, int N)
+void psrs_mpi(int *array, long n_vals)
 {
-    int p, myId, *partitionSizes, *newPartitionSizes, nameLength;
-    int subArraySize, startIndex, endIndex, *pivots, *newPartitions;
+    int p, myId, *partitionSizes, *newPartitionSizes, nameLength, *pivots, *newPartitions;
+    long subArraySize, startIndex, endIndex;
     char processorName[MPI_MAX_PROCESSOR_NAME];
 
 
@@ -204,19 +204,19 @@ void psrs_mpi(int *array, int N)
     }
 
     // 获取起始位置和子数组大小
-    startIndex = myId * N / p;
+    startIndex = myId * n_vals / p;
     if (p == (myId + 1))
     {
-        endIndex = N;
+        endIndex = n_vals;
     } else
     {
-        endIndex = (myId + 1) * N / p;
+        endIndex = (myId + 1) * n_vals / p;
     }
     subArraySize = endIndex - startIndex;
 
     MPI_Barrier(MPI_COMM_WORLD);
     //调用各阶段函数
-    phase1(array, N, startIndex, subArraySize, pivots, p);
+    phase1(array, n_vals, startIndex, subArraySize, pivots, p);
     if (p > 1)
     {
         phase2(array, startIndex, subArraySize, pivots, partitionSizes, p, myId);
@@ -225,7 +225,7 @@ void psrs_mpi(int *array, int N)
     }
 
 //    if (myId == 0)
-//        for (k = 0; k < N; k++)
+//        for (k = 0; k < n_vals; k++)
 //        {
 //            printf("%d ", array[k]);
 //        }
@@ -233,7 +233,7 @@ void psrs_mpi(int *array, int N)
 
     double end = MPI_Wtime();
     if (myId == 0)
-        printf("%d, %d, %f\n", N, is_sorted(array, N), end - start);
+        printf("%ld, %d, %d, %f\n", n_vals, p, is_sorted(array, n_vals), end - start);
 
     if (p > 1)
     {
@@ -251,8 +251,11 @@ void psrs_mpi(int *array, int N)
 
 int main(int argc, char *argv[])
 {
-
     int *array;
+
+    N = 1000;
+    if (argc > 1)
+        N = atol(argv[1]);
     array = (int *) malloc(N * sizeof(int));
 
     srand(100);

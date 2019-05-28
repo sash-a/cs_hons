@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/parallel_sort.dir/mpi_sort.c.o"
-  "CMakeFiles/parallel_sort.dir/main.cpp.o"
+  "CMakeFiles/parallel_sort.dir/qs/mpi_sort.c.o"
+  "CMakeFiles/parallel_sort.dir/qs/main.cpp.o"
   "CMakeFiles/parallel_sort.dir/psrs/mpi_psrs.c.o"
   "CMakeFiles/parallel_sort.dir/psrs/omp_psrs.c.o"
   "parallel_sort.pdb"
