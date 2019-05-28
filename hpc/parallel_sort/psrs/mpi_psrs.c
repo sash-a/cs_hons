@@ -9,7 +9,7 @@
 #include "mpi.h"
 
 int i, j, k;
-int N = 10000;
+int N = 1000000;
 
 
 int cmp(const void *a, const void *b)
