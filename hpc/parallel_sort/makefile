@@ -4,11 +4,8 @@ main: main.cpp seq_sort.h omp_sort.h utils.h
 mpi: mpi_sort.c
 	mpicc -o mpi mpi_sort.c --std=c11
 
-run_mpi_4: mpi
-	mpirun -n 4 mpi
-
-run_mpi_8: mpi
-	mpiexec -n 8 mpi
+psrs_mpi: psrs_mpi_test.cpp
+	mpic++ -o psrs_mpi psrs_mpi_test.cpp --std=c++11
 
 clean:
 	rm -rf main
