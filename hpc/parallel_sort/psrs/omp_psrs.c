@@ -28,6 +28,16 @@ void psrs_sort(long long *a, int n);
 
 void sortll(long long *a, int len);
 
+int is_sorted(long long arr[], int size)
+{
+    for (int i = 1; i < size; ++i)
+    {
+        if (arr[i-1] > arr[i])
+            return 0;
+    }
+    return 1;
+}
+
 /* sort an array in non-descending order */
 void psrs_sort(long long *a, int n)
 {
@@ -372,7 +382,7 @@ int main(int argc, char *argv[])
     psrs_sort(arr, n);
     double end = omp_get_wtime();
 
-    printf("%d, %f\n", n, end - start);
+    printf("%d, %d, %f\n", n, is_sorted(arr, n), end - start);
 
     return 0;
 }

@@ -11,6 +11,15 @@
 int i, j, k;
 int N = 1000000;
 
+int is_sorted(int arr[], int size)
+{
+    for (int i = 1; i < size; ++i)
+    {
+	if (arr[i-1] > arr[i])
+	    return 0;
+    }
+    return 1;
+}
 
 int cmp(const void *a, const void *b)
 {
@@ -224,7 +233,7 @@ void psrs_mpi(int *array, int N)
 
     double end = MPI_Wtime();
     if (myId == 0)
-        printf("%d, %f\n", N, end - start);
+        printf("%d, %d, %f\n", N, is_sorted(array, N), end - start);
 
     if (p > 1)
     {
