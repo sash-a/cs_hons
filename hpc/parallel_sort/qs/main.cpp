@@ -37,8 +37,7 @@ int main(int argc, char *argv[])
 
     if (type == 1 || type == 0)
     {
-        printf("chosen tasks\n");
-        start = omp_get_wtime();
+	start = omp_get_wtime();
 #pragma omp parallel //default(none) shared(v, n_vals)
         {
 #pragma omp single nowait

@@ -40,7 +40,7 @@ namespace omp
         }
     }
 
-    void qs_rec_tasks(int *v, const int &thresh, int l, int h)
+    void qs_rec_tasks(int *v, int thresh, int l, int h)
     {
         if (h - l < thresh)
             utils::insertionsort(v, l, h);
@@ -49,11 +49,11 @@ namespace omp
             int pivot = utils::partition(v, l, h);
 
             if (true)
-            // if (omp_get_num_threads() < omp_get_max_threads())
+            //if (omp_get_num_threads() <= omp_get_max_threads())
             {
                 #pragma omp task
                 qs_rec_tasks(v, thresh, l, pivot - 1);
-                #pragma omp task
+                 #pragma omp task
                 qs_rec_tasks(v, thresh, pivot + 1, h);
             }
             else

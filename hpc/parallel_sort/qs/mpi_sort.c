@@ -86,16 +86,16 @@ void swap(int arr[], int a, int b)
     arr[b] = t;
 }
 
-int partition(int v[], int l, long h)
+int partition(int v[], long l, long h)
 {
 
-    int lt_pos = l; // position one past the last element smaller than pivot
+    long lt_pos = l; // position one past the last element smaller than pivot
 
     // putting the pivot in the last position
     swap(v, l, h);
     int pivot = v[h];
 
-    for (int i = l; i < h; ++i)
+    for (long i = l; i < h; ++i)
     {
         if (v[i] < pivot)
         {
@@ -166,13 +166,11 @@ int main(int argc, char *argv[])
 
     double start = MPI_Wtime();
 
-    MPI_Bcast(&local_len, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&local_len, 1, MPI_LONG, 0, MPI_COMM_WORLD);
     local_arr = malloc(local_len * sizeof(int));
     MPI_Scatter(global_arr, local_len, MPI_INT, local_arr, local_len, MPI_INT, 0, MPI_COMM_WORLD);
-
     //qs
     qs(local_arr, 7, 0, local_len - 1);
-
     //MPI_Gather(local_arr, local_len, MPI_INT, global_arr, local_len, MPI_INT, 0, MPI_COMM_WORLD);
     if (rank != 0)
     {
@@ -181,22 +179,25 @@ int main(int argc, char *argv[])
 
     if (rank == 0)
     {
-        int n_arr[local_len * num_procs];
-
+        int* n_arr = malloc(n_vals * sizeof(int));
         global_arr = local_arr;
+
         for (int i = 1; i < num_procs; ++i)
         {
-            int recvd[local_len];
+            int* recvd = malloc(local_len * sizeof(int));;
             MPI_Status status;
             MPI_Recv(recvd, local_len, MPI_INT, MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
             global_arr = merge_arr(n_arr, recvd, global_arr, local_len, local_len * i);
+            
+            free(recvd);
         }
         // merge_all(n_arr, global_arr, local_len, num_procs);
         // qs(global_arr, 7, 0, n_vals - 1);
         double end = MPI_Wtime();
 
         printf("%ld, %d, %d %f\n", n_vals, num_procs, is_sorted(global_arr, n_vals), end - start);
-//        free(global_arr);
+// free(global_arr);
+        free(n_arr);
 
     }
     free(local_arr);
@@ -204,3 +205,4 @@ int main(int argc, char *argv[])
     MPI_Finalize();
     return 0;
 }
+
