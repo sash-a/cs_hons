@@ -2,7 +2,6 @@
 
 #include "seq_sort.h"
 #include "omp_sort.h"
-#include <sys/resource.h>
 
 
 using namespace std;
@@ -32,15 +31,15 @@ int main(int argc, char *argv[])
     copy(orig, orig + n_vals, v);
 
     omp_set_nested(1);
-    cout << getrlimit() << endl;
 
     //-------------------------------------------------
     // parallel recursive using tasks
 
     if (type == 1 || type == 0)
     {
+        printf("chosen tasks\n");
         start = omp_get_wtime();
-#pragma omp parallel default(none) shared(v, n_vals)
+#pragma omp parallel //default(none) shared(v, n_vals)
         {
 #pragma omp single nowait
             omp::qs_rec_tasks(v, 100, 0, n_vals - 1);

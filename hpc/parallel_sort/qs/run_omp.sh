@@ -11,6 +11,15 @@ cd /home/hpc24/cs_hons/hpc/parallel_sort
 
 export OMP_NUM_THREADS=8
 
-for i in {1..20}; do
-    ./main 10000000
+make omp_qs
+for i in {1..5}; do
+    ./build/omp_qs 10000000 1
+done
+
+for i in {1..5}; do
+    ./build/omp_qs 10000000 2
+done
+
+for i in {1..5}; do
+    ./build/omp_qs 10000000 3
 done

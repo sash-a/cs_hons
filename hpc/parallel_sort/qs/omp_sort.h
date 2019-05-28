@@ -48,10 +48,20 @@ namespace omp
         {
             int pivot = utils::partition(v, l, h);
 
-            #pragma omp task default(none) shared(thresh) firstprivate(v, l, pivot)
-            qs_rec_tasks(v, thresh, l, pivot - 1);
-            #pragma omp task default(none) shared(thresh) firstprivate(v, h, pivot)
-            qs_rec_tasks(v, thresh, pivot + 1, h);
+            if (true)
+            // if (omp_get_num_threads() < omp_get_max_threads())
+            {
+                #pragma omp task
+                qs_rec_tasks(v, thresh, l, pivot - 1);
+                #pragma omp task
+                qs_rec_tasks(v, thresh, pivot + 1, h);
+            }
+            else
+            {
+                qs_rec_tasks(v, thresh, l, pivot - 1);
+                qs_rec_tasks(v, thresh, pivot + 1, h);
+
+            }
         }
     }
 
