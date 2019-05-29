@@ -34,14 +34,14 @@ done
 for i in {1..10}; do
 	for j in {1..20}; do
 		nv=$(($i * 1000000))
-		./build/omp_qs $nv 3
+		./build/omp_qs $nv 4
 	done;
 done
 # 1k to 1mil
 for i in {0..5}; do
 	for j in {1..20}; do
 		nv=$((1000 * 10 ** $i))
-		./build/omp_qs $nv 3
+		./build/omp_qs $nv 4
 	done;
 done
 

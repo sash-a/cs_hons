@@ -382,7 +382,7 @@ int main(int argc, char *argv[])
     psrs_sort(arr, n);
     double end = omp_get_wtime();
 
-    printf("%ld, %d, %d, %f\n", n, omp_get_num_threads(), is_sorted(arr, n), end - start);
+    printf("%ld, %d, %d, %f\n", n, omp_get_max_threads(), is_sorted(arr, n), end - start);
 
     return 0;
 }
