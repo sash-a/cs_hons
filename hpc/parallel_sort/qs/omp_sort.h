@@ -24,7 +24,6 @@ namespace omp
             seq::qs(v, thresh, i * local_size, i * local_size + local_size - 1);
         }
         #pragma omp taskwait
-        v = utils::merge_all(v, len / omp_get_max_threads(), omp_get_max_threads());
     }
 
 

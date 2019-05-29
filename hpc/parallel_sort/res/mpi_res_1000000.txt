@@ -1,3 +1,0 @@
-make: `mpi' is up to date.
-nv 1000000
-time taken: 16.986112, valid: 1
