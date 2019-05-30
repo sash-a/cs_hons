@@ -32,3 +32,7 @@ Specifically for ```omp_qs``` there is a second optional command line arguement 
 #### MPI
 
 ```mpirun -n  <desired thread count>  /build/mpi_<algorithm> <array size>```
+
+## Resuls
+
+Results are stored inside res/RawData. All results are named with the following system ```<algorithm>_<framework>_<threads>_<nodes>.csv```. Data inside them is stored in the following format: ```<array size>, <threads>, <is sorted>, <time>```
