@@ -32,30 +32,31 @@ def avg(results):
 
     return final
 
+
 def speedup(seq, para):
     d = {}
     for k in para.keys():
-        d[k] = seq[k]/para[k]
+        d[k] = seq[k] / para[k]
 
     return d
+
 
 data = get_data('../RawData')
 seq = avg(data['seq'])
 
-# mpi_psrs_4 = speedup(seq, avg(data['mpi_psrs_4ct']))
-# mpi_qs_4 = speedup(seq, avg(data['mpi_qs_4ct']))
-# omp_psrs_4 = speedup(seq, avg(data['omp_psrs_4ct']))
-# omp_qs_4 = speedup(seq, avg(data['omp_qs_4ct']))
-# omp_qs_4_bal = speedup(seq, avg(data['omp_qs_4ct_bal']))
+mpi_psrs_2 = speedup(seq, avg(data['mpi_psrs_2ct']))
+mpi_qs_2 = speedup(seq, avg(data['mpi_qs_2ct']))
+omp_psrs_2 = speedup(seq, avg(data['omp_psrs_2ct']))
+omp_qs_2 = speedup(seq, avg(data['omp_qs_2ct']))
+omp_qs_2_bal = speedup(seq, avg(data['omp_qs_2ct_bal']))
 
-
-# plt.title('Comparison of all 4 threaded sorts')
-# plt.scatter(list(mpi_psrs_4.keys())[:-1], list(mpi_psrs_4.values())[:-1], alpha=0.5, label='MPI PSRS 4 threads', marker='^-')
-# plt.scatter(list(mpi_qs_4.keys())[:-1], list(mpi_qs_4.values())[:-1], alpha=0.5, label='MPI QS 4 threads')
-# plt.scatter(list(omp_psrs_4.keys())[:-1], list(omp_psrs_4.values())[:-1], alpha=0.5, label='OMP PSRS 4 threads')
-# plt.scatter(list(omp_qs_4.keys())[:-1], list(omp_qs_4.values())[:-1], alpha=0.5, label='OMP QS 4 threads')
-# plt.scatter(list(omp_qs_4_bal.keys())[:-1], list(omp_qs_4_bal.values())[:-1], alpha=0.5,
-#            label='OMP QS 4 threads balanced')
+plt.title('Comparison of all 2 threaded sorts')
+plt.plot(list(mpi_psrs_2.keys())[:-1], list(mpi_psrs_2.values())[:-1], '^', alpha=0.5, label='MPI PSRS 2 threads')
+plt.plot(list(mpi_qs_2.keys())[:-1], list(mpi_qs_2.values())[:-1], '^', alpha=0.5, label='MPI QS 2 threads')
+plt.plot(list(omp_psrs_2.keys())[:-1], list(omp_psrs_2.values())[:-1], 'o', alpha=0.5, label='OMP PSRS 2 threads')
+plt.plot(list(omp_qs_2.keys())[:-1], list(omp_qs_2.values())[:-1], 'o', alpha=0.5, label='OMP QS 2 threads')
+plt.plot(list(omp_qs_2_bal.keys())[:-1], list(omp_qs_2_bal.values())[:-1], 'o', alpha=0.5,
+         label='OMP QS 2 threads balanced')
 
 # omp_qs_8 = avg(data['omp_qs_8ct'])
 # omp_qs_4 = avg(data['omp_qs_4ct'])
@@ -75,34 +76,32 @@ seq = avg(data['seq'])
 # mpi_psrs_8 = avg(data['mpi_psrs_8ct'])[100000000]
 # mpi_psrs_4 = avg(data['mpi_psrs_4ct'])[100000000]
 # mpi_psrs_2 = avg(data['mpi_psrs_2ct'])[100000000]
-
+#
 # omp_psrs_8 = avg(data['omp_psrs_8ct'])[100000000]
 # omp_psrs_4 = avg(data['omp_psrs_4ct'])[100000000]
 # omp_psrs_2 = avg(data['omp_psrs_2ct'])[100000000]
-
+#
 # mpi_qs_8 = avg(data['mpi_qs_8ct'])[100000000]
 # mpi_qs_4 = avg(data['mpi_qs_4ct'])[100000000]
 # mpi_qs_2 = avg(data['mpi_qs_2ct'])[100000000]
-
+#
 # omp_qs_8 = avg(data['omp_qs_8ct'])[100000000]
 # omp_qs_4 = avg(data['omp_qs_4ct'])[100000000]
 # omp_qs_2 = avg(data['omp_qs_2ct'])[100000000]
-
+#
 # seq10m = seq[100000000]
-
+#
 # threads = [2, 4, 8]
 # mpi_psrs = [seq10m / mpi_psrs_2, seq10m / mpi_psrs_4, seq10m / mpi_psrs_8]
 # omp_psrs = [seq10m / omp_psrs_2, seq10m / omp_psrs_4, seq10m / omp_psrs_8]
 # mpi_qs = [seq10m / mpi_qs_2, seq10m / mpi_qs_4, seq10m / mpi_qs_8]
 # omp_qs = [seq10m / omp_qs_2, seq10m / omp_qs_4, seq10m / omp_qs_8]
-
-
+#
 # plt.title('Speedup vs core count for array size of 10 million')
-# plt.scatter(threads, omp_psrs, alpha=0.5, label='OMP psrs speedup')
-# plt.scatter(threads, mpi_psrs, alpha=0.5, label='MPI psrs speedup')
-# plt.scatter(threads, mpi_qs, alpha=0.5, label='MPI qs speedup')
-# plt.scatter(threads, omp_qs, alpha=0.5, label='OMP qs speedup')
-
+# plt.plot(threads, omp_psrs, 'o-', alpha=0.5, label='OMP psrs speedup')
+# plt.plot(threads, mpi_psrs, '^-', alpha=0.5, label='MPI psrs speedup')
+# plt.plot(threads, mpi_qs, '^-', alpha=0.5, label='MPI qs speedup')
+# plt.plot(threads, omp_qs, 'o-', alpha=0.5, label='OMP qs speedup')
 
 # mpi_psrs_4_2 = speedup(seq, avg(data['mpi_psrs_4_2']))
 # mpi_psrs_4 = speedup(seq, avg(data['mpi_psrs_4ct']))
@@ -115,22 +114,22 @@ seq = avg(data['seq'])
 # plt.scatter(list(mpi_qs_4_2.keys())[:-1], list(mpi_qs_4_2.values())[:-1], alpha=0.5, label='qs 2 nodes')
 # plt.scatter(list(mpi_qs_4.keys())[:-1], list(mpi_qs_4.values())[:-1], alpha=0.5, label='qs 1 node')
 
-mpi_psrs_8 = speedup(seq, avg(data['mpi_psrs_8ct']))[10000000]
-mpi_psrs_8_2 = speedup(seq, avg(data['mpi_psrs_8_2']))[10000000]
-mpi_psrs_8_4 = speedup(seq, avg(data['mpi_psrs_8_4']))[10000000]
+# mpi_psrs_8 = speedup(seq, avg(data['mpi_psrs_8ct']))[10000000]
+# mpi_psrs_8_2 = speedup(seq, avg(data['mpi_psrs_8_2']))[10000000]
+# mpi_psrs_8_4 = speedup(seq, avg(data['mpi_psrs_8_4']))[10000000]
+#
+# mpi_qs_8 = speedup(seq, avg(data['mpi_qs_8ct']))[10000000]
+# mpi_qs_8_2 = speedup(seq, avg(data['mpi_qs_8_2']))[10000000]
+# mpi_qs_8_4 = speedup(seq, avg(data['mpi_qs_8_4']))[10000000]
+#
+# plt.plot([1, 2, 4], [mpi_psrs_8, mpi_psrs_8_2, mpi_psrs_8_4], 'o-', alpha=0.5, label='RSPS')
+# plt.plot([1, 2, 4], [mpi_qs_8, mpi_qs_8_2, mpi_qs_8_4], '^-', alpha=0.5, label='QS')
+# plt.title('Nodes vs speedup for array size of 10 million and 8 threads')
 
-mpi_qs_8 = speedup(seq, avg(data['mpi_qs_8ct']))[10000000]
-mpi_qs_8_2 = speedup(seq, avg(data['mpi_qs_8_2']))[10000000]
-mpi_qs_8_4 = speedup(seq, avg(data['mpi_qs_8_4']))[10000000]
-
-plt.plot([1,2,4], [mpi_psrs_8, mpi_psrs_8_2, mpi_psrs_8_4], 'o-', alpha=0.5, label='RSPS')
-plt.plot([1,2,4], [mpi_qs_8, mpi_qs_8_2, mpi_qs_8_4], '^-', alpha=0.5, label='QS')
-plt.title('Nodes vs speedup for array size of 10 million and 8 threads')
-
-plt.xlabel('Nodes')
+plt.xlabel('Arrays size')
 plt.ylabel('Speedup')
 
 plt.legend()
 plt.grid(True)
-plt.show()
-# plt.savefig('Speedup.png')
+# plt.show()
+plt.savefig('2 thread comp finalllll.png')
