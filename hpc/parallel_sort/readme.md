@@ -20,12 +20,15 @@ Specifically for ```omp_qs``` there is a second optional command line arguement 
 
 ##### Type options:
 0: run all
+
 1: run omp tasks naive
+
 2: run omp sections (this does not work for large array sizes)
+
 3: run sequential
+
 4: run omp tasks balanced
 
 #### MPI
 
-```mpirun -n <desired thread count>  /build/mpi_<algorithm> <array size>````
-
+```mpirun -n  <desired thread count>  /build/mpi_<algorithm> <array size>```
