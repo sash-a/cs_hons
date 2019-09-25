@@ -2,12 +2,20 @@ package algorithm.ga.base;
 
 public class Gene
 {
-    int id;
-    int weight;
-    int value;
+    public int id;
+    public int weight;
+    public int value;
 
-    public Gene() {}
+    public Gene(int id, int weight, int value)
+    {
+        this.id = id;
+        this.weight = weight;
+        this.value = value;
+    }
 
-    public void mutate() {}
-
+    @Override
+    public String toString()
+    {
+        return "id: " + this.id + " weight: " + this.weight + " value: " + this.value;
+    }
 }

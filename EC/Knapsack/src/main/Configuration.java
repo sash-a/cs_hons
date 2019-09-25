@@ -2,7 +2,8 @@ package main;
 
 import random.MersenneTwisterFast;
 
-public enum Configuration {
+public enum Configuration
+{
     instance;
 
     public String fileSeparator = System.getProperty("file.separator");
@@ -13,7 +14,9 @@ public enum Configuration {
 
     public MersenneTwisterFast randomGenerator = new MersenneTwisterFast(System.nanoTime());
 
-    public int numberOfItems = 150;
-    public int maximumCapacity = 822;
+    public int numberOfItems = 4; // 150;
+    public int maximumCapacity = 5; //822;
     public int bestKnownOptimum = 1013;
+
+    public double mutationChance = 0.8; // TODO
 }
