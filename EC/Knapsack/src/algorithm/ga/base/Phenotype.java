@@ -12,7 +12,8 @@ public class Phenotype implements Comparable<Phenotype>
     public List<Gene> genes;
     public Set<Integer> gene_ids;
 
-    private Phenotype() {
+    private Phenotype()
+    {
         this.gene_ids = new HashSet<>();
         this.genes = new LinkedList<>();
     }
@@ -26,10 +27,12 @@ public class Phenotype implements Comparable<Phenotype>
         {
             double rand = Configuration.instance.randomGenerator.nextDouble(true, true);
             int idx = (int) (rand * Configuration.instance.numberOfItems);
-            if (this.gene_ids.contains(idx)) // Assuming the genes ID == its position in the list
+            Gene new_gene = all_genes.get(idx);
+
+            // Making sure gene not yet in genome
+            if (this.gene_ids.contains(new_gene.id))
                 continue;
 
-            Gene new_gene = all_genes.get(idx);
             this.gene_ids.add(idx);
             this.genes.add(new_gene);
             weight += all_genes.get(idx).weight;
@@ -42,7 +45,8 @@ public class Phenotype implements Comparable<Phenotype>
     {
         this();
 
-        for (int i = 0; i < representation.size(); i++) {
+        for (int i = 0; i < representation.size(); i++)
+        {
             if (representation.get(i))
             {
                 gene_ids.add(i);
@@ -75,8 +79,9 @@ public class Phenotype implements Comparable<Phenotype>
         System.out.println(genes);
 
         int prevID = 0;
-        for (Gene g : genes) {
-            for (int i = prevID; i < g.id-1; i++)
+        for (Gene g : genes)
+        {
+            for (int i = prevID; i < g.id - 1; i++)
             {
                 rep.add(false);
             }
@@ -84,7 +89,8 @@ public class Phenotype implements Comparable<Phenotype>
             prevID = g.id;
         }
 
-        for (int i = prevID; i < Configuration.instance.maximumCapacity; i++) {
+        for (int i = prevID; i < Configuration.instance.maximumCapacity; i++)
+        {
             rep.add(false);
         }
         return rep;

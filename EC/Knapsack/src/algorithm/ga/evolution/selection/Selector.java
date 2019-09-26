@@ -6,15 +6,15 @@ import algorithm.ga.base.Genome;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Selector {
+public abstract class Selector
+{
     List<Genome> genomes;
     List<Gene> allGenes;
 
-    public Selector() {
-        this.genomes = new ArrayList<>();
-    }
+    public Selector() { this.genomes = new ArrayList<>(); }
 
-    public void beforeSelection(List<Genome> genomes, List<Gene> allGenes) {
+    public void beforeSelection(List<Genome> genomes, List<Gene> allGenes)
+    {
         this.genomes = genomes;
         this.allGenes = allGenes;
     }

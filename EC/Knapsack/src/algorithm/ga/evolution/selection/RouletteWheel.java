@@ -6,6 +6,7 @@ import algorithm.ga.base.Phenotype;
 import main.Configuration;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +36,7 @@ public class RouletteWheel extends Selector
     public void beforeSelection(List<Genome> genomes, List<Gene> allGenes)
     {
         super.beforeSelection(genomes, allGenes);
-        List<Phenotype> phenotypes = genomes.stream().map(g -> new Phenotype(g, allGenes)).collect(Collectors.toList());
+        List<Phenotype> phenotypes = genomes.stream().map(g -> g.toPheno(allGenes)).collect(Collectors.toList());
 
         // Getting the selection probabilities
         double totalFitness = getTotalFitness(phenotypes);
@@ -47,8 +48,18 @@ public class RouletteWheel extends Selector
             fitnessSum += p.getFitness() / totalFitness;
             newSelectionChances.add(fitnessSum);
         }
+        // Ordering selection chances and genomes
         this.selectionChances = newSelectionChances.stream().sorted().collect(Collectors.toList());
+        System.out.println("Selection chances:" + this.selectionChances);
+        Comparator<Genome> genomeComparator = Comparator.comparing(genome -> genome.toPheno(allGenes));
+        this.genomes.sort(genomeComparator);
+        System.out.println("Genome fitnesses sorted: " +
+                this.genomes
+                        .stream()
+                        .map(genome -> genome.toPheno(allGenes))
+                        .collect(Collectors.toList()));
     }
 
-    private int getTotalFitness(List<Phenotype> phenotypes) {return phenotypes.stream().map(Phenotype::getFitness).reduce(0, Integer::sum);}
+    private int getTotalFitness(List<Phenotype> phenotypes)
+    { return phenotypes.stream().map(Phenotype::getFitness).reduce(0, Integer::sum); }
 }

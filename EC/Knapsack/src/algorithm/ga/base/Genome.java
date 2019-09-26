@@ -9,7 +9,8 @@ import main.Configuration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Genome {
+public class Genome
+{
     public List<Boolean> rep;
     private Crossover crossover;
     private Mutator mutator;
@@ -19,32 +20,33 @@ public class Genome {
         rep = new LinkedList<>();
         for (int i = 0; i < Configuration.instance.maximumCapacity; i++)
             rep.add(Configuration.instance.randomGenerator.nextBoolean());
-    }
 
-    public Genome(int crossoverPoints)
-    {
-        this();
-        assert crossoverPoints == 1 || crossoverPoints == 2;
-        if (crossoverPoints == 1)
+        assert Configuration.instance.crossoverPoints == 1 || Configuration.instance.crossoverPoints == 2;
+        if (Configuration.instance.crossoverPoints == 1)
             crossover = new OnePointCrossover();
         else
             crossover = new TwoPointCrossover();
     }
 
-    public Genome(int crossoverPoints, List<Boolean> rep)
+    public Genome(List<Boolean> rep)
     {
-        this(crossoverPoints);
+        this();
         this.rep = rep;
     }
 
     public Genome mutate()
     {
-        return new Genome(crossover.points, mutator.mutate(rep));
+        return new Genome(mutator.mutate(rep));
     }
 
     public Genome crossover(Genome other)
     {
-        return new Genome(crossover.points, crossover.crossover(this.rep, other.rep));
+        return new Genome(crossover.crossover(this.rep, other.rep));
+    }
+
+    public Phenotype toPheno(List<Gene> allGenes)
+    {
+        return new Phenotype(this, allGenes);
     }
 
     @Override

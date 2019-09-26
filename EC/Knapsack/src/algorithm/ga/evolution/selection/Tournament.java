@@ -37,9 +37,9 @@ public class Tournament extends Selector
         }
 
         Phenotype best = (tournament.stream()
-                .map(g -> new Phenotype(g, allGenes))
+                .map(g -> g.toPheno(allGenes))
                 .max(Comparator.comparingInt(Phenotype::getFitness)).get());
 
-        return new Genome(Configuration.instance.crossoverPoints, best.getRepresentation());
+        return new Genome(best.getRepresentation());
     }
 }

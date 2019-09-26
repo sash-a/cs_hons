@@ -18,7 +18,12 @@ public enum Configuration
     public int maximumCapacity = 9; //822;
     public int bestKnownOptimum = 1013;
 
+    // ------------------------ GA config options ------------------------
+
     public double mutationChance = 0.8; // TODO
     public int crossoverPoints = 1;
-    public int newChildren = 10;
+    public int populationSize = 10;
+    public int elite = 1;
+
+    // ------------------------ GA config options ------------------------
 }

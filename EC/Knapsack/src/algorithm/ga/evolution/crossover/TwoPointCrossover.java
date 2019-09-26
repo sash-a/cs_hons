@@ -12,6 +12,8 @@ public class TwoPointCrossover extends Crossover {
 
     @Override
     public List<Boolean> crossover(List<Boolean> self, List<Boolean> other) {
+        // TODO should this return return two children? i.e self x other and other x self
+
         int point1 = (int)(Configuration.instance.randomGenerator.nextDouble() * Configuration.instance.maximumCapacity);
         int point2 = (int)(Configuration.instance.randomGenerator.nextDouble() * Configuration.instance.maximumCapacity);
         List<Boolean> child = self.subList(0, point1);
