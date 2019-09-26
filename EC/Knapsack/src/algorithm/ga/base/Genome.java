@@ -1,68 +1,56 @@
 package algorithm.ga.base;
 
+import algorithm.ga.evolution.crossover.Crossover;
+import algorithm.ga.evolution.crossover.OnePointCrossover;
+import algorithm.ga.evolution.crossover.TwoPointCrossover;
+import algorithm.ga.evolution.mutation.Mutator;
 import main.Configuration;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-public class Genome implements Comparable<Genome>
-{
-    public List<Gene> genes;
-    public Set<Integer> gene_ids;
+public class Genome {
+    public List<Boolean> rep;
+    private Crossover crossover;
+    private Mutator mutator;
 
-    public Genome(List<Gene> all_genes)
+    public Genome()
     {
-        this.gene_ids = new HashSet<>();
-        this.genes = new LinkedList<>();
-
-        int weight = 0;
-        while (weight < Configuration.instance.maximumCapacity)
-        {
-            double rand = Configuration.instance.randomGenerator.nextDouble(true, true);
-            int idx = (int) (rand * Configuration.instance.numberOfItems);
-            if (this.gene_ids.contains(idx)) // Assuming the genes ID == its position in the list
-                continue;
-
-            Gene new_gene = all_genes.get(idx);
-            this.gene_ids.add(idx);
-            this.genes.add(new_gene);
-            weight += all_genes.get(idx).weight;
-        }
-
-        this.genes.remove(this.genes.size() - 1);
+        rep = new LinkedList<>();
+        for (int i = 0; i < Configuration.instance.maximumCapacity; i++)
+            rep.add(Configuration.instance.randomGenerator.nextBoolean());
     }
 
-    public boolean isValid()
+    public Genome(int crossoverPoints)
     {
-        return genes.stream().map(g -> g.weight).reduce(0, Integer::sum) < Configuration.instance.maximumCapacity;
+        this();
+        assert crossoverPoints == 1 || crossoverPoints == 2;
+        if (crossoverPoints == 1)
+            crossover = new OnePointCrossover();
+        else
+            crossover = new TwoPointCrossover();
     }
 
-    public int getFitness()
+    public Genome(int crossoverPoints, List<Boolean> rep)
     {
-        return genes.stream().map(g -> g.value).reduce(0, Integer::sum);
+        this(crossoverPoints);
+        this.rep = rep;
     }
 
     public Genome mutate()
     {
-        return this;
+        return new Genome(crossover.points, mutator.mutate(rep));
     }
 
     public Genome crossover(Genome other)
     {
-        return this;
+        return new Genome(crossover.points, crossover.crossover(this.rep, other.rep));
     }
 
     @Override
     public String toString()
     {
-        return genes.toString();
+        return this.rep.toString();
     }
 
-    @Override
-    public int compareTo(Genome other)
-    {
-        return Integer.compare(this.getFitness(), other.getFitness());
-    }
 }

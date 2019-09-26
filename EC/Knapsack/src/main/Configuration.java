@@ -15,8 +15,10 @@ public enum Configuration
     public MersenneTwisterFast randomGenerator = new MersenneTwisterFast(System.nanoTime());
 
     public int numberOfItems = 4; // 150;
-    public int maximumCapacity = 5; //822;
+    public int maximumCapacity = 9; //822;
     public int bestKnownOptimum = 1013;
 
     public double mutationChance = 0.8; // TODO
+    public int crossoverPoints = 1;
+    public int newChildren = 10;
 }

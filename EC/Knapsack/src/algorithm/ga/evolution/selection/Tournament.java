@@ -1,6 +1,7 @@
 package algorithm.ga.evolution.selection;
 
 import algorithm.ga.base.Genome;
+import algorithm.ga.base.Phenotype;
 import main.Configuration;
 
 import java.util.*;
@@ -32,9 +33,13 @@ public class Tournament extends Selector
             }
 
             selected.add(idx);
-            tournament.add(individuals.get(idx));
+            tournament.add(genomes.get(idx));
         }
 
-        return Collections.max(tournament);
+        Phenotype best = (tournament.stream()
+                .map(g -> new Phenotype(g, allGenes))
+                .max(Comparator.comparingInt(Phenotype::getFitness)).get());
+
+        return new Genome(Configuration.instance.crossoverPoints, best.getRepresentation());
     }
 }

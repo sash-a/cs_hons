@@ -1,6 +1,8 @@
 package algorithm.ga.evolution.selection;
 
+import algorithm.ga.base.Gene;
 import algorithm.ga.base.Genome;
+import algorithm.ga.base.Phenotype;
 import main.Configuration;
 
 import java.util.ArrayList;
@@ -23,29 +25,30 @@ public class RouletteWheel extends Selector
         for (int i = 0; i < selectionChances.size(); i++)
         {
             if (probability <= selectionChances.get(i))
-                return individuals.get(i);
+                return genomes.get(i);
         }
 
         System.out.println("Error: could not find an appropriate genome given the probabilities");
         return null;
     }
 
-    public void beforeSelection(List<Genome> individuals)
+    public void beforeSelection(List<Genome> genomes, List<Gene> allGenes)
     {
-        super.beforeSelection(individuals);
+        super.beforeSelection(genomes, allGenes);
+        List<Phenotype> phenotypes = genomes.stream().map(g -> new Phenotype(g, allGenes)).collect(Collectors.toList());
 
         // Getting the selection probabilities
-        double totalFitness = getTotalFitness(individuals);
+        double totalFitness = getTotalFitness(phenotypes);
         double fitnessSum = 0;
         List<Double> newSelectionChances = new ArrayList<>();
 
-        for (Genome g : individuals)
+        for (Phenotype p : phenotypes)
         {
-            fitnessSum += g.getFitness() / totalFitness;
+            fitnessSum += p.getFitness() / totalFitness;
             newSelectionChances.add(fitnessSum);
         }
         this.selectionChances = newSelectionChances.stream().sorted().collect(Collectors.toList());
     }
 
-    private int getTotalFitness(List<Genome> genomes) {return genomes.stream().map(Genome::getFitness).reduce(0, Integer::sum);}
+    private int getTotalFitness(List<Phenotype> phenotypes) {return phenotypes.stream().map(Phenotype::getFitness).reduce(0, Integer::sum);}
 }
