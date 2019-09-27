@@ -14,16 +14,29 @@ public enum Configuration
 
     public MersenneTwisterFast randomGenerator = new MersenneTwisterFast(System.nanoTime());
 
-    public int numberOfItems = 4; // 150;
-    public int maximumCapacity = 9; //822;
+    public int numberOfItems = 150;
+    public int maximumCapacity = 822;
     public int bestKnownOptimum = 1013;
 
     // ------------------------ GA config options ------------------------
 
-    public double mutationChance = 0.8; // TODO
-    public int crossoverPoints = 1;
-    public int populationSize = 10;
+    public enum MutationType
+    {
+        BITFLIP,
+        DISPLACEMENT,
+        EXCHANGE,
+        INSERTION,
+        INVERRSION
+    }
+
+    public double mutationChance = 0.1;
+    public int populationSize = 50;
     public int elite = 1;
+    public int generations = 100000;
+    public int validAttempts = 100;
+
+    public int crossoverPoints = 1;
+    public MutationType mutationType = MutationType.BITFLIP;
 
     // ------------------------ GA config options ------------------------
 }

@@ -2,6 +2,7 @@ package algorithm.ga.evolution.selection;
 
 import algorithm.ga.base.Genome;
 import algorithm.ga.base.Phenotype;
+import algorithm.ga.main.GARunner;
 import main.Configuration;
 
 import java.util.*;
@@ -20,7 +21,7 @@ public class Tournament extends Selector
 
     public Genome select()
     {
-        List<Genome> tournament = new ArrayList<>();
+        List<Genome> tournament = new LinkedList<>();
         HashSet<Integer> selected = new HashSet<>();
 
         for (int i = 0; i < tournamentSize; i++)
@@ -37,7 +38,7 @@ public class Tournament extends Selector
         }
 
         Phenotype best = (tournament.stream()
-                .map(g -> g.toPheno(allGenes))
+                .map(Genome::toPheno)
                 .max(Comparator.comparingInt(Phenotype::getFitness)).get());
 
         return new Genome(best.getRepresentation());

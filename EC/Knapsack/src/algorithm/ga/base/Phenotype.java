@@ -1,8 +1,5 @@
 package algorithm.ga.base;
 
-import algorithm.ga.evolution.crossover.Crossover;
-import algorithm.ga.evolution.crossover.OnePointCrossover;
-import algorithm.ga.evolution.crossover.TwoPointCrossover;
 import main.Configuration;
 
 import java.util.*;
@@ -18,65 +15,36 @@ public class Phenotype implements Comparable<Phenotype>
         this.genes = new LinkedList<>();
     }
 
-    public Phenotype(List<Gene> all_genes)
+    public Phenotype(List<Boolean> representation)
     {
         this();
-
-        int weight = 0;
-        while (weight < Configuration.instance.maximumCapacity)
-        {
-            double rand = Configuration.instance.randomGenerator.nextDouble(true, true);
-            int idx = (int) (rand * Configuration.instance.numberOfItems);
-            Gene new_gene = all_genes.get(idx);
-
-            // Making sure gene not yet in genome
-            if (this.gene_ids.contains(new_gene.id))
-                continue;
-
-            this.gene_ids.add(idx);
-            this.genes.add(new_gene);
-            weight += all_genes.get(idx).weight;
-        }
-
-        this.genes.remove(this.genes.size() - 1);
-    }
-
-    public Phenotype(List<Boolean> representation, List<Gene> all_genes)
-    {
-        this();
-
-        for (int i = 0; i < representation.size(); i++)
+        for (int i = 0; i < representation.size() - 1; i++)
         {
             if (representation.get(i))
             {
                 gene_ids.add(i);
-                genes.add(all_genes.get(i));
+                genes.add(Population.allGenes.get(i));
             }
         }
     }
 
-    public Phenotype(Genome genome, List<Gene> all_genes)
+    public Phenotype(Genome genome)
     {
-        this(genome.rep, all_genes);
+        this(genome.rep);
     }
 
 
-    public boolean isValid()
-    {
-        return genes.stream().map(g -> g.weight).reduce(0, Integer::sum) < Configuration.instance.maximumCapacity;
-    }
+    public boolean isValid() { return getWeight() <= Configuration.instance.maximumCapacity; }
 
-    public int getFitness()
-    {
-        return genes.stream().map(g -> g.value).reduce(0, Integer::sum);
-    }
+    public int getFitness() { return genes.stream().map(g -> g.value).reduce(0, Integer::sum); }
+
+    public int getWeight() { return genes.stream().map(g -> g.weight).reduce(0, Integer::sum); }
 
     public List<Boolean> getRepresentation()
     {
-        List<Boolean> rep = new ArrayList<>();
+        List<Boolean> rep = new LinkedList<>();
         Comparator<Gene> cmp = Comparator.comparingInt(o -> o.id);
         genes.sort(cmp);
-        System.out.println(genes);
 
         int prevID = 0;
         for (Gene g : genes)
@@ -89,7 +57,7 @@ public class Phenotype implements Comparable<Phenotype>
             prevID = g.id;
         }
 
-        for (int i = prevID; i < Configuration.instance.maximumCapacity; i++)
+        for (int i = prevID; i < Configuration.instance.numberOfItems; i++)
         {
             rep.add(false);
         }

@@ -3,6 +3,7 @@ package algorithm.ga.evolution.mutation;
 import algorithm.ga.base.Genome;
 import main.Configuration;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Displacement extends Mutator
@@ -20,7 +21,7 @@ public class Displacement extends Mutator
             endMove = temp;
         }
 
-        List<Boolean> toMove = rep.subList(startMove, endMove);
+        List<Boolean> toMove = new LinkedList<>(rep.subList(startMove, endMove));
         rep.subList(startMove, endMove).clear();
         System.out.println("Moving: " + toMove);
 

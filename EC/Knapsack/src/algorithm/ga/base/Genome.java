@@ -3,7 +3,8 @@ package algorithm.ga.base;
 import algorithm.ga.evolution.crossover.Crossover;
 import algorithm.ga.evolution.crossover.OnePointCrossover;
 import algorithm.ga.evolution.crossover.TwoPointCrossover;
-import algorithm.ga.evolution.mutation.Mutator;
+import algorithm.ga.evolution.mutation.*;
+import algorithm.ga.main.GARunner;
 import main.Configuration;
 
 import java.util.LinkedList;
@@ -18,14 +19,59 @@ public class Genome
     public Genome()
     {
         rep = new LinkedList<>();
-        for (int i = 0; i < Configuration.instance.maximumCapacity; i++)
+        for (int i = 0; i < Configuration.instance.numberOfItems; i++)
             rep.add(Configuration.instance.randomGenerator.nextBoolean());
+
+        boolean valid = new Phenotype(rep).isValid();
+        while (!valid)
+        {
+            // Remove random genes until weight is acceptable:
+            // Pick a random position in list and random direction (forward or back) and traverse until you find a gene
+            // then remove it to save weight.
+            int pos = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
+            int dir = 1;
+            boolean reverse = Configuration.instance.randomGenerator.nextBoolean();
+            if (reverse)
+                dir = -1;
+
+            for (int i = pos; i < Configuration.instance.numberOfItems && i >= 0; i += dir)
+            {
+                if (rep.get(i))
+                {
+                    rep.set(i, false);
+                    break;
+                }
+            }
+
+            valid = new Phenotype(rep).isValid();
+        }
 
         assert Configuration.instance.crossoverPoints == 1 || Configuration.instance.crossoverPoints == 2;
         if (Configuration.instance.crossoverPoints == 1)
             crossover = new OnePointCrossover();
         else
             crossover = new TwoPointCrossover();
+
+        setMutationType();
+    }
+
+    private void setMutationType()
+    {
+        switch (Configuration.instance.mutationType)
+        {
+            case BITFLIP:
+                mutator = new BitFlip();
+            case DISPLACEMENT:
+                mutator = new Displacement();
+            case EXCHANGE:
+                mutator = new Exchange();
+            case INSERTION:
+                mutator = new Insertion();
+            case INVERRSION:
+                mutator = new Inversion();
+            default:
+                mutator = new BitFlip();
+        }
     }
 
     public Genome(List<Boolean> rep)
@@ -36,7 +82,7 @@ public class Genome
 
     public Genome mutate()
     {
-        return new Genome(mutator.mutate(rep));
+        return new Genome(mutator.mutate(new LinkedList<>(rep)));
     }
 
     public Genome crossover(Genome other)
@@ -44,9 +90,9 @@ public class Genome
         return new Genome(crossover.crossover(this.rep, other.rep));
     }
 
-    public Phenotype toPheno(List<Gene> allGenes)
+    public Phenotype toPheno()
     {
-        return new Phenotype(this, allGenes);
+        return new Phenotype(this);
     }
 
     @Override

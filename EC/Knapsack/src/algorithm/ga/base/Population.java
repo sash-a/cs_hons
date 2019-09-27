@@ -3,9 +3,10 @@ package algorithm.ga.base;
 import algorithm.ga.evolution.selection.RouletteWheel;
 import algorithm.ga.evolution.selection.Selector;
 import algorithm.ga.evolution.selection.Tournament;
+import algorithm.ga.main.GARunner;
 import main.Configuration;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -13,30 +14,27 @@ import java.util.stream.Collectors;
 
 public class Population
 {
+    public static List<Gene> allGenes;
     public List<Genome> genomes;
-    public List<Gene> allGenes;
     public Selector selector;
 
-
     // Tournament selection constructor
-    public Population(List<Genome> genomes, List<Gene> genes, int k)
+    public Population(List<Genome> genomes, int k)
     {
         this.genomes = genomes;
-        this.allGenes = genes;
         selector = new Tournament(k);
     }
 
     // Roulette wheel constructor
-    public Population(List<Genome> genomes, List<Gene> genes)
+    public Population(List<Genome> genomes)
     {
         this.genomes = genomes;
-        this.allGenes = genes;
         selector = new RouletteWheel();
     }
 
     public void step()
     {
-        List<Genome> children = new ArrayList<>();
+        List<Genome> children = new LinkedList<>();
         for (int i = 0; i < Configuration.instance.populationSize - Configuration.instance.elite; i++)
         {
             List<Genome> parents = selectParents();
@@ -44,15 +42,18 @@ public class Population
             children.add(mutateChild(child));
         }
 
-        // Setting next generations genomes to the elite Genomes
-        genomes = genomes.stream()
-                .map(g -> g.toPheno(allGenes))
-                .sorted()
-                .collect(Collectors.toList())
-                .subList(0, Configuration.instance.elite)
+        // Sorting to find the elite individuals
+        List<Phenotype> phenotypes = genomes.stream()
+                .map(Genome::toPheno)
+                .sorted(Collections.reverseOrder())
+                .collect(Collectors.toList());
+
+        genomes = phenotypes.subList(0, Configuration.instance.elite)
                 .stream()
                 .map(phenotype -> new Genome(phenotype.getRepresentation()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        System.out.println("Fittest individual " + phenotypes.get(0).getFitness());
 
         // Adding all children to the next generation
         genomes.addAll(children);
@@ -61,27 +62,65 @@ public class Population
     private Genome mutateChild(Genome child)
     {
         if (Configuration.instance.randomGenerator.nextDouble() < Configuration.instance.mutationChance)
-            return child.mutate();
+        {
+            Genome mutant = child.mutate();
+            boolean valid = mutant.toPheno().isValid();
+
+            for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
+            {
+                mutant = child.mutate();
+                valid = mutant.toPheno().isValid();
+            }
+
+            if (valid)
+                return mutant;
+        }
 
         return child;
     }
 
     private Genome createChild(List<Genome> parents)
     {
-        return parents.get(0).crossover(parents.get(1));
+        Genome child = parents.get(0).crossover(parents.get(1));
+        boolean valid = child.toPheno().isValid();
+        for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
+        {
+            child = parents.get(0).crossover(parents.get(1));
+            valid = child.toPheno().isValid();
+        }
+
+        if (valid)
+            return child;
+
+        // Never found a valid combination of parents so return fittest parent
+        List<Integer> fitnesses = parents.stream().map(Genome::toPheno).map(Phenotype::getFitness).collect(Collectors.toList());
+        if (fitnesses.get(0) > fitnesses.get(1))
+            return parents.get(0);
+        else
+            return parents.get(1);
     }
 
     private List<Genome> selectParents()
     {
-        selector.beforeSelection(genomes, allGenes);
+//        System.out.println("Selecting parents");
+        selector.beforeSelection(genomes);
 
-        List<Genome> parents = new ArrayList<>();
-        for (int i = 0; i < 2; i++)  // TODO config option parents to crossover
-        {
-            parents.add(selector.select());
-            parents.add(selector.select());
-        }
+        List<Genome> parents = new LinkedList<>();
+
+        parents.add(selector.select());
+        parents.add(selector.select());
+
 
         return parents;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder joined = new StringBuilder();
+        for (Genome g : genomes)
+            joined.append(g.toString()).append("\n");
+
+        return "Population:\n" + joined.toString();
     }
 }
