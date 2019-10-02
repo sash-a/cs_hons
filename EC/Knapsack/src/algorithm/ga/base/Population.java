@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class Population
 {
-    public static List<Gene> allGenes;
     public List<Genome> genomes;
     public Selector selector;
 

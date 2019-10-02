@@ -33,10 +33,15 @@ public enum Configuration
     public int populationSize = 50;
     public int elite = 1;
     public int generations = 100000;
-    public int validAttempts = 100;
+    public int validAttempts = 1000;
 
     public int crossoverPoints = 1;
     public MutationType mutationType = MutationType.BITFLIP;
 
-    // ------------------------ GA config options ------------------------
+    // ------------------------ SA config options ------------------------
+
+    public double initialTemp = 1000.0;
+    public double minTemp = 1.0;
+    public double coolingRate = 0.997;
+
 }

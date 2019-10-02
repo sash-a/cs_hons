@@ -13,29 +13,10 @@ import java.util.*;
 
 public class GARunner
 {
-    public void run()
+    public static void run()
     {
         System.out.println("Running GA " + Configuration.instance.dataFilePath);
-        Population.allGenes = new ArrayList<>(Configuration.instance.numberOfItems);
         List<Genome> genomes = new LinkedList<>();
-
-        // Collecting genes
-        try
-        {
-            BufferedReader f = new BufferedReader(new FileReader(Configuration.instance.dataFilePath));
-            f.readLine(); // Skipping first line
-            String line = f.readLine();
-            while (line != null)
-            {
-                int[] attributes = Arrays.stream(line.split(";")).map(Integer::parseInt).mapToInt(x -> x).toArray();
-                Population.allGenes.add(new Gene(attributes[0], attributes[1], attributes[2]));
-                line = f.readLine();
-            }
-
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
 
         // Creating genomes
         for (int i = 0; i < Configuration.instance.populationSize; i++)
@@ -46,7 +27,7 @@ public class GARunner
         // Running evolution
         for (int i = 0; i < Configuration.instance.generations; i++)
         {
-            System.out.println("gen" + i);
+            System.out.println("Generation " + i);
             pop.step();
         }
 

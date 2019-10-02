@@ -4,7 +4,6 @@ import algorithm.ga.evolution.crossover.Crossover;
 import algorithm.ga.evolution.crossover.OnePointCrossover;
 import algorithm.ga.evolution.crossover.TwoPointCrossover;
 import algorithm.ga.evolution.mutation.*;
-import algorithm.ga.main.GARunner;
 import main.Configuration;
 
 import java.util.LinkedList;
@@ -46,17 +45,23 @@ public class Genome
             valid = new Phenotype(rep).isValid();
         }
 
+        setMuatationAndCrossover();
+    }
+
+    public Genome(List<Boolean> rep)
+    {
+        setMuatationAndCrossover();
+        this.rep = rep;
+    }
+
+    private void setMuatationAndCrossover()
+    {
         assert Configuration.instance.crossoverPoints == 1 || Configuration.instance.crossoverPoints == 2;
         if (Configuration.instance.crossoverPoints == 1)
             crossover = new OnePointCrossover();
         else
             crossover = new TwoPointCrossover();
 
-        setMutationType();
-    }
-
-    private void setMutationType()
-    {
         switch (Configuration.instance.mutationType)
         {
             case BITFLIP:
@@ -74,12 +79,6 @@ public class Genome
         }
     }
 
-    public Genome(List<Boolean> rep)
-    {
-        this();
-        this.rep = rep;
-    }
-
     public Genome mutate()
     {
         return new Genome(mutator.mutate(new LinkedList<>(rep)));
@@ -94,6 +93,10 @@ public class Genome
     {
         return new Phenotype(this);
     }
+
+    public int getFitness() { return new Phenotype(this).getFitness(); }
+
+    public boolean isValid() { return new Phenotype(this).isValid(); }
 
     @Override
     public String toString()

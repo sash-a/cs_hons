@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Phenotype implements Comparable<Phenotype>
 {
+    public static List<Gene> allGenes;
     public List<Gene> genes;
     public Set<Integer> gene_ids;
 
@@ -23,7 +24,7 @@ public class Phenotype implements Comparable<Phenotype>
             if (representation.get(i))
             {
                 gene_ids.add(i);
-                genes.add(Population.allGenes.get(i));
+                genes.add(allGenes.get(i));
             }
         }
     }
