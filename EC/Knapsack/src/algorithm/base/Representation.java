@@ -1,23 +1,13 @@
 package algorithm.base;
 
-import algorithm.ga.evolution.crossover.Crossover;
-import algorithm.ga.evolution.crossover.OnePointCrossover;
-import algorithm.ga.evolution.crossover.TwoPointCrossover;
-import algorithm.ga.evolution.mutation.*;
 import main.Configuration;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-/*
-    Genome in the case of a GA
-*/
 public class Representation
 {
     public List<Boolean> rep;
-    private Crossover crossover;
-    private Mutator mutator;
 
     public Representation()
     {
@@ -48,50 +38,9 @@ public class Representation
 
             valid = new Knapsack(rep).isValid();
         }
-
-        setMuatationAndCrossover();
     }
 
-    public Representation(List<Boolean> rep)
-    {
-        setMuatationAndCrossover();
-        this.rep = rep;
-    }
-
-    private void setMuatationAndCrossover()
-    {
-        assert Configuration.instance.crossoverPoints == 1 || Configuration.instance.crossoverPoints == 2;
-        if (Configuration.instance.crossoverPoints == 1)
-            crossover = new OnePointCrossover();
-        else
-            crossover = new TwoPointCrossover();
-
-        switch (Configuration.instance.mutationType)
-        {
-            case BITFLIP:
-                mutator = new BitFlip();
-            case DISPLACEMENT:
-                mutator = new Displacement();
-            case EXCHANGE:
-                mutator = new Exchange();
-            case INSERTION:
-                mutator = new Insertion();
-            case INVERRSION:
-                mutator = new Inversion();
-            default:
-                mutator = new BitFlip();
-        }
-    }
-
-    public Representation mutate()
-    {
-        return new Representation(mutator.mutate(new LinkedList<>(rep)));
-    }
-
-    public Representation crossover(Representation other)
-    {
-        return new Representation(crossover.crossover(this.rep, other.rep));
-    }
+    public Representation(List<Boolean> rep) { this.rep = rep; }
 
     public Knapsack toKnapsack()
     {

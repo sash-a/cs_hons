@@ -7,6 +7,7 @@ import algorithm.ga.evolution.selection.Selector;
 import algorithm.ga.evolution.selection.Tournament;
 import main.Configuration;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Collections;
 import java.util.List;
@@ -14,18 +15,18 @@ import java.util.stream.Collectors;
 
 public class Population
 {
-    public List<Representation> genomes;
+    public List<Genome> genomes;
     public Selector selector;
 
     // Tournament selection constructor
-    public Population(List<Representation> genomes, int k)
+    public Population(List<Genome> genomes, int k)
     {
         this.genomes = genomes;
         selector = new Tournament(k);
     }
 
     // Roulette wheel constructor
-    public Population(List<Representation> genomes)
+    public Population(List<Genome> genomes)
     {
         this.genomes = genomes;
         selector = new RouletteWheel();
@@ -33,23 +34,24 @@ public class Population
 
     public void step()
     {
-        List<Representation> children = new LinkedList<>();
+        List<Genome> children = new LinkedList<>();
         for (int i = 0; i < Configuration.instance.populationSize - Configuration.instance.elite; i++)
         {
-            List<Representation> parents = selectParents();
-            Representation child = createChild(parents);
+            List<Genome> parents = selectParents();
+            Genome child = createChild(parents);
             children.add(mutateChild(child));
         }
 
         // Sorting to find the elite individuals
         List<Knapsack> phenotypes = genomes.stream()
-                .map(Representation::toKnapsack)
+                .map(Genome::toKnapsack)
                 .sorted(Collections.reverseOrder())
                 .collect(Collectors.toList());
 
+        // Only taking the top n from the sorted list in genome form
         genomes = phenotypes.subList(0, Configuration.instance.elite)
                 .stream()
-                .map(phenotype -> new Representation(phenotype.getRepresentation()))
+                .map(phenotype -> new Genome(phenotype.getRepresentation()))
                 .collect(Collectors.toCollection(LinkedList::new));
 
         System.out.println("Fittest individual " + phenotypes.get(0).getFitness());
@@ -58,11 +60,11 @@ public class Population
         genomes.addAll(children);
     }
 
-    private Representation mutateChild(Representation child)
+    private Genome mutateChild(Genome child)
     {
         if (Configuration.instance.randomGenerator.nextDouble() < Configuration.instance.mutationChance)
         {
-            Representation mutant = child.mutate();
+            Genome mutant = child.mutate();
             boolean valid = mutant.toKnapsack().isValid();
 
             for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
@@ -78,9 +80,9 @@ public class Population
         return child;
     }
 
-    private Representation createChild(List<Representation> parents)
+    private Genome createChild(List<Genome> parents)
     {
-        Representation child = parents.get(0).crossover(parents.get(1));
+        Genome child = parents.get(0).crossover(parents.get(1));
         boolean valid = child.toKnapsack().isValid();
         for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
         {
@@ -92,19 +94,19 @@ public class Population
             return child;
 
         // Never found a valid combination of parents so return fittest parent
-        List<Integer> fitnesses = parents.stream().map(Representation::toKnapsack).map(Knapsack::getFitness).collect(Collectors.toList());
+        List<Integer> fitnesses = parents.stream().map(Genome::toKnapsack).map(Knapsack::getFitness).collect(Collectors.toList());
         if (fitnesses.get(0) > fitnesses.get(1))
             return parents.get(0);
         else
             return parents.get(1);
     }
 
-    private List<Representation> selectParents()
+    private List<Genome> selectParents()
     {
 //        System.out.println("Selecting parents");
         selector.beforeSelection(genomes);
 
-        List<Representation> parents = new LinkedList<>();
+        List<Genome> parents = new ArrayList<>();
 
         parents.add(selector.select());
         parents.add(selector.select());
@@ -117,7 +119,7 @@ public class Population
     public String toString()
     {
         StringBuilder joined = new StringBuilder();
-        for (Representation g : genomes)
+        for (Genome g : genomes)
             joined.append(g.toString()).append("\n");
 
         return "Population:\n" + joined.toString();

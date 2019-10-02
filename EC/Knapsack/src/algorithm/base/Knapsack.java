@@ -11,11 +11,9 @@ public class Knapsack implements Comparable<Knapsack>
 {
     public static List<Item> allItems;
     public List<Item> items;
-    public Set<Integer> gene_ids;
 
     private Knapsack()
     {
-        this.gene_ids = new HashSet<>();
         this.items = new LinkedList<>();
     }
 
@@ -23,20 +21,14 @@ public class Knapsack implements Comparable<Knapsack>
     {
         this();
         for (int i = 0; i < representation.size() - 1; i++)
-        {
             if (representation.get(i))
-            {
-                gene_ids.add(i);
                 items.add(allItems.get(i));
-            }
-        }
     }
 
     public Knapsack(Representation representation)
     {
         this(representation.rep);
     }
-
 
     public boolean isValid() { return getWeight() <= Configuration.instance.maximumCapacity; }
 

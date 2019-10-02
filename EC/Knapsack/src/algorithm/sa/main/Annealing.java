@@ -1,6 +1,6 @@
 package algorithm.sa.main;
 
-import algorithm.base.Representation;
+import algorithm.sa.base.Particle;
 import main.Configuration;
 
 public class Annealing
@@ -8,8 +8,8 @@ public class Annealing
     public double coolingRate;
     public double temp;
 
-    public Representation currentSolution;
-    public Representation bestSolution;
+    public Particle currentSolution;
+    public Particle bestSolution;
 
     public Annealing()
     {
@@ -18,8 +18,8 @@ public class Annealing
         this.temp = Configuration.instance.initialTemp;
         this.coolingRate = Configuration.instance.coolingRate;
 
-        currentSolution = new Representation();
-        bestSolution = new Representation(currentSolution.rep);
+        currentSolution = new Particle();
+        bestSolution = new Particle(currentSolution.rep);
 
     }
 
@@ -34,15 +34,15 @@ public class Annealing
         }
     }
 
-    public Representation randomNeighbour()
+    public Particle randomNeighbour()
     {
-        Representation nextSolution = currentSolution.mutate();
+        Particle nextSolution = currentSolution.move();
         for (int i = 0; i < Configuration.instance.validAttempts; i++)
         {
             if (nextSolution.isValid())
                 return nextSolution;
 
-            nextSolution = currentSolution.mutate();
+            nextSolution = currentSolution.move();
         }
 
         System.out.println("Could not find valid solution mutation");
@@ -51,7 +51,7 @@ public class Annealing
 
     public void step()
     {
-        Representation nextSolution = randomNeighbour();
+        Particle nextSolution = randomNeighbour();
 
         int currentFitness = currentSolution.getValue();
         int nextFitness = nextSolution.getValue();

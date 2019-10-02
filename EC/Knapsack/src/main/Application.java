@@ -3,6 +3,7 @@ package main;
 import algorithm.aco.base.AntColony;
 import algorithm.base.Item;
 import algorithm.base.Knapsack;
+import algorithm.ga.main.GARunner;
 import algorithm.sa.main.Annealing;
 
 import java.io.BufferedReader;
@@ -18,13 +19,13 @@ public class Application
     // -algorithm [ga | sa | aco | pso | best-algorithm] -configuration [default | best] -search_best_configuration
     public static void main(String... args)
     {
-        readGenes();
+        readItems();
 //        GARunner.run();
 //        new Annealing().run();
         new AntColony().run();
     }
 
-    public static void readGenes()
+    public static void readItems()
     {
         Knapsack.allItems = new ArrayList<>(Configuration.instance.numberOfItems);
 

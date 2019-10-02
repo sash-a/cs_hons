@@ -2,6 +2,7 @@ package algorithm.ga.evolution.selection;
 
 import algorithm.base.Representation;
 import algorithm.base.Knapsack;
+import algorithm.ga.base.Genome;
 import main.Configuration;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class Tournament extends Selector
         this.tournamentSize = tournamentSize;
     }
 
-    public Representation select()
+    public Genome select()
     {
         List<Representation> tournament = new LinkedList<>();
         HashSet<Integer> selected = new HashSet<>();
@@ -40,6 +41,6 @@ public class Tournament extends Selector
                 .map(Representation::toKnapsack)
                 .max(Comparator.comparingInt(Knapsack::getFitness)).get());
 
-        return new Representation(best.getRepresentation());
+        return new Genome(best.getRepresentation());
     }
 }

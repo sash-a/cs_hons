@@ -2,6 +2,7 @@ package algorithm.ga.evolution.selection;
 
 import algorithm.base.Representation;
 import algorithm.base.Knapsack;
+import algorithm.ga.base.Genome;
 import main.Configuration;
 
 import java.util.*;
@@ -17,23 +18,19 @@ public class RouletteWheel extends Selector
         this.selectionChances = new LinkedList<>();
     }
 
-    public Representation select()
+    public Genome select()
     {
         double probability = Configuration.instance.randomGenerator.nextDouble();
 
         for (int i = 0; i < selectionChances.size(); i++)
-        {
             if (probability <= selectionChances.get(i))
-            {
                 return genomes.get(i);
-            }
-        }
 
         System.out.println("Error: could not find an appropriate genome given the probabilities");
         return null;
     }
 
-    public void beforeSelection(List<Representation> genomes)
+    public void beforeSelection(List<Genome> genomes)
     {
         super.beforeSelection(genomes);
         selectionChances.clear();

@@ -2,6 +2,7 @@ package algorithm.ga.main;
 
 import algorithm.base.Representation;
 import algorithm.base.Knapsack;
+import algorithm.ga.base.Genome;
 import algorithm.ga.base.Population;
 import main.Configuration;
 
@@ -12,11 +13,11 @@ public class GARunner
     public static void run()
     {
         System.out.println("Running GA " + Configuration.instance.dataFilePath);
-        List<Representation> genomes = new LinkedList<>();
+        List<Genome> genomes = new LinkedList<>();
 
         // Creating genomes
         for (int i = 0; i < Configuration.instance.populationSize; i++)
-            genomes.add(new Representation());
+            genomes.add(new Genome());
 
         Population pop = new Population(genomes);
 
