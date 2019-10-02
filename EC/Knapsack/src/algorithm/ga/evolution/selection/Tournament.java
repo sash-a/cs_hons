@@ -1,8 +1,7 @@
 package algorithm.ga.evolution.selection;
 
-import algorithm.ga.base.Genome;
-import algorithm.ga.base.Phenotype;
-import algorithm.ga.main.GARunner;
+import algorithm.base.Representation;
+import algorithm.base.Knapsack;
 import main.Configuration;
 
 import java.util.*;
@@ -19,9 +18,9 @@ public class Tournament extends Selector
         this.tournamentSize = tournamentSize;
     }
 
-    public Genome select()
+    public Representation select()
     {
-        List<Genome> tournament = new LinkedList<>();
+        List<Representation> tournament = new LinkedList<>();
         HashSet<Integer> selected = new HashSet<>();
 
         for (int i = 0; i < tournamentSize; i++)
@@ -37,10 +36,10 @@ public class Tournament extends Selector
             tournament.add(genomes.get(idx));
         }
 
-        Phenotype best = (tournament.stream()
-                .map(Genome::toPheno)
-                .max(Comparator.comparingInt(Phenotype::getFitness)).get());
+        Knapsack best = (tournament.stream()
+                .map(Representation::toKnapsack)
+                .max(Comparator.comparingInt(Knapsack::getFitness)).get());
 
-        return new Genome(best.getRepresentation());
+        return new Representation(best.getRepresentation());
     }
 }

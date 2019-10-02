@@ -1,4 +1,4 @@
-package algorithm.ga.base;
+package algorithm.base;
 
 import algorithm.ga.evolution.crossover.Crossover;
 import algorithm.ga.evolution.crossover.OnePointCrossover;
@@ -6,22 +6,26 @@ import algorithm.ga.evolution.crossover.TwoPointCrossover;
 import algorithm.ga.evolution.mutation.*;
 import main.Configuration;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Genome
+/*
+    Genome in the case of a GA
+*/
+public class Representation
 {
     public List<Boolean> rep;
     private Crossover crossover;
     private Mutator mutator;
 
-    public Genome()
+    public Representation()
     {
-        rep = new LinkedList<>();
+        rep = new ArrayList<>();
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
             rep.add(Configuration.instance.randomGenerator.nextBoolean());
 
-        boolean valid = new Phenotype(rep).isValid();
+        boolean valid = new Knapsack(rep).isValid();
         while (!valid)
         {
             // Remove random genes until weight is acceptable:
@@ -42,13 +46,13 @@ public class Genome
                 }
             }
 
-            valid = new Phenotype(rep).isValid();
+            valid = new Knapsack(rep).isValid();
         }
 
         setMuatationAndCrossover();
     }
 
-    public Genome(List<Boolean> rep)
+    public Representation(List<Boolean> rep)
     {
         setMuatationAndCrossover();
         this.rep = rep;
@@ -79,24 +83,26 @@ public class Genome
         }
     }
 
-    public Genome mutate()
+    public Representation mutate()
     {
-        return new Genome(mutator.mutate(new LinkedList<>(rep)));
+        return new Representation(mutator.mutate(new LinkedList<>(rep)));
     }
 
-    public Genome crossover(Genome other)
+    public Representation crossover(Representation other)
     {
-        return new Genome(crossover.crossover(this.rep, other.rep));
+        return new Representation(crossover.crossover(this.rep, other.rep));
     }
 
-    public Phenotype toPheno()
+    public Knapsack toKnapsack()
     {
-        return new Phenotype(this);
+        return new Knapsack(this);
     }
 
-    public int getFitness() { return new Phenotype(this).getFitness(); }
+    public int getValue() { return new Knapsack(this).getFitness(); }
 
-    public boolean isValid() { return new Phenotype(this).isValid(); }
+    public int getWeight() { return new Knapsack(this).getWeight(); }
+
+    public boolean isValid() { return new Knapsack(this).isValid(); }
 
     @Override
     public String toString()

@@ -1,9 +1,7 @@
 package algorithm.ga.evolution.selection;
 
-import algorithm.ga.base.Gene;
-import algorithm.ga.base.Genome;
-import algorithm.ga.base.Phenotype;
-import algorithm.ga.main.GARunner;
+import algorithm.base.Representation;
+import algorithm.base.Knapsack;
 import main.Configuration;
 
 import java.util.*;
@@ -19,7 +17,7 @@ public class RouletteWheel extends Selector
         this.selectionChances = new LinkedList<>();
     }
 
-    public Genome select()
+    public Representation select()
     {
         double probability = Configuration.instance.randomGenerator.nextDouble();
 
@@ -35,26 +33,26 @@ public class RouletteWheel extends Selector
         return null;
     }
 
-    public void beforeSelection(List<Genome> genomes)
+    public void beforeSelection(List<Representation> genomes)
     {
         super.beforeSelection(genomes);
         selectionChances.clear();
-        List<Phenotype> phenotypes = genomes.stream().map(Genome::toPheno).sorted(Collections.reverseOrder()).collect(Collectors.toList());
+        List<Knapsack> phenotypes = genomes.stream().map(Representation::toKnapsack).sorted(Collections.reverseOrder()).collect(Collectors.toList());
 
         // Getting the selection probabilities
         double totalFitness = getTotalFitness(phenotypes);
         double fitnessSum = 0;
 
-        for (Phenotype p : phenotypes)
+        for (Knapsack p : phenotypes)
         {
             fitnessSum += p.getFitness() / totalFitness;
             selectionChances.add(fitnessSum);
         }
         // Ordering selection chances and genomes
-        Comparator<Genome> genomeComparator = Comparator.comparing(Genome::toPheno, Collections.reverseOrder());
+        Comparator<Representation> genomeComparator = Comparator.comparing(Representation::toKnapsack, Collections.reverseOrder());
         this.genomes.sort(genomeComparator);
     }
 
-    private int getTotalFitness(List<Phenotype> phenotypes)
-    { return phenotypes.stream().map(Phenotype::getFitness).reduce(0, Integer::sum); }
+    private int getTotalFitness(List<Knapsack> phenotypes)
+    { return phenotypes.stream().map(Knapsack::getFitness).reduce(0, Integer::sum); }
 }

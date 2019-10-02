@@ -1,8 +1,6 @@
 package algorithm.sa.main;
 
-import algorithm.ga.base.Genome;
-import algorithm.ga.evolution.mutation.BitFlip;
-import algorithm.ga.evolution.mutation.Mutator;
+import algorithm.base.Representation;
 import main.Configuration;
 
 public class Annealing
@@ -10,8 +8,8 @@ public class Annealing
     public double coolingRate;
     public double temp;
 
-    public Genome currentSolution;
-    public Genome bestSolution;
+    public Representation currentSolution;
+    public Representation bestSolution;
 
     public Annealing()
     {
@@ -20,8 +18,8 @@ public class Annealing
         this.temp = Configuration.instance.initialTemp;
         this.coolingRate = Configuration.instance.coolingRate;
 
-        currentSolution = new Genome();
-        bestSolution = new Genome(currentSolution.rep);
+        currentSolution = new Representation();
+        bestSolution = new Representation(currentSolution.rep);
 
     }
 
@@ -36,9 +34,9 @@ public class Annealing
         }
     }
 
-    public Genome randomNeighbour()
+    public Representation randomNeighbour()
     {
-        Genome nextSolution = currentSolution.mutate();
+        Representation nextSolution = currentSolution.mutate();
         for (int i = 0; i < Configuration.instance.validAttempts; i++)
         {
             if (nextSolution.isValid())
@@ -53,15 +51,15 @@ public class Annealing
 
     public void step()
     {
-        Genome nextSolution = randomNeighbour();
+        Representation nextSolution = randomNeighbour();
 
-        int currentFitness = currentSolution.getFitness();
-        int nextFitness = nextSolution.getFitness();
+        int currentFitness = currentSolution.getValue();
+        int nextFitness = nextSolution.getValue();
 
         if (accept(currentFitness, nextFitness))
             currentSolution = nextSolution;
 
-        if (nextFitness > bestSolution.getFitness())
+        if (nextFitness > bestSolution.getValue())
             bestSolution = nextSolution;
 
         temp *= coolingRate;
@@ -75,8 +73,8 @@ public class Annealing
             gen++;
             System.out.println("\nGeneration: " + gen +
                     "\nTemperature: " + temp +
-                    "\nCurrent: " + currentSolution.getFitness() +
-                    "\nBest: " + bestSolution.getFitness());
+                    "\nCurrent: " + currentSolution.getValue() +
+                    "\nBest: " + bestSolution.getValue());
             step();
         }
     }

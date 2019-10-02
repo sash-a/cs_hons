@@ -1,14 +1,10 @@
 package algorithm.ga.main;
 
-import algorithm.ga.base.Gene;
-import algorithm.ga.base.Genome;
-import algorithm.ga.base.Phenotype;
+import algorithm.base.Representation;
+import algorithm.base.Knapsack;
 import algorithm.ga.base.Population;
 import main.Configuration;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 public class GARunner
@@ -16,11 +12,11 @@ public class GARunner
     public static void run()
     {
         System.out.println("Running GA " + Configuration.instance.dataFilePath);
-        List<Genome> genomes = new LinkedList<>();
+        List<Representation> genomes = new LinkedList<>();
 
         // Creating genomes
         for (int i = 0; i < Configuration.instance.populationSize; i++)
-            genomes.add(new Genome());
+            genomes.add(new Representation());
 
         Population pop = new Population(genomes);
 
@@ -32,9 +28,9 @@ public class GARunner
         }
 
         // Printing out best individual
-        Phenotype best = (pop.genomes.stream()
-                .map(Genome::toPheno)
-                .max(Comparator.comparingInt(Phenotype::getFitness)).get());
+        Knapsack best = (pop.genomes.stream()
+                .map(Representation::toKnapsack)
+                .max(Comparator.comparingInt(Knapsack::getFitness)).get());
 
         System.out.println("Final fittest individual" +
                 "\nFitness:" + best.getFitness() +

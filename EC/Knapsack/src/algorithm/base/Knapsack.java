@@ -1,22 +1,25 @@
-package algorithm.ga.base;
+package algorithm.base;
 
 import main.Configuration;
 
 import java.util.*;
 
-public class Phenotype implements Comparable<Phenotype>
+/*
+    Phenotype in the case of a GA
+ */
+public class Knapsack implements Comparable<Knapsack>
 {
-    public static List<Gene> allGenes;
-    public List<Gene> genes;
+    public static List<Item> allItems;
+    public List<Item> items;
     public Set<Integer> gene_ids;
 
-    private Phenotype()
+    private Knapsack()
     {
         this.gene_ids = new HashSet<>();
-        this.genes = new LinkedList<>();
+        this.items = new LinkedList<>();
     }
 
-    public Phenotype(List<Boolean> representation)
+    public Knapsack(List<Boolean> representation)
     {
         this();
         for (int i = 0; i < representation.size() - 1; i++)
@@ -24,31 +27,31 @@ public class Phenotype implements Comparable<Phenotype>
             if (representation.get(i))
             {
                 gene_ids.add(i);
-                genes.add(allGenes.get(i));
+                items.add(allItems.get(i));
             }
         }
     }
 
-    public Phenotype(Genome genome)
+    public Knapsack(Representation representation)
     {
-        this(genome.rep);
+        this(representation.rep);
     }
 
 
     public boolean isValid() { return getWeight() <= Configuration.instance.maximumCapacity; }
 
-    public int getFitness() { return genes.stream().map(g -> g.value).reduce(0, Integer::sum); }
+    public int getFitness() { return items.stream().map(g -> g.value).reduce(0, Integer::sum); }
 
-    public int getWeight() { return genes.stream().map(g -> g.weight).reduce(0, Integer::sum); }
+    public int getWeight() { return items.stream().map(g -> g.weight).reduce(0, Integer::sum); }
 
     public List<Boolean> getRepresentation()
     {
         List<Boolean> rep = new LinkedList<>();
-        Comparator<Gene> cmp = Comparator.comparingInt(o -> o.id);
-        genes.sort(cmp);
+        Comparator<Item> cmp = Comparator.comparingInt(o -> o.id);
+        items.sort(cmp);
 
         int prevID = 0;
-        for (Gene g : genes)
+        for (Item g : items)
         {
             for (int i = prevID; i < g.id - 1; i++)
             {
@@ -68,11 +71,11 @@ public class Phenotype implements Comparable<Phenotype>
     @Override
     public String toString()
     {
-        return genes.toString();
+        return items.toString();
     }
 
     @Override
-    public int compareTo(Phenotype other)
+    public int compareTo(Knapsack other)
     {
         return Integer.compare(this.getFitness(), other.getFitness());
     }

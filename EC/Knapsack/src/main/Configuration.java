@@ -42,6 +42,14 @@ public enum Configuration
 
     public double initialTemp = 1000.0;
     public double minTemp = 1.0;
-    public double coolingRate = 0.997;
+    public double coolingRate = 0.99997;
 
+    // ------------------------ ACO config options ------------------------
+
+    public double alpha = 1.2;
+    public double beta = 1;
+    public double evaporationRate = 0.7;
+
+    public final double initialPheromoneValue = 2;
+    public final int numAnts = 10;
 }

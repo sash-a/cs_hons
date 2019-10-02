@@ -1,8 +1,8 @@
 package main;
 
-import algorithm.ga.base.Gene;
-import algorithm.ga.base.Phenotype;
-import algorithm.ga.main.GARunner;
+import algorithm.aco.base.AntColony;
+import algorithm.base.Item;
+import algorithm.base.Knapsack;
 import algorithm.sa.main.Annealing;
 
 import java.io.BufferedReader;
@@ -20,12 +20,13 @@ public class Application
     {
         readGenes();
 //        GARunner.run();
-        new Annealing().run();
+//        new Annealing().run();
+        new AntColony().run();
     }
 
     public static void readGenes()
     {
-        Phenotype.allGenes = new ArrayList<>(Configuration.instance.numberOfItems);
+        Knapsack.allItems = new ArrayList<>(Configuration.instance.numberOfItems);
 
         try
         {
@@ -35,7 +36,7 @@ public class Application
             while (line != null)
             {
                 int[] attributes = Arrays.stream(line.split(";")).map(Integer::parseInt).mapToInt(x -> x).toArray();
-                Phenotype.allGenes.add(new Gene(attributes[0], attributes[1], attributes[2]));
+                Knapsack.allItems.add(new Item(attributes[0], attributes[1], attributes[2]));
                 line = f.readLine();
             }
 

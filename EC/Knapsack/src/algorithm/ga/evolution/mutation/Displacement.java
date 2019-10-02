@@ -1,6 +1,5 @@
 package algorithm.ga.evolution.mutation;
 
-import algorithm.ga.base.Genome;
 import main.Configuration;
 
 import java.util.LinkedList;
