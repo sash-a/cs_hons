@@ -32,7 +32,7 @@ public class Population
         selector = new RouletteWheel();
     }
 
-    public void step()
+    public Genome step()
     {
         List<Genome> children = new LinkedList<>();
         for (int i = 0; i < Configuration.instance.populationSize - Configuration.instance.elite; i++)
@@ -54,10 +54,11 @@ public class Population
                 .map(phenotype -> new Genome(phenotype.getRepresentation()))
                 .collect(Collectors.toCollection(LinkedList::new));
 
-        System.out.println("Fittest individual " + phenotypes.get(0).getFitness());
-
         // Adding all children to the next generation
         genomes.addAll(children);
+
+
+        return genomes.get(0);
     }
 
     private Genome mutateChild(Genome child)

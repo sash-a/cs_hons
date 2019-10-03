@@ -9,7 +9,7 @@ public class Insertion extends Mutator
     @Override
     public List<Boolean> mutate(List<Boolean> rep)
     {
-        System.out.println("Insertion mutation");
+        // Move value at position 2 to position 1
         int pos1 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
         int pos2 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
 

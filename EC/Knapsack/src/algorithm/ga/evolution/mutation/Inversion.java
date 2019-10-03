@@ -9,23 +9,17 @@ public class Inversion extends Mutator
     @Override
     public List<Boolean> mutate(List<Boolean> rep)
     {
-        System.out.println("Inversion mutation");
         int pos1 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
         int pos2 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
 
-        int first, last;
         if (pos1 > pos2)
         {
-            first = pos2;
-            last = pos1;
-        } else
-        {
-            first = pos1;
-            last = pos2;
+            int temp = pos1;
+            pos1 = pos2;
+            pos2 = temp;
         }
 
-        System.out.println("first pos" + first + " last pos " + last);
-        for (int i = first; i < last; i++)
+        for (int i = pos1; i < pos2; i++)
             rep.set(i, !rep.get(i));
 
         return rep;

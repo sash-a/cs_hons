@@ -8,7 +8,6 @@ public class Exchange extends Mutator {
     @Override
     public List<Boolean> mutate(List<Boolean> rep)
     {
-        System.out.println("Exchange mutation");
         int pos1 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
         int pos2 = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
 

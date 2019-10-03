@@ -20,18 +20,23 @@ public class GARunner
             genomes.add(new Genome());
 
         Population pop = new Population(genomes);
+        Genome bestGenome = pop.genomes.get(0);
 
         // Running evolution
         for (int i = 0; i < Configuration.instance.generations; i++)
         {
-            System.out.println("Generation " + i);
-            pop.step();
+            Genome fittest = pop.step();
+            if (fittest.getValue() > bestGenome.getValue())
+            {
+                System.out.println("Generation " + i + ". New best fitness: " + fittest.getValue() + ", improved on: " + bestGenome.getValue());
+                bestGenome = fittest;
+            }
         }
 
-        // Printing out best individual
-        Knapsack best = (pop.genomes.stream()
+        // Printing out final best individual
+        Knapsack best = pop.genomes.stream()
                 .map(Representation::toKnapsack)
-                .max(Comparator.comparingInt(Knapsack::getFitness)).get());
+                .max(Comparator.comparingInt(Knapsack::getFitness)).get();
 
         System.out.println("Final fittest individual" +
                 "\nFitness:" + best.getFitness() +

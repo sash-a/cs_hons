@@ -11,6 +11,13 @@ public class BitFlip extends Mutator
     {
         int pos = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
         rep.set(pos, !rep.get(pos));
+
         return rep;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Bitlfip";
     }
 }

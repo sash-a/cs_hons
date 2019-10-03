@@ -59,7 +59,7 @@ public class Ant implements Comparable<Ant>
             double totalPheromonesRatio = 0.0;
             for (Integer visitableItem : notVisited)
                 totalPheromonesRatio += Math.pow(pheromones[currentItem][visitableItem], Configuration.instance.alpha) /
-                        Math.pow(Knapsack.allItems.get(visitableItem).value, Configuration.instance.beta);
+                        Math.pow(Knapsack.allItems[visitableItem].value, Configuration.instance.beta);
 
             double probability = 0.0;
             double rand = Configuration.instance.randomGenerator.nextDouble();
@@ -71,7 +71,7 @@ public class Ant implements Comparable<Ant>
                 int possibleItem = itr.next();
                 // Probability of choosing this item
                 probability += Math.pow(pheromones[currentItem][possibleItem], Configuration.instance.alpha) /
-                        Math.pow(Knapsack.allItems.get(possibleItem).value, Configuration.instance.beta) /
+                        Math.pow(Knapsack.allItems[possibleItem].value, Configuration.instance.beta) /
                         totalPheromonesRatio;
 
                 if (rand < probability)

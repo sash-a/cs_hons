@@ -14,7 +14,7 @@ public enum Configuration
 
     public MersenneTwisterFast randomGenerator = new MersenneTwisterFast(System.nanoTime());
 
-    public int numberOfItems = 150;
+    public int numberOfItems = 10;//150;
     public int maximumCapacity = 822;
     public int bestKnownOptimum = 1013;
 
@@ -32,11 +32,11 @@ public enum Configuration
     public double mutationChance = 0.1;
     public int populationSize = 50;
     public int elite = 1;
-    public int generations = 100000;
+    public int generations = 2;
     public int validAttempts = 1000;
 
-    public int crossoverPoints = 1;
-    public MutationType mutationType = MutationType.BITFLIP;
+    public int crossoverPoints = 2;
+    public MutationType mutationType = MutationType.INVERSION;
 
     // ------------------------ SA config options ------------------------
 

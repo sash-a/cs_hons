@@ -9,7 +9,7 @@ import java.util.*;
  */
 public class Knapsack implements Comparable<Knapsack>
 {
-    public static List<Item> allItems;
+    public static Item [] allItems;
     public List<Item> items;
 
     private Knapsack()
@@ -22,7 +22,7 @@ public class Knapsack implements Comparable<Knapsack>
         this();
         for (int i = 0; i < representation.size() - 1; i++)
             if (representation.get(i))
-                items.add(allItems.get(i));
+                items.add(allItems[i]);
     }
 
     public Knapsack(Representation representation)

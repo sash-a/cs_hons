@@ -20,24 +20,25 @@ public class Application
     public static void main(String... args)
     {
         readItems();
-//        GARunner.run();
-        new Annealing().run();
+        GARunner.run();
+//        new Annealing().run();
 //        new AntColony().run();
     }
 
     public static void readItems()
     {
-        Knapsack.allItems = new ArrayList<>(Configuration.instance.numberOfItems);
+        Knapsack.allItems = new Item[Configuration.instance.numberOfItems];
+        int i = 0;
 
         try
         {
             BufferedReader f = new BufferedReader(new FileReader(Configuration.instance.dataFilePath));
             f.readLine(); // Skipping first line
             String line = f.readLine();
-            while (line != null)
+            while (line != null && i < Configuration.instance.numberOfItems)
             {
                 int[] attributes = Arrays.stream(line.split(";")).map(Integer::parseInt).mapToInt(x -> x).toArray();
-                Knapsack.allItems.add(new Item(attributes[0], attributes[1], attributes[2]));
+                Knapsack.allItems[i++] = new Item(attributes[0], attributes[1], attributes[2]);
                 line = f.readLine();
             }
 
