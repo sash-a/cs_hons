@@ -14,10 +14,7 @@ public class Ant implements Comparable<Ant>
 
     public int knapsackValue;
 
-    public Ant()
-    {
-        reset();
-    }
+    public Ant() { reset(); }
 
     public Ant(Ant other)
     {

@@ -50,15 +50,15 @@ public class AntColony
         decay();
 
         if (globalBestAnt == null || bestAnt.knapsackValue > globalBestAnt.knapsackValue)
+        {
             globalBestAnt = new Ant(bestAnt);
+            System.out.println("New best value: " + globalBestAnt.knapsackValue);
+        }
     }
 
     public void run()
     {
         for (int i = 0; i < Configuration.instance.generations; i++)
-        {
             step();
-            System.out.println(globalBestAnt.knapsackValue + "");
-        }
     }
 }

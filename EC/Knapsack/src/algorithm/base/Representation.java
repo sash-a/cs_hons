@@ -58,5 +58,4 @@ public class Representation
     {
         return this.rep.toString();
     }
-
 }
