@@ -26,7 +26,7 @@ public enum Configuration
         DISPLACEMENT,
         EXCHANGE,
         INSERTION,
-        INVERRSION
+        INVERSION
     }
 
     public double mutationChance = 0.1;
@@ -40,9 +40,9 @@ public enum Configuration
 
     // ------------------------ SA config options ------------------------
 
-    public double initialTemp = 1000.0;
+    public double initialTemp = 100000000.0;
     public double minTemp = 1.0;
-    public double coolingRate = 0.99997;
+    public double coolingRate = 0.999997;
 
     // ------------------------ ACO config options ------------------------
 

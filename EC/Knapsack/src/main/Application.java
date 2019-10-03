@@ -21,8 +21,8 @@ public class Application
     {
         readItems();
 //        GARunner.run();
-//        new Annealing().run();
-        new AntColony().run();
+        new Annealing().run();
+//        new AntColony().run();
     }
 
     public static void readItems()

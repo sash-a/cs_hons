@@ -23,15 +23,14 @@ public class Annealing
 
     }
 
-    public boolean accept(int currentFitness, int newFitness)
+    public boolean accept(double currentEnergy, double newEnergy)
     {
-        if (newFitness < currentFitness)
+        double energyDelta = newEnergy - currentEnergy;
+
+        if (energyDelta <= 0)
             return true;
         else
-        {
-            int delta = currentFitness - newFitness;
-            return Math.exp(delta / this.temp) > Configuration.instance.randomGenerator.nextDouble();
-        }
+            return Math.exp(-energyDelta / this.temp) > Configuration.instance.randomGenerator.nextDouble();
     }
 
     public Particle randomNeighbour()
@@ -45,22 +44,26 @@ public class Annealing
             nextSolution = currentSolution.move();
         }
 
-        System.out.println("Could not find valid solution mutation");
+        System.out.println("Could not find valid neighbour solution");
         return currentSolution;
     }
 
-    public void step()
+    public void step(int gen)
     {
         Particle nextSolution = randomNeighbour();
 
         int currentFitness = currentSolution.getValue();
         int nextFitness = nextSolution.getValue();
 
-        if (accept(currentFitness, nextFitness))
+        // TODO what is the best way to minimize these?
+        if (accept(1 / (double) currentFitness, 1 / (double) nextFitness))
             currentSolution = nextSolution;
 
         if (nextFitness > bestSolution.getValue())
+        {
+            System.out.println("New best solution: " + nextFitness + ", compared to old fitness: " + bestSolution.getValue() + " (" + gen + ")");
             bestSolution = nextSolution;
+        }
 
         temp *= coolingRate;
     }
@@ -68,14 +71,14 @@ public class Annealing
     public void run()
     {
         int gen = 0;
-        while (temp > Configuration.instance.minTemp && gen < Configuration.instance.generations)
+        while (temp > Configuration.instance.minTemp)
         {
             gen++;
-            System.out.println("\nGeneration: " + gen +
-                    "\nTemperature: " + temp +
-                    "\nCurrent: " + currentSolution.getValue() +
-                    "\nBest: " + bestSolution.getValue());
-            step();
+//            System.out.println("\nGeneration: " + gen +
+//                    "\nTemperature: " + temp +
+//                    "\nCurrent: " + currentSolution.getValue() +
+//                    "\nBest: " + bestSolution.getValue());
+            step(gen);
         }
     }
 

@@ -26,8 +26,7 @@ public class Genome extends Representation
         super(rep);
         setMutationAndCrossover();
     }
-
-
+    
     private void setMutationAndCrossover()
     {
         assert Configuration.instance.crossoverPoints == 1 || Configuration.instance.crossoverPoints == 2;
@@ -46,7 +45,7 @@ public class Genome extends Representation
                 mutator = new Exchange();
             case INSERTION:
                 mutator = new Insertion();
-            case INVERRSION:
+            case INVERSION:
                 mutator = new Inversion();
             default:
                 mutator = new BitFlip();
