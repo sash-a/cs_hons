@@ -9,21 +9,22 @@ import java.util.List;
 
 public class Vector
 {
-    private int x, y, z;
-    private int xlim, ylim, zlim;
+    private double x, y, z;
+    private long xlim, ylim, zlim;
 
     private void init()
     {
         double third = Configuration.instance.numberOfItems / 3.0;
-
         if (Configuration.instance.numberOfItems % 3 == 0)
-            xlim = ylim = zlim = (int) Math.pow(2, third);
+            xlim = ylim = zlim = (long) Math.pow(2, third);
         else
         {
-            xlim = (int) Math.pow(2, Math.floor(third));
-            ylim = (int) Math.pow(2, Math.round(third));
-            zlim = (int) Math.pow(2, Math.ceil(third));
+            xlim = (long) Math.pow(2, Math.floor(third));
+            ylim = (long) Math.pow(2, Math.round(third));
+            zlim = (long) Math.pow(2, Math.ceil(third));
         }
+
+        System.out.println("Worked out limits: " + xlim + " " + ylim + " " + zlim + " for " + Configuration.instance.numberOfItems);
     }
 
     public Vector(int xlim, int ylim, int zlim)
@@ -143,16 +144,22 @@ public class Vector
     public List<Boolean> toBoolList()
     {
         List<Boolean> rep = new ArrayList<>();
-        rep.addAll(intToBoolList(x));
-        rep.addAll(intToBoolList(y));
-        rep.addAll(intToBoolList(z));
+        rep.addAll(intToBoolList((int) x));
+        rep.addAll(intToBoolList((int) y));
+        rep.addAll(intToBoolList((int) z));
 
         return rep;
     }
 
-    public int getX() { return x; }
+    public double getX() { return x; }
 
-    public int getY() { return y; }
+    public double getY() { return y; }
 
-    public int getZ() { return z; }
+    public double getZ() { return z; }
+
+    @Override
+    public String toString()
+    {
+        return x + ", " + y + ", " + z;
+    }
 }

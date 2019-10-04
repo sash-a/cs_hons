@@ -16,6 +16,7 @@ public class Particle extends Representation implements Comparable<Particle>
     {
         super();
         pos = new Vector(rep);
+        pos.wrap();
         bestPosition = new Vector(pos);
         bestValue = 0;
         velocity = new Vector(10, 10, 10);
@@ -43,33 +44,36 @@ public class Particle extends Representation implements Comparable<Particle>
     {
         boolean valid = false;
 
+        Vector possiblePos = new Vector(pos);
         // TODO test
         while (!valid)
         {
-
-            Vector inertia = velocity.mul(Configuration.instance.inertia);
+            Vector inertia = new Vector(velocity).mul(Configuration.instance.inertia);
             Vector local = new Vector(bestPosition)
                     .sub(pos)
-                    .normalize() // TODO should this be done? Would it be better to mutate a bigger magnitude?
+//                    .normalize() // TODO should this be done? Would it be better to mutate a bigger magnitude?
                     .mul(Configuration.instance.localForce)
                     .mul(Configuration.instance.randomGenerator.nextDouble());
 
             Vector global = new Vector(globalBest)
                     .sub(pos)
-                    .normalize() // TODO should this be done? Would it be better to mutate a bigger magnitude?
+//                    .normalize() // TODO should this be done? Would it be better to mutate a bigger magnitude?
                     .mul(Configuration.instance.globalForce)
                     .mul(Configuration.instance.randomGenerator.nextDouble());
 
             velocity = inertia.add(local).add(global);
-            Vector possiblePos = new Vector(pos).add(velocity);
+            possiblePos = new Vector(pos).add(velocity);
 
             if (Configuration.instance.useClamp)
-                pos.clamp();
+                possiblePos.clamp();
             else
-                pos.wrap();
+                possiblePos.wrap();
 
             valid = new Representation(possiblePos.toBoolList()).isValid();
         }
+
+        pos = possiblePos;
+        update();
 
         int currVal = getValue();
         if (currVal > bestValue)

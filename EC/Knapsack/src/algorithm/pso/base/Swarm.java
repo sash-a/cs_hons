@@ -24,6 +24,7 @@ public class Swarm
     public void step()
     {
         Particle best = Arrays.stream(particles).max(Particle::compareTo).get();
+//        System.out.println("best " + best.bestValue + " " + best.getValue());
         if (best.getValue() > bestParticle.bestValue)
         {
             bestParticle = new Particle(best);
@@ -31,7 +32,10 @@ public class Swarm
         }
 
         for (Particle p : particles)
+        {
             p.move(bestParticle.pos);
+//            System.out.println(p.pos);
+        }
 
 //        System.out.println("done step");
     }

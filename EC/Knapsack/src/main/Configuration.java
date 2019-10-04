@@ -32,7 +32,7 @@ public enum Configuration
     public double mutationChance = 0.1;
     public int populationSize = 50;
     public int elite = 1;
-    public int generations = 50000;
+    public int generations = 1000000;
     public int validAttempts = 1000;
 
     public int crossoverPoints = 2;
@@ -51,7 +51,7 @@ public enum Configuration
     public double evaporationRate = 0.7;
 
     public final double initialPheromoneValue = 2;
-    public final int numAnts = 10;
+    public final int numAnts = 5;
 
     // ------------------------ PSO config options ------------------------
 
