@@ -18,18 +18,18 @@ public class Swarm
 
     public void step(int gen)
     {
-        for (Particle p : particles)
-            p.calcFitness();
+        for (Particle p : particles) p.calcFitness();
 
         for (Particle p : particles)
+        {
             if (p.bestFitness > gbestParticle.bestFitness)
             {
                 System.out.println("New best: " + p.bestFitness + " at generation " + gen);
                 gbestParticle = new Particle(p);
             }
+        }
 
-        for (Particle p : particles)
-            p.move(gbestParticle.pos);
+        for (Particle p : particles) p.move(gbestParticle.pos);
     }
 
     public void run()
@@ -37,6 +37,6 @@ public class Swarm
         for (int i = 0; i < Configuration.instance.generations; i++)
             step(i);
 
-        System.out.println("Final best: " + gbestParticle.bestFitness);
+        System.out.println("Final best - value: " + gbestParticle.bestFitness + " weight: " + gbestParticle.getWeight());
     }
 }

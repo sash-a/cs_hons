@@ -56,6 +56,7 @@ public class Particle implements Comparable<Particle>
         bestPosition = Arrays.copyOf(other.bestPosition, other.bestPosition.length);
         bestFitness = other.bestFitness;
         velocity = Arrays.copyOf(other.velocity, other.velocity.length);
+        fitness = other.fitness;
     }
 
     public void move(int[] globalBest)
@@ -74,7 +75,7 @@ public class Particle implements Comparable<Particle>
         }
     }
 
-    public int calcFitness()
+    public void calcFitness()
     {
         fitness = getValue();
         if (getWeight() > Configuration.instance.maximumCapacity)
@@ -85,9 +86,10 @@ public class Particle implements Comparable<Particle>
             bestFitness = fitness;
             bestPosition = Arrays.copyOf(pos, pos.length);
         }
-
-        return fitness;
     }
+
+    public boolean isValid() { return getWeight() < Configuration.instance.maximumCapacity; }
+
 
     public int getWeight()
     {
@@ -99,7 +101,6 @@ public class Particle implements Comparable<Particle>
         return weight;
     }
 
-    public boolean isValid() { return getWeight() < Configuration.instance.maximumCapacity; }
 
     public int getValue()
     {
@@ -111,7 +112,7 @@ public class Particle implements Comparable<Particle>
         return value;
     }
 
-    public static double sig(double n) { return 1 / Math.exp(-n); }
+    public static double sig(double n) { return 1 / (1 + Math.exp(-n)); }
 
     @Override
     public int compareTo(Particle other) { return Integer.compare(this.getValue(), other.getValue()); }
