@@ -47,11 +47,27 @@ public class Representation
         return new Knapsack(this);
     }
 
-    public int getValue() { return new Knapsack(this).getFitness(); }
+    public int getValue()
+    {
+        int value = 0;
+        for (int i = 0; i < Configuration.instance.numberOfItems; i++)
+            if (rep.get(i))
+                value += Knapsack.allItems[i].value;
 
-    public int getWeight() { return new Knapsack(this).getWeight(); }
+        return value;
+    }
 
-    public boolean isValid() { return new Knapsack(this).isValid(); }
+    public int getWeight()
+    {
+        int weight = 0;
+        for (int i = 0; i < Configuration.instance.numberOfItems; i++)
+            if (rep.get(i))
+                weight += Knapsack.allItems[i].weight;
+
+        return weight;
+    }
+
+    public boolean isValid() { return getWeight() < Configuration.instance.maximumCapacity; }
 
     @Override
     public String toString()

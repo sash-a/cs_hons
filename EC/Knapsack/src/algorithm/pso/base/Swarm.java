@@ -2,8 +2,6 @@ package algorithm.pso.base;
 
 import main.Configuration;
 
-import java.util.Arrays;
-
 public class Swarm
 {
     public Particle[] particles;
@@ -15,33 +13,30 @@ public class Swarm
         for (int i = 0; i < Configuration.instance.numParticles; i++)
             particles[i] = new Particle();
 
-        gbestParticle = particles[0];
+        gbestParticle = new Particle();
     }
 
-    public void step()
+    public void step(int gen)
     {
-        Particle best = Arrays.stream(particles).max(Particle::compareTo).get();
-//        System.out.println("best " + best.bestValue + " " + best.getValue());
-        if (best.getValue() > gbestParticle.bestValue)
-        {
-            gbestParticle = new Particle(best);
-            System.out.println("New best value: " + gbestParticle.bestValue);
-        }
+        for (Particle p : particles)
+            p.calcFitness();
 
         for (Particle p : particles)
-        {
-            p.move(gbestParticle.pos);
-//            System.out.println(p.pos);
-        }
+            if (p.bestFitness > gbestParticle.bestFitness)
+            {
+                System.out.println("New best: " + p.bestFitness + " at generation " + gen);
+                gbestParticle = new Particle(p);
+            }
 
-//        System.out.println("done step");
+        for (Particle p : particles)
+            p.move(gbestParticle.pos);
     }
 
     public void run()
     {
         for (int i = 0; i < Configuration.instance.generations; i++)
-            step();
+            step(i);
 
-        System.out.println("Final best: " + gbestParticle.bestValue);
+        System.out.println("Final best: " + gbestParticle.bestFitness);
     }
 }

@@ -14,9 +14,10 @@ public enum Configuration
 
     public MersenneTwisterFast randomGenerator = new MersenneTwisterFast(System.nanoTime());
 
-    public int numberOfItems = 5;
+    public int numberOfItems = 150;
     public int maximumCapacity = 822;
     public int bestKnownOptimum = 1013;
+    public int generations = 100000;
 
     // ------------------------ GA config options ------------------------
 
@@ -32,7 +33,6 @@ public enum Configuration
     public double mutationChance = 0.1;
     public int populationSize = 50;
     public int elite = 1;
-    public int generations = 1;
     public int validAttempts = 1000;
 
     public int crossoverPoints = 2;
@@ -59,7 +59,7 @@ public enum Configuration
     public double localForce = 1; // Cognitive factor
     public double globalForce = 1; // Social factor
 
-    public int numParticles = 5;
+    public int numParticles = 20;
 
     public boolean useClamp = false; // Implementation: wrap (modulo) or clamp (min/max)
     public boolean normalize = true; // Normalize the velocity vectors before multiplying by constants

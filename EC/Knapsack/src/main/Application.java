@@ -6,7 +6,6 @@ import algorithm.base.Knapsack;
 import algorithm.base.Representation;
 import algorithm.ga.main.GARunner;
 import algorithm.pso.base.Swarm;
-import algorithm.pso.base.Vector;
 import algorithm.sa.main.Annealing;
 
 import java.io.BufferedReader;
@@ -23,36 +22,14 @@ public class Application
     // -algorithm [ga | sa | aco | pso | best-algorithm] -configuration [default | best] -search_best_configuration
     public static void main(String... args)
     {
-//        List<Boolean> b = new ArrayList<>();
-//        b.add(true);
-//        b.add(true);
-//        b.add(true);
-//
-//        b.add(true);
-//        b.add(false);
-//        b.add(false);
-//        b.add(true);
-//
-//
-//        b.add(true);
-//        b.add(true);
-//        b.add(false);
-//        b.add(true);
-//
-//
-//        Vector v = new Vector(b);
-//
-//        System.out.println(b);
-//        System.out.println(v.toBoolList());
-//        System.out.println(Vector.intToBoolList(v.getX()));
-//        System.out.println(Vector.intToBoolList(v.getY()));
-//        System.out.println(Vector.intToBoolList(v.getZ()));
+        System.out.println("psvm");
 
         readItems();
         double time = System.currentTimeMillis();
 //        GARunner.run();
 //        new Annealing().run();
 //        new AntColony().run();
+        System.out.println("above run");
         new Swarm().run();
         System.out.println("took: " + ((System.currentTimeMillis() - time) / 1000) + "s");
 
