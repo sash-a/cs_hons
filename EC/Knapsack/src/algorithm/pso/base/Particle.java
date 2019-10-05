@@ -15,20 +15,21 @@ public class Particle extends Representation implements Comparable<Particle>
     public Particle()
     {
         super();
-        pos = new Vector(rep);
-        pos.wrap();
+        pos = new Vector(rep, 1, 0);
         bestPosition = new Vector(pos);
         bestValue = 0;
-        velocity = new Vector(10, 10, 10);
+        velocity = new Vector(Configuration.instance.vmax, Configuration.instance.vmin);
+        System.out.println("Starting velocity: " + velocity);
+        System.out.println("Starting pos: " + pos);
     }
 
     public Particle(List<Boolean> rep)
     {
         super(rep);
-        pos = new Vector(rep);
+        pos = new Vector(rep, 1, 0);
         bestPosition = new Vector(pos);
         bestValue = 0;
-        velocity = new Vector(100, 100, 100);
+        velocity = new Vector(Configuration.instance.vmax, Configuration.instance.vmin);
     }
 
     public Particle(Particle other)
@@ -48,32 +49,35 @@ public class Particle extends Representation implements Comparable<Particle>
         // TODO test
         while (!valid)
         {
-            Vector inertia = new Vector(velocity).mul(Configuration.instance.inertia);
+            Vector inertia = new Vector(velocity).mul(Configuration.instance.inertia).clamp();
             Vector local = new Vector(bestPosition)
                     .sub(pos)
 //                    .normalize() // TODO should this be done? Would it be better to mutate a bigger magnitude?
                     .mul(Configuration.instance.localForce)
-                    .mul(Configuration.instance.randomGenerator.nextDouble());
+                    .mul(Configuration.instance.randomGenerator.nextDouble())
+                    .clamp();
 
             Vector global = new Vector(globalBest)
                     .sub(pos)
 //                    .normalize() // TODO should this be done? Would it be better to mutate a bigger magnitude?
                     .mul(Configuration.instance.globalForce)
-                    .mul(Configuration.instance.randomGenerator.nextDouble());
+                    .mul(Configuration.instance.randomGenerator.nextDouble())
+                    .clamp();
+            System.out.println("i: " + inertia + "\nl: " + local + "\ng: " + global);
 
             velocity = inertia.add(local).add(global);
+            System.out.println("v: " + velocity);
             possiblePos = new Vector(pos).add(velocity);
 
-            if (Configuration.instance.useClamp)
-                possiblePos.clamp();
-            else
-                possiblePos.wrap();
 
-            valid = new Representation(possiblePos.toBoolList()).isValid();
+            double rand = Configuration.instance.randomGenerator.nextDouble();
+            for (int i = 0; i < velocity.size(); i++)
+                rep.set(i, rand < sig(velocity.getVelocity().get(i)));
+
+            valid = isValid();
         }
 
         pos = possiblePos;
-        update();
 
         int currVal = getValue();
         if (currVal > bestValue)
@@ -83,8 +87,10 @@ public class Particle extends Representation implements Comparable<Particle>
         }
     }
 
-    // So that all the methods from super class work
-    public void update() { rep = pos.toBoolList(); }
+    public static double sig(double n)
+    {
+        return 1 / Math.exp(-n);
+    }
 
     @Override
     public int compareTo(Particle other)

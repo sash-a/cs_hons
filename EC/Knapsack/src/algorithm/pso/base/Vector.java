@@ -9,157 +9,104 @@ import java.util.List;
 
 public class Vector
 {
-    private double x, y, z;
-    private long xlim, ylim, zlim;
-
-    private void init()
-    {
-        double third = Configuration.instance.numberOfItems / 3.0;
-        if (Configuration.instance.numberOfItems % 3 == 0)
-            xlim = ylim = zlim = (long) Math.pow(2, third);
-        else
-        {
-            xlim = (long) Math.pow(2, Math.floor(third));
-            ylim = (long) Math.pow(2, Math.round(third));
-            zlim = (long) Math.pow(2, Math.ceil(third));
-        }
-
-        System.out.println("Worked out limits: " + xlim + " " + ylim + " " + zlim + " for " + Configuration.instance.numberOfItems);
-    }
-
-    public Vector(int xlim, int ylim, int zlim)
-    {
-        this.xlim = xlim;
-        this.ylim = ylim;
-        this.zlim = zlim;
-
-        x = Configuration.instance.randomGenerator.nextInt(xlim);
-        y = Configuration.instance.randomGenerator.nextInt(ylim);
-        z = Configuration.instance.randomGenerator.nextInt(zlim);
-    }
+    private List<Double> velocity;
+    private double vmax, vmin;
 
     public Vector(Vector other)
     {
-        this.x = other.x;
-        this.y = other.y;
-        this.z = other.z;
-
-        this.xlim = other.xlim;
-        this.ylim = other.ylim;
-        this.zlim = other.zlim;
+        this.vmax = other.vmax;
+        this.vmin = other.vmin;
+        this.velocity = new ArrayList<>(other.velocity);
     }
 
-    public Vector(List<Boolean> rep)
+    public Vector(List<Boolean> rep, double vmax, double vmin)
     {
-        init();
+        this.vmax = vmax;
+        this.vmin = vmin;
 
-        double third = Configuration.instance.numberOfItems / 3.0;
-        int numX = (int) Math.floor(third);
-        int numY = (int) Math.round(third);
-        int numZ = (int) Math.ceil(third);
-
-        x = boolListToInt(rep.subList(0, numX));
-        y = boolListToInt(rep.subList(numX, numX + numY));
-        z = boolListToInt(rep.subList(numX + numY, numX + numY + numZ));
+        this.velocity = new ArrayList<>();
+        for (int i = 0; i < rep.size(); i++) velocity.add(rep.get(i) ? 1.0 : 0.0);
     }
 
-    public static int boolListToInt(List<Boolean> lst)
+    public Vector(double vmax, double vmin)
     {
-        int n = 0;
-        for (Boolean bit : lst) n = (n << 1) + (bit ? 1 : 0);
+        this.vmax = vmax;
+        this.vmin = vmin;
 
-        return n;
+        this.velocity = new ArrayList<>();
+        for (int i = 0; i < Configuration.instance.numberOfItems; i++)
+            velocity.add(
+                    (Configuration.instance.randomGenerator.nextDouble() * (vmax + Math.abs(vmin)) + vmin));
     }
 
-    public static List<Boolean> intToBoolList(int num)
+    public Vector clamp()
     {
-        List<Boolean> bin = new ArrayList<>();
-        while (num > 0)
-        {
-            bin.add(num % 2 != 0);
-            num = Math.floorDiv(num, 2);
-        }
-        Collections.reverse(bin);
-        return bin;
-    }
-
-    public void clamp()
-    {
-        x = Math.min(Math.max(x, 0), xlim);
-        y = Math.min(Math.max(y, 0), ylim);
-        z = Math.min(Math.max(z, 0), zlim);
-    }
-
-    public void wrap()
-    {
-        x %= xlim;
-        y %= ylim;
-        z %= zlim;
-    }
-
-
-    public Vector add(Vector other)
-    {
-        x = other.x + this.x;
-        y = other.y + this.y;
-        z = other.z + this.z;
+        for (int i = 0; i < velocity.size(); i++)
+            velocity.set(i, Math.min(Math.max(velocity.get(i), vmin), vmax));
 
         return this;
     }
 
-    public Vector sub(Vector other)
+
+    public Vector add(Vector other) throws IndexOutOfBoundsException
     {
-        x = other.x + this.x;
-        y = other.y + this.y;
-        z = other.z + this.z;
+        if (other.velocity.size() != this.velocity.size())
+            throw new IndexOutOfBoundsException("Velocity vectors not the same size");
+
+        for (int i = 0; i < this.velocity.size(); i++)
+            this.velocity.set(i, this.velocity.get(i) + other.velocity.get(i));
+
+        return this;
+    }
+
+    public Vector sub(Vector other) throws IndexOutOfBoundsException
+    {
+        if (other.size() != this.size())
+            throw new IndexOutOfBoundsException("Velocity vectors not the same size");
+
+        for (int i = 0; i < this.velocity.size(); i++)
+            this.velocity.set(i, this.velocity.get(i) - other.velocity.get(i));
 
         return this;
     }
 
     public Vector mul(double n)
     {
-        x = (int) (n * x);
-        y = (int) (n * y);
-        z = (int) (n * z);
+        for (int i = 0; i < this.size(); i++)
+            this.velocity.set(i, this.velocity.get(i) * n);
 
         return this;
     }
 
     public double mag()
     {
-        return Math.sqrt(x * x + y * y + z * z);
+        double sum = 0;
+        for (double v : velocity)
+            sum += v * v;
+
+        return Math.sqrt(sum);
     }
 
     public Vector normalize()
     {
         double mag = mag();
 
-        x /= mag;
-        y /= mag;
-        z /= mag;
+        for (int i = 0; i < this.velocity.size(); i++)
+            this.velocity.set(i, this.velocity.get(i) / mag);
 
         return this;
     }
 
-    public List<Boolean> toBoolList()
+    public int size() { return velocity.size(); }
+
+    public List<Double> getVelocity()
     {
-        List<Boolean> rep = new ArrayList<>();
-        rep.addAll(intToBoolList((int) x));
-        rep.addAll(intToBoolList((int) y));
-        rep.addAll(intToBoolList((int) z));
-
-        return rep;
+        return velocity;
     }
-
-    public double getX() { return x; }
-
-    public double getY() { return y; }
-
-    public double getZ() { return z; }
 
     @Override
     public String toString()
     {
-        return x + ", " + y + ", " + z;
+        return velocity.toString();
     }
 }

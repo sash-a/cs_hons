@@ -7,33 +7,30 @@ import java.util.Arrays;
 public class Swarm
 {
     public Particle[] particles;
-    public Particle bestParticle;
+    public Particle gbestParticle;
 
     public Swarm()
     {
         particles = new Particle[Configuration.instance.numParticles];
         for (int i = 0; i < Configuration.instance.numParticles; i++)
-        {
             particles[i] = new Particle();
-            particles[i].update();
-        }
 
-        bestParticle = particles[0];
+        gbestParticle = particles[0];
     }
 
     public void step()
     {
         Particle best = Arrays.stream(particles).max(Particle::compareTo).get();
 //        System.out.println("best " + best.bestValue + " " + best.getValue());
-        if (best.getValue() > bestParticle.bestValue)
+        if (best.getValue() > gbestParticle.bestValue)
         {
-            bestParticle = new Particle(best);
-            System.out.println("New best value: " + bestParticle.bestValue);
+            gbestParticle = new Particle(best);
+            System.out.println("New best value: " + gbestParticle.bestValue);
         }
 
         for (Particle p : particles)
         {
-            p.move(bestParticle.pos);
+            p.move(gbestParticle.pos);
 //            System.out.println(p.pos);
         }
 
@@ -45,6 +42,6 @@ public class Swarm
         for (int i = 0; i < Configuration.instance.generations; i++)
             step();
 
-        System.out.println("Final best: " + bestParticle.bestValue);
+        System.out.println("Final best: " + gbestParticle.bestValue);
     }
 }

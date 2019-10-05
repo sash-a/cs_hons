@@ -14,7 +14,7 @@ public enum Configuration
 
     public MersenneTwisterFast randomGenerator = new MersenneTwisterFast(System.nanoTime());
 
-    public int numberOfItems = 150;
+    public int numberOfItems = 5;
     public int maximumCapacity = 822;
     public int bestKnownOptimum = 1013;
 
@@ -32,7 +32,7 @@ public enum Configuration
     public double mutationChance = 0.1;
     public int populationSize = 50;
     public int elite = 1;
-    public int generations = 1000000;
+    public int generations = 1;
     public int validAttempts = 1000;
 
     public int crossoverPoints = 2;
@@ -51,16 +51,19 @@ public enum Configuration
     public double evaporationRate = 0.7;
 
     public final double initialPheromoneValue = 2;
-    public final int numAnts = 5;
+    public final int numAnts = 10;
 
     // ------------------------ PSO config options ------------------------
 
-    public double inertia = 0.7;
-    public double localForce = 1.5; // Cognitive factor
-    public double globalForce = 1.5; // Social factor
+    public double inertia = 1;
+    public double localForce = 1; // Cognitive factor
+    public double globalForce = 1; // Social factor
 
-    public int numParticles = 20;
+    public int numParticles = 5;
 
     public boolean useClamp = false; // Implementation: wrap (modulo) or clamp (min/max)
     public boolean normalize = true; // Normalize the velocity vectors before multiplying by constants
+
+    public double vmax = 2;
+    public double vmin = -2;
 }
