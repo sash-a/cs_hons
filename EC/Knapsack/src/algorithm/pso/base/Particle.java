@@ -1,29 +1,31 @@
 package algorithm.pso.base;
 
 import algorithm.base.Knapsack;
+import algorithm.base.Utils;
 import main.Configuration;
 
 import java.util.Arrays;
 
 public class Particle implements Comparable<Particle>
 {
-    public int[] pos;
+    public double[] pos;
     public double[] velocity;
-    public int[] bestPosition;
+    public double[] bestPosition;
     public int bestFitness;
     public int fitness;
 
     public Particle()
     {
-        pos = new int[Configuration.instance.numberOfItems];
+        pos = new double[Configuration.instance.numberOfItems];
         velocity = new double[Configuration.instance.numberOfItems];
-        bestPosition = new int[Configuration.instance.numberOfItems];
+        bestPosition = new double[Configuration.instance.numberOfItems];
 
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
             pos[i] = Configuration.instance.randomGenerator.nextInt(2);
 
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
-            velocity[i] = Configuration.instance.randomGenerator.nextDouble() * 10 - 5;
+            velocity[i] = Configuration.instance.randomGenerator.nextDouble() *
+                    (Configuration.instance.vmax - Configuration.instance.vmin) + Configuration.instance.vmin;
 
         while (!isValid())
         {
@@ -47,8 +49,9 @@ public class Particle implements Comparable<Particle>
         }
 
         bestPosition = Arrays.copyOf(pos, pos.length);
-        bestFitness = getValue();
+        bestFitness = 0;
     }
+
 
     public Particle(Particle other)
     {
@@ -59,7 +62,7 @@ public class Particle implements Comparable<Particle>
         fitness = other.fitness;
     }
 
-    public void move(int[] globalBest)
+    public void move(double[] globalBest)
     {
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
         {
@@ -70,8 +73,8 @@ public class Particle implements Comparable<Particle>
             double t2 = Configuration.instance.localForce * r1 * (bestPosition[i] - pos[i]);
             double t3 = Configuration.instance.globalForce * r2 * (globalBest[i] - pos[i]);
 
-            velocity[i] = t1 + t2 + t3;
-            pos[i] = sig(pos[i] + velocity[i]) > Configuration.instance.randomGenerator.nextDouble() ? 1 : 0;
+            velocity[i] = Utils.clamp(t1 + t2 + t3, Configuration.instance.vmin, Configuration.instance.vmax);
+            pos[i] = Utils.sig(pos[i] + velocity[i]) > Configuration.instance.randomGenerator.nextDouble() ? 1 : 0;
         }
     }
 
@@ -89,7 +92,6 @@ public class Particle implements Comparable<Particle>
     }
 
     public boolean isValid() { return getWeight() < Configuration.instance.maximumCapacity; }
-
 
     public int getWeight()
     {
@@ -111,8 +113,6 @@ public class Particle implements Comparable<Particle>
 
         return value;
     }
-
-    public static double sig(double n) { return 1 / (1 + Math.exp(-n)); }
 
     @Override
     public int compareTo(Particle other) { return Integer.compare(this.getValue(), other.getValue()); }

@@ -1,9 +1,11 @@
 package algorithm.sa.main;
 
+import algorithm.base.Hyperparameter;
+import algorithm.base.Evaluatable;
 import algorithm.sa.base.Particle;
 import main.Configuration;
 
-public class Annealing
+public class Annealing extends Evaluatable
 {
     public double coolingRate;
     public double temp;
@@ -20,7 +22,18 @@ public class Annealing
 
         currentSolution = new Particle();
         bestSolution = new Particle(currentSolution.rep);
+    }
 
+    /**
+     * @param bns: temp, cooling rate
+     */
+    @Override
+    public void setHyperparams(Hyperparameter... bns)
+    {
+        assert bns.length == 2;
+
+        this.temp = bns[0].value;
+        this.coolingRate = bns[1].value;
     }
 
     public boolean accept(double currentEnergy, double newEnergy)
@@ -68,18 +81,16 @@ public class Annealing
         temp *= coolingRate;
     }
 
-    public void run()
+    public int run()
     {
         int gen = 0;
         while (temp > Configuration.instance.minTemp)
         {
-            gen++;
-//            System.out.println("\nGeneration: " + gen +
-//                    "\nTemperature: " + temp +
-//                    "\nCurrent: " + currentSolution.getValue() +
-//                    "\nBest: " + bestSolution.getValue());
+//            System.out.println("Annealing running for: " + gen++);
             step(gen);
         }
+
+        return bestSolution.getValue();
     }
 
 

@@ -2,9 +2,6 @@ package algorithm.aco.base;
 
 import main.Configuration;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 public class AntColony
 {
     public double[][] pheromones;
@@ -58,7 +55,7 @@ public class AntColony
 
     public void run()
     {
-        for (int i = 0; i < Configuration.instance.generations; i++)
+        for (int i = 0; i < Configuration.instance.numGenerations; i++)
             step();
     }
 }

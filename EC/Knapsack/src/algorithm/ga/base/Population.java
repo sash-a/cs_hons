@@ -1,5 +1,7 @@
 package algorithm.ga.base;
 
+import algorithm.base.Hyperparameter;
+import algorithm.base.Evaluatable;
 import algorithm.base.Representation;
 import algorithm.base.Knapsack;
 import algorithm.ga.evolution.selection.RouletteWheel;
@@ -7,29 +9,81 @@ import algorithm.ga.evolution.selection.Selector;
 import algorithm.ga.evolution.selection.Tournament;
 import main.Configuration;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Population
+public class Population extends Evaluatable
 {
     public List<Genome> genomes;
     public Selector selector;
 
     // Tournament selection constructor
-    public Population(List<Genome> genomes, int k)
+    public Population(int k)
     {
-        this.genomes = genomes;
+        this.genomes = new LinkedList<>();
+        for (int i = 0; i < Configuration.instance.populationSize; i++)
+            genomes.add(new Genome());
         selector = new Tournament(k);
     }
 
     // Roulette wheel constructor
-    public Population(List<Genome> genomes)
+    public Population()
     {
-        this.genomes = genomes;
+        this.genomes = new LinkedList<>();
+        for (int i = 0; i < Configuration.instance.populationSize; i++)
+            genomes.add(new Genome());
+
+
         selector = new RouletteWheel();
+    }
+
+    /**
+     * @param bns: pop size, tournament size (0 = rouletteWheel), crossover (1 or 2), mutator (1-5)
+     */
+    public void setHyperparams(Hyperparameter... bns)
+    {
+        assert bns.length == 4;
+        genomes.clear();
+        Configuration.instance.populationSize = (int) bns[0].value;
+
+        if (bns[1].value == 0.0)
+            selector = new RouletteWheel();
+        else
+            selector = new Tournament((int) bns[1].value);
+
+        Configuration.instance.crossoverPoints = (int) bns[2].value;
+        Configuration.instance.mutationType = Configuration.MutationType.values()[(int) bns[3].value];
+
+        this.genomes.clear();
+        for (int i = 0; i < Configuration.instance.populationSize; i++)
+            genomes.add(new Genome());
+    }
+
+    public int run()
+    {
+        Genome bestGenome = genomes.get(0);
+
+        // Running evolution
+        for (int i = 0; i < Configuration.instance.numGenerations; i++)
+        {
+            Genome fittest = step();
+            if (fittest.getValue() > bestGenome.getValue())
+            {
+                System.out.println("Generation " + i + ". New best fitness: " + fittest.getValue() + ", improved on: " + bestGenome.getValue());
+                bestGenome = fittest;
+            }
+        }
+
+        // Printing out final best individual
+        Genome best = genomes.stream()
+                .max(Comparator.comparingInt(Representation::getValue)).get();
+
+        System.out.println("Final fittest individual" +
+                "\nFitness:" + best.getValue() +
+                "\nWeight: " + best.getWeight() +
+                "\nIndividual" + best);
+
+        return best.getValue();
     }
 
     public Genome step()
@@ -71,7 +125,7 @@ public class Population
             for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
             {
                 mutant = child.mutate();
-                valid = mutant.toKnapsack().isValid();
+                valid = mutant.isValid();
             }
 
             if (valid)
@@ -85,10 +139,10 @@ public class Population
     {
         Genome child = parents.get(0).crossover(parents.get(1));
         boolean valid = child.toKnapsack().isValid();
-        for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
+        for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++) // todo fix
         {
             child = parents.get(0).crossover(parents.get(1));
-            valid = child.toKnapsack().isValid();
+            valid = child.isValid();
         }
 
         if (valid)

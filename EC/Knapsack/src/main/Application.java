@@ -1,19 +1,20 @@
 package main;
 
-import algorithm.aco.base.AntColony;
 import algorithm.base.Item;
 import algorithm.base.Knapsack;
 import algorithm.base.Representation;
+import algorithm.ga.base.Population;
 import algorithm.ga.main.GARunner;
+import algorithm.ga.recommender.GARecommender;
 import algorithm.pso.base.Swarm;
 import algorithm.sa.main.Annealing;
+import algorithm.aco.base.AntColony;
+import algorithm.sa.recommender.SARecommender;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 public class Application
@@ -22,17 +23,16 @@ public class Application
     // -algorithm [ga | sa | aco | pso | best-algorithm] -configuration [default | best] -search_best_configuration
     public static void main(String... args)
     {
-        System.out.println("psvm");
-
         readItems();
         double time = System.currentTimeMillis();
-//        GARunner.run();
+//        new Population().run();
 //        new Annealing().run();
 //        new AntColony().run();
-        System.out.println("above run");
-        new Swarm().run();
-        System.out.println("took: " + ((System.currentTimeMillis() - time) / 1000) + "s");
+//        new Swarm().run();
 
+//        new SARecommender().recommend();
+        new GARecommender().recommend();
+        System.out.println("Finished in: " + ((System.currentTimeMillis() - time) / 1000) + "s");
     }
 
     public static void readItems()

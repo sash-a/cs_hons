@@ -21,12 +21,12 @@ public class Tournament extends Selector
 
     public Genome select()
     {
-        List<Representation> tournament = new LinkedList<>();
+        List<Genome> tournament = new LinkedList<>();
         HashSet<Integer> selected = new HashSet<>();
 
         for (int i = 0; i < tournamentSize; i++)
         {
-            int idx = (int) (Configuration.instance.randomGenerator.nextDouble() * Configuration.instance.numberOfItems);
+            int idx = (int) (Configuration.instance.randomGenerator.nextDouble() * genomes.size());
             if (selected.contains(idx)) // making sure all tournament entrants are distinct
             {
                 i--;
@@ -37,10 +37,8 @@ public class Tournament extends Selector
             tournament.add(genomes.get(idx));
         }
 
-        Knapsack best = (tournament.stream()
-                .map(Representation::toKnapsack)
-                .max(Comparator.comparingInt(Knapsack::getFitness)).get());
-
-        return new Genome(best.getRepresentation());
+        return (tournament.stream()
+                .max(Comparator.comparingInt(Representation::getValue))
+                .get());
     }
 }

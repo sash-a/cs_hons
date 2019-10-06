@@ -17,7 +17,7 @@ public enum Configuration
     public int numberOfItems = 150;
     public int maximumCapacity = 822;
     public int bestKnownOptimum = 1013;
-    public int generations = 100000;
+    public int numGenerations = 1000;
 
     // ------------------------ GA config options ------------------------
 
@@ -40,7 +40,7 @@ public enum Configuration
 
     // ------------------------ SA config options ------------------------
 
-    public double initialTemp = 100000000.0;
+    public double initialTemp = 1E10;
     public double minTemp = 1.0;
     public double coolingRate = 0.999997;
 
@@ -61,9 +61,6 @@ public enum Configuration
 
     public int numParticles = 20;
 
-    public boolean useClamp = false; // Implementation: wrap (modulo) or clamp (min/max)
-    public boolean normalize = true; // Normalize the velocity vectors before multiplying by constants
-
-    public double vmax = 2;
-    public double vmin = -2;
+    public double vmax = 5;
+    public double vmin = -5;
 }
