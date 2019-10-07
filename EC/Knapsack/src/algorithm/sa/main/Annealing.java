@@ -25,15 +25,15 @@ public class Annealing extends Evaluatable
     }
 
     /**
-     * @param bns: temp, cooling rate
+     * @param hyperparameters: temp, cooling rate
      */
     @Override
-    public void setHyperparams(Hyperparameter... bns)
+    public void setHyperparams(Hyperparameter... hyperparameters)
     {
-        assert bns.length == 2;
+        assert hyperparameters.length == 2;
 
-        this.temp = bns[0].value;
-        this.coolingRate = bns[1].value;
+        this.temp = hyperparameters[0].value;
+        this.coolingRate = hyperparameters[1].value;
     }
 
     public boolean accept(double currentEnergy, double newEnergy)

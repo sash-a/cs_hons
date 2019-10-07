@@ -17,7 +17,6 @@ public class RecommenderParticle extends Particle
         this.hyperparameters = new Hyperparameter[initialPositions.length];
         for (int i = 0; i < initialPositions.length; i++)
         {
-            System.out.println("Attempting to create value in range: " + initialPositions[i].min + " - " + initialPositions[i].max);
             hyperparameters[i] = initialPositions[i].change(Configuration.instance.randomGenerator.nextDouble() *
                     (initialPositions[i].max - initialPositions[i].min) + initialPositions[i].min);
         }
@@ -29,10 +28,7 @@ public class RecommenderParticle extends Particle
             velocity[i] = Configuration.instance.randomGenerator.nextDouble() *
                     (initialPositions[i].max - initialPositions[i].min) / 10 + initialPositions[i].min;
 
-        System.out.println(evaluatable);
         this.evaluatable = evaluatable;
-
-        System.out.println("Evaluating with hyperparameters:\n" + toString());
     }
 
     public RecommenderParticle(RecommenderParticle p)
@@ -64,8 +60,20 @@ public class RecommenderParticle extends Particle
     @Override
     public int getValue()
     {
-        evaluatable.setHyperparams(hyperparameters);
-        return evaluatable.run();
+        double result = 0;
+        double repeats = 5.0;
+
+        System.out.println("\n\nEvaluating " + (int) repeats + " times, with hyperparameters:\n" + toString() + "\n");
+
+        for (int i = 0; i < repeats; i++)
+        {
+            evaluatable.setHyperparams(hyperparameters);
+            result += evaluatable.run();
+        }
+
+        int avg = (int) (result / repeats);
+        System.out.println("Final averaged fitness: " + avg);
+        return avg;
     }
 
     @Override

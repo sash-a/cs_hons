@@ -55,11 +55,11 @@ public enum Configuration
 
     // ------------------------ PSO config options ------------------------
 
-    public double inertia = 1;
-    public double localForce = 1; // Cognitive factor
-    public double globalForce = 1; // Social factor
+    public double inertia = 0.9;
+    public double localForce = 1.1; // Cognitive factor
+    public double globalForce = 1.1; // Social factor
 
-    public int numParticles = 20;
+    public int numParticles = 10;
 
     public double vmax = 5;
     public double vmin = -5;

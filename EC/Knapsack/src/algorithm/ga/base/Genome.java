@@ -10,7 +10,7 @@ import main.Configuration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Genome extends Representation
+public class Genome extends Representation implements Comparable<Genome>
 {
     private Crossover crossover;
     private Mutator mutator;
@@ -52,4 +52,7 @@ public class Genome extends Representation
     public Genome mutate() { return new Genome(mutator.mutate(new LinkedList<>(rep))); }
 
     public Genome crossover(Representation other) { return new Genome(crossover.crossover(this.rep, other.rep)); }
+
+    @Override
+    public int compareTo(Genome other) { return Integer.compare(this.getValue(), other.getValue()); }
 }

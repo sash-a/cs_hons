@@ -16,46 +16,65 @@ public class Population extends Evaluatable
 {
     public List<Genome> genomes;
     public Selector selector;
+    private int size;
+    private int elite;
+    private double mutationChance;
 
     // Tournament selection constructor
     public Population(int k)
     {
+        elite = Configuration.instance.elite;
+        size = Configuration.instance.populationSize;
+        mutationChance = Configuration.instance.mutationChance;
+
         this.genomes = new LinkedList<>();
-        for (int i = 0; i < Configuration.instance.populationSize; i++)
+        for (int i = 0; i < size; i++)
             genomes.add(new Genome());
+
         selector = new Tournament(k);
     }
 
     // Roulette wheel constructor
     public Population()
     {
-        this.genomes = new LinkedList<>();
-        for (int i = 0; i < Configuration.instance.populationSize; i++)
-            genomes.add(new Genome());
+        elite = Configuration.instance.elite;
+        size = Configuration.instance.populationSize;
+        mutationChance = Configuration.instance.mutationChance;
 
+        this.genomes = new LinkedList<>();
+        for (int i = 0; i < size; i++)
+            genomes.add(new Genome());
 
         selector = new RouletteWheel();
     }
 
     /**
-     * @param bns: pop size, tournament size (0 = rouletteWheel), crossover (1 or 2), mutator (1-5)
+     * @param hyperparameters: pop size
+     *                         num elite,
+     *                         tournament size (0 = rouletteWheel),
+     *                         crossover (1 or 2),
+     *                         mutator (1-5),
+     *                         mutation chance
      */
-    public void setHyperparams(Hyperparameter... bns)
+    public void setHyperparams(Hyperparameter... hyperparameters)
     {
-        assert bns.length == 4;
+        assert hyperparameters.length == 6;
         genomes.clear();
-        Configuration.instance.populationSize = (int) bns[0].value;
 
-        if (bns[1].value == 0.0)
+        size = (int) hyperparameters[0].value;
+        elite = (int) hyperparameters[1].value;
+        mutationChance = hyperparameters[5].value;
+
+        if (hyperparameters[2].value == 0.0 || hyperparameters[2].value == 1.0)
             selector = new RouletteWheel();
         else
-            selector = new Tournament((int) bns[1].value);
+            selector = new Tournament((int) hyperparameters[2].value);
 
-        Configuration.instance.crossoverPoints = (int) bns[2].value;
-        Configuration.instance.mutationType = Configuration.MutationType.values()[(int) bns[3].value];
+        Configuration.instance.crossoverPoints = (int) hyperparameters[3].value;
+        Configuration.instance.mutationType = Configuration.MutationType.values()[(int) hyperparameters[4].value];
 
         this.genomes.clear();
-        for (int i = 0; i < Configuration.instance.populationSize; i++)
+        for (int i = 0; i < size; i++)
             genomes.add(new Genome());
     }
 
@@ -75,21 +94,20 @@ public class Population extends Evaluatable
         }
 
         // Printing out final best individual
-        Genome best = genomes.stream()
-                .max(Comparator.comparingInt(Representation::getValue)).get();
+        int bestValue = bestGenome.getValue();
+        System.out.println("GA final fittest individual" +
+                "\nFitness:" + bestValue +
+                "\nWeight: " + bestGenome.getWeight() +
+                /*"\nIndividual" + bestGenome +*/ "\n\n");
 
-        System.out.println("Final fittest individual" +
-                "\nFitness:" + best.getValue() +
-                "\nWeight: " + best.getWeight() +
-                "\nIndividual" + best);
-
-        return best.getValue();
+        return bestValue;
     }
 
     public Genome step()
     {
+        // Creating children
         List<Genome> children = new LinkedList<>();
-        for (int i = 0; i < Configuration.instance.populationSize - Configuration.instance.elite; i++)
+        for (int i = 0; i < size - elite; i++)
         {
             List<Genome> parents = selectParents();
             Genome child = createChild(parents);
@@ -97,35 +115,31 @@ public class Population extends Evaluatable
         }
 
         // Sorting to find the elite individuals
-        List<Knapsack> phenotypes = genomes.stream()
-                .map(Genome::toKnapsack)
+        List<Genome> sortedGenomes = genomes.stream()
                 .sorted(Collections.reverseOrder())
-                .collect(Collectors.toList());
-
-        // Only taking the top n from the sorted list in genome form
-        genomes = phenotypes.subList(0, Configuration.instance.elite)
-                .stream()
-                .map(phenotype -> new Genome(phenotype.getRepresentation()))
                 .collect(Collectors.toCollection(LinkedList::new));
 
         // Adding all children to the next generation
+        genomes.clear();
+        genomes.addAll(sortedGenomes.subList(0, elite));
         genomes.addAll(children);
 
-
-        return genomes.get(0);
+        return sortedGenomes.get(0);  // Returning the best elite individual
     }
 
     private Genome mutateChild(Genome child)
     {
-        if (Configuration.instance.randomGenerator.nextDouble() < Configuration.instance.mutationChance)
+        if (Configuration.instance.randomGenerator.nextDouble() < mutationChance)
         {
             Genome mutant = child.mutate();
             boolean valid = mutant.toKnapsack().isValid();
 
-            for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++)
+            for (int i = 0; i < Configuration.instance.validAttempts; i++)
             {
                 mutant = child.mutate();
+
                 valid = mutant.isValid();
+                if (valid) break;
             }
 
             if (valid)
@@ -139,10 +153,12 @@ public class Population extends Evaluatable
     {
         Genome child = parents.get(0).crossover(parents.get(1));
         boolean valid = child.toKnapsack().isValid();
-        for (int i = 0; i < Configuration.instance.validAttempts && !valid; i++) // todo fix
+        for (int i = 0; i < Configuration.instance.validAttempts; i++) // todo fix
         {
             child = parents.get(0).crossover(parents.get(1));
+
             valid = child.isValid();
+            if (valid) break;
         }
 
         if (valid)
