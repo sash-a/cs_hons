@@ -11,7 +11,7 @@ public class SARecommender
     {
         Annealing annealing = new Annealing();
 
-        Swarm swarm = new Swarm(annealing,
+        Swarm swarm = new Swarm(1000, annealing,
                 new Hyperparameter("Initial temp", Configuration.instance.initialTemp, Configuration.instance.minTemp, 10E10, Hyperparameter.Type.DOUBLE),
                 new Hyperparameter("Cooling rate", Configuration.instance.coolingRate, 0.9, 0.99999999999999, Hyperparameter.Type.DOUBLE));
 

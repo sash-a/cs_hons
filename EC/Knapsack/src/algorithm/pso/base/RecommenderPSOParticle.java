@@ -2,17 +2,16 @@ package algorithm.pso.base;
 
 import algorithm.base.Hyperparameter;
 import algorithm.base.Evaluatable;
-import algorithm.base.Utils;
 import main.Configuration;
 
 import java.util.Arrays;
 
-public class RecommenderParticle extends Particle
+public class RecommenderPSOParticle extends PSOParticle
 {
     public Hyperparameter[] hyperparameters;
     public Evaluatable evaluatable;
 
-    public RecommenderParticle(Hyperparameter[] initialPositions, Evaluatable evaluatable)
+    public RecommenderPSOParticle(Hyperparameter[] initialPositions, Evaluatable evaluatable)
     {
         this.hyperparameters = new Hyperparameter[initialPositions.length];
         for (int i = 0; i < initialPositions.length; i++)
@@ -31,7 +30,7 @@ public class RecommenderParticle extends Particle
         this.evaluatable = evaluatable;
     }
 
-    public RecommenderParticle(RecommenderParticle p)
+    public RecommenderPSOParticle(RecommenderPSOParticle p)
     {
         super(p);
         hyperparameters = new Hyperparameter[p.hyperparameters.length];
@@ -60,18 +59,17 @@ public class RecommenderParticle extends Particle
     @Override
     public int getValue()
     {
-        double result = 0;
-        double repeats = 5.0;
+        double totalFitness = 0;
 
-        System.out.println("\n\nEvaluating " + (int) repeats + " times, with hyperparameters:\n" + toString() + "\n");
+        System.out.println("\n\nEvaluating " + Configuration.instance.repeats + " times, with hyperparameters:\n" + toString() + "\n");
 
-        for (int i = 0; i < repeats; i++)
+        for (int i = 0; i < Configuration.instance.repeats; i++)
         {
             evaluatable.setHyperparams(hyperparameters);
-            result += evaluatable.run();
+            totalFitness += evaluatable.run();
         }
 
-        int avg = (int) (result / repeats);
+        int avg = (int) (totalFitness / (double) Configuration.instance.repeats);
         System.out.println("Final averaged fitness: " + avg);
         return avg;
     }

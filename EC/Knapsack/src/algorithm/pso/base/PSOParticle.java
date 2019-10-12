@@ -6,7 +6,7 @@ import main.Configuration;
 
 import java.util.Arrays;
 
-public class Particle implements Comparable<Particle>
+public class PSOParticle implements Comparable<PSOParticle>
 {
     public double[] pos;
     public double[] velocity;
@@ -14,8 +14,17 @@ public class Particle implements Comparable<Particle>
     public int bestFitness;
     public int fitness;
 
-    public Particle()
+    private double inertia;
+    private double localForce;
+    private double globalForce;
+
+
+    public PSOParticle()
     {
+        inertia = Configuration.instance.inertia;
+        localForce = Configuration.instance.localForce;
+        globalForce = Configuration.instance.globalForce;
+
         pos = new double[Configuration.instance.numberOfItems];
         velocity = new double[Configuration.instance.numberOfItems];
         bestPosition = new double[Configuration.instance.numberOfItems];
@@ -52,14 +61,24 @@ public class Particle implements Comparable<Particle>
         bestFitness = 0;
     }
 
+    public PSOParticle(double inertia, double localForce, double globalForce)
+    {
+        this();
+        this.inertia = inertia;
+        this.localForce = localForce;
+        this.globalForce = globalForce;
+    }
 
-    public Particle(Particle other)
+    public PSOParticle(PSOParticle other)
     {
         pos = Arrays.copyOf(other.pos, other.pos.length);
         bestPosition = Arrays.copyOf(other.bestPosition, other.bestPosition.length);
         bestFitness = other.bestFitness;
         velocity = Arrays.copyOf(other.velocity, other.velocity.length);
         fitness = other.fitness;
+        inertia = other.inertia;
+        localForce = other.localForce;
+        globalForce = other.globalForce;
     }
 
     public void move(double[] globalBest)
@@ -69,9 +88,9 @@ public class Particle implements Comparable<Particle>
             double r1 = Configuration.instance.randomGenerator.nextDouble();
             double r2 = Configuration.instance.randomGenerator.nextDouble();
 
-            double t1 = velocity[i] * Configuration.instance.inertia;
-            double t2 = Configuration.instance.localForce * r1 * (bestPosition[i] - pos[i]);
-            double t3 = Configuration.instance.globalForce * r2 * (globalBest[i] - pos[i]);
+            double t1 = velocity[i] * inertia;
+            double t2 = localForce * r1 * (bestPosition[i] - pos[i]);
+            double t3 = globalForce * r2 * (globalBest[i] - pos[i]);
 
             velocity[i] = Utils.clamp(t1 + t2 + t3, Configuration.instance.vmin, Configuration.instance.vmax);
             pos[i] = Utils.sig(pos[i] + velocity[i]) > Configuration.instance.randomGenerator.nextDouble() ? 1 : 0;
@@ -115,5 +134,5 @@ public class Particle implements Comparable<Particle>
     }
 
     @Override
-    public int compareTo(Particle other) { return Integer.compare(this.getValue(), other.getValue()); }
+    public int compareTo(PSOParticle other) { return Integer.compare(this.getValue(), other.getValue()); }
 }

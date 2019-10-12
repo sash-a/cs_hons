@@ -83,12 +83,12 @@ public class Population extends Evaluatable
         Genome bestGenome = genomes.get(0);
 
         // Running evolution
-        for (int i = 0; i < Configuration.instance.numGenerations; i++)
+        for (int i = 0; i < Configuration.instance.numGAGens; i++)
         {
             Genome fittest = step();
             if (fittest.getValue() > bestGenome.getValue())
             {
-                System.out.println("Generation " + i + ". New best fitness: " + fittest.getValue() + ", improved on: " + bestGenome.getValue());
+                System.out.println("Generation " + i + ". New best fitness: " + bestGenome.getValue() + " -> " + fittest.getValue());
                 bestGenome = fittest;
             }
         }

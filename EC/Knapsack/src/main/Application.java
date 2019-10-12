@@ -1,5 +1,6 @@
 package main;
 
+import algorithm.aco.recommender.ACORecommender;
 import algorithm.base.Item;
 import algorithm.base.Knapsack;
 import algorithm.base.Representation;
@@ -7,6 +8,7 @@ import algorithm.ga.base.Population;
 import algorithm.ga.main.GARunner;
 import algorithm.ga.recommender.GARecommender;
 import algorithm.pso.base.Swarm;
+import algorithm.pso.recommender.PSORecommender;
 import algorithm.sa.main.Annealing;
 import algorithm.aco.base.AntColony;
 import algorithm.sa.recommender.SARecommender;
@@ -30,8 +32,10 @@ public class Application
 //        new AntColony().run();
 //        new Swarm().run();
 
+//        new GARecommender().recommend();
 //        new SARecommender().recommend();
-        new GARecommender().recommend();
+        new ACORecommender().recommend();
+//        new PSORecommender().recommend();
         System.out.println("Finished in: " + ((System.currentTimeMillis() - time) / 1000) + "s");
     }
 

@@ -9,7 +9,7 @@ public class Hyperparameter
     public double value;
     public double min;
     public double max;
-    private Type type;
+    public Type type;
 
 
     public Hyperparameter(String name, double value, double min, double max, Type type)
@@ -25,7 +25,7 @@ public class Hyperparameter
     {
         value = Utils.clamp(value, min, max);
         if (type == Type.INT)
-            value = (int) value;
+            value = (int) Math.round(value);
 
         return new Hyperparameter(name, value, min, max, type);
     }

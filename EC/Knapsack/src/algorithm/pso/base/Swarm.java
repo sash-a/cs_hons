@@ -4,65 +4,91 @@ import algorithm.base.Hyperparameter;
 import algorithm.base.Evaluatable;
 import main.Configuration;
 
-public class Swarm
+public class Swarm extends Evaluatable
 {
-    public Particle[] particles;
-    public Particle gbestParticle;
-
-    private boolean recommenderRun;
+    public PSOParticle[] particles;
+    public PSOParticle gbestParticle;
+    private int generations;
 
     public Swarm()
     {
-        particles = new Particle[Configuration.instance.numParticles];
+        this.generations = Configuration.instance.numPSOGens;
+        particles = new PSOParticle[Configuration.instance.numParticles];
         for (int i = 0; i < Configuration.instance.numParticles; i++)
-            particles[i] = new Particle();
+            particles[i] = new PSOParticle();
 
-        gbestParticle = new Particle();
-
-        recommenderRun = false;
+        gbestParticle = new PSOParticle();
     }
 
-    public Swarm(Evaluatable evaluatable, Hyperparameter... bns)
+    public Swarm(int generations)
     {
-        particles = new RecommenderParticle[Configuration.instance.numParticles];
+        this();
+        this.generations = generations;
+    }
+
+    public Swarm(int generations, Evaluatable evaluatable, Hyperparameter... bns)
+    {
+        this.generations = generations;
+        particles = new RecommenderPSOParticle[Configuration.instance.numParticles];
 
         for (int i = 0; i < Configuration.instance.numParticles; i++)
-            particles[i] = new RecommenderParticle(bns, evaluatable);
+            particles[i] = new RecommenderPSOParticle(bns, evaluatable);
 
-        gbestParticle = new RecommenderParticle(bns, evaluatable);
+        gbestParticle = new RecommenderPSOParticle(bns, evaluatable);
+    }
 
-        recommenderRun = true;
+    /**
+     * @param hyperparameters: num particles, inertia, cognitive factor, social factor
+     */
+    @Override
+    public void setHyperparams(Hyperparameter... hyperparameters)
+    {
+        int numParticles = (int) hyperparameters[0].value;
+        double inertia = hyperparameters[1].value;
+        double cog = hyperparameters[2].value;
+        double social = hyperparameters[3].value;
+
+        particles = new PSOParticle[numParticles];
+        gbestParticle = new PSOParticle(inertia, cog, social);
+        for (int i = 0; i < numParticles; i++)
+            particles[i] = new PSOParticle(inertia, cog, social);
     }
 
     public void step(int gen)
     {
-        System.out.println("Optim generation " + gen);
-        for (Particle p : particles) p.calcFitness();
+        if (particles[0] instanceof RecommenderPSOParticle)
+        {
+            System.out.println("Optimizer generation " + gen);
+            System.out.println("Current best configuration from " + gen + " generations\n" + ((RecommenderPSOParticle) gbestParticle));
+        }
 
-        for (Particle p : particles)
+        for (PSOParticle p : particles) p.calcFitness();
+
+        for (PSOParticle p : particles)
         {
             if (p.bestFitness > gbestParticle.bestFitness)
             {
-                System.out.println("New best: " + p.bestFitness + " at generation " + gen);
+                System.out.println("Generation " + gen + ". New best " + gbestParticle.bestFitness + " -> " + p.bestFitness);
 
-                if (p instanceof RecommenderParticle)
+                if (p instanceof RecommenderPSOParticle)
                 {
-                    gbestParticle = new RecommenderParticle((RecommenderParticle) p);
+                    gbestParticle = new RecommenderPSOParticle((RecommenderPSOParticle) p);
                     System.out.println("Hyper params:\n" + gbestParticle);
                 }
                 else
-                    gbestParticle = new Particle(p);
+                    gbestParticle = new PSOParticle(p);
             }
         }
 
-        for (Particle p : particles) p.move(gbestParticle.pos);
+        for (PSOParticle p : particles) p.move(gbestParticle.pos);
     }
 
-    public void run()
+    public int run()
     {
-        for (int i = 0; i < Configuration.instance.numGenerations; i++)
+        for (int i = 0; i < generations; i++)
             step(i);
 
-        System.out.println("Final best - value: " + gbestParticle.bestFitness + " weight: " + gbestParticle.getWeight());
+        System.out.println("\n\nFinal best -> value: " + gbestParticle.bestFitness + " weight: " + gbestParticle.getWeight());
+        return gbestParticle.bestFitness;
     }
 }

@@ -10,7 +10,7 @@ public class GARecommender
     public void recommend()
     {
         Population pop = new Population();
-        Swarm GAOptimizer = new Swarm(pop,
+        Swarm GAOptimizer = new Swarm(100, pop,
                 new Hyperparameter("Pop size", 50, 20, 200, Hyperparameter.Type.INT),
                 new Hyperparameter("Num elite", 1, 0, 5, Hyperparameter.Type.INT),
                 new Hyperparameter("Tournament size", 0, 0, 30, Hyperparameter.Type.INT),

@@ -14,14 +14,29 @@ public class Ant implements Comparable<Ant>
 
     public int knapsackValue;
 
-    public Ant() { reset(); }
+    public double alpha;
+    public double beta;
+    public double evaporationRate;
+
+    public Ant(double alpha, double beta)
+    {
+        reset();
+
+        this.alpha = alpha;
+        this.beta = beta;
+    }
 
     public Ant(Ant other)
     {
         this.path = new ArrayList<>(other.path);
         this.representation = new Representation(other.representation.rep);
         this.knapsackValue = other.knapsackValue;
+
+        alpha = other.alpha;
+        beta = other.beta;
+        evaporationRate = other.evaporationRate;
     }
+
 
     public void reset()
     {
@@ -36,27 +51,24 @@ public class Ant implements Comparable<Ant>
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
             notVisited.add(i);
 
-        Collections.shuffle(notVisited); // So that no item is biased. TODO is this correct?
+        Collections.shuffle(notVisited); // So that no item is biased
     }
 
     public int search(double[][] pheromones)
     {
-        // initial city
         // can take first item in not visited list because it is random
-
         int currentItem = notVisited.get(0);
         representation.rep.set(currentItem, true);
         path.add(currentItem);
         notVisited.remove(0);
-
 
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
         {
             // Calculating the denominator for the probability function
             double totalPheromonesRatio = 0.0;
             for (Integer visitableItem : notVisited)
-                totalPheromonesRatio += Math.pow(pheromones[currentItem][visitableItem], Configuration.instance.alpha) /
-                        Math.pow(Knapsack.allItems[visitableItem].value, Configuration.instance.beta);
+                totalPheromonesRatio += Math.pow(pheromones[currentItem][visitableItem], alpha) /
+                        Math.pow(Knapsack.allItems[visitableItem].value, beta);
 
             double probability = 0.0;
             double rand = Configuration.instance.randomGenerator.nextDouble();
@@ -67,8 +79,8 @@ public class Ant implements Comparable<Ant>
             {
                 int possibleItem = itr.next();
                 // Probability of choosing this item
-                probability += Math.pow(pheromones[currentItem][possibleItem], Configuration.instance.alpha) /
-                        Math.pow(Knapsack.allItems[possibleItem].value, Configuration.instance.beta) /
+                probability += Math.pow(pheromones[currentItem][possibleItem], alpha) /
+                        Math.pow(Knapsack.allItems[possibleItem].value, beta) /
                         totalPheromonesRatio;
 
                 if (rand < probability)
@@ -90,7 +102,7 @@ public class Ant implements Comparable<Ant>
             }
 
             // If at max capacity no use in trying anymore
-            if (representation.getWeight() == Configuration.instance.maximumCapacity) // TODO: this call may be expensive in large lists
+            if (representation.getWeight() == Configuration.instance.maximumCapacity)
                 break;
         }
 

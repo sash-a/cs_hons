@@ -2,7 +2,7 @@ package algorithm.sa.main;
 
 import algorithm.base.Hyperparameter;
 import algorithm.base.Evaluatable;
-import algorithm.sa.base.Particle;
+import algorithm.sa.base.SAParticle;
 import main.Configuration;
 
 public class Annealing extends Evaluatable
@@ -10,8 +10,8 @@ public class Annealing extends Evaluatable
     public double coolingRate;
     public double temp;
 
-    public Particle currentSolution;
-    public Particle bestSolution;
+    public SAParticle currentSolution;
+    public SAParticle bestSolution;
 
     public Annealing()
     {
@@ -20,8 +20,8 @@ public class Annealing extends Evaluatable
         this.temp = Configuration.instance.initialTemp;
         this.coolingRate = Configuration.instance.coolingRate;
 
-        currentSolution = new Particle();
-        bestSolution = new Particle(currentSolution.rep);
+        currentSolution = new SAParticle();
+        bestSolution = new SAParticle(currentSolution.rep);
     }
 
     /**
@@ -46,9 +46,9 @@ public class Annealing extends Evaluatable
             return Math.exp(-energyDelta / this.temp) > Configuration.instance.randomGenerator.nextDouble();
     }
 
-    public Particle randomNeighbour()
+    public SAParticle randomNeighbour()
     {
-        Particle nextSolution = currentSolution.move();
+        SAParticle nextSolution = currentSolution.move();
         for (int i = 0; i < Configuration.instance.validAttempts; i++)
         {
             if (nextSolution.isValid())
@@ -63,13 +63,12 @@ public class Annealing extends Evaluatable
 
     public void step(int gen)
     {
-        Particle nextSolution = randomNeighbour();
+        SAParticle nextSolution = randomNeighbour();
 
         int currentFitness = currentSolution.getValue();
         int nextFitness = nextSolution.getValue();
 
-        // TODO what is the best way to minimize these?
-        if (accept(1 / (double) currentFitness, 1 / (double) nextFitness))
+        if (accept(-(double) currentFitness, -(double) nextFitness))
             currentSolution = nextSolution;
 
         if (nextFitness > bestSolution.getValue())
@@ -85,11 +84,10 @@ public class Annealing extends Evaluatable
     {
         int gen = 0;
         while (temp > Configuration.instance.minTemp)
-        {
-//            System.out.println("Annealing running for: " + gen++);
-            step(gen);
-        }
+            step(gen++);
 
+        System.out.println("Ran for " + gen + " generations");
+        System.out.println("Best solution " + bestSolution);
         return bestSolution.getValue();
     }
 
