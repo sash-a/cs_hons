@@ -30,7 +30,6 @@ public class Application
     // -algorithm [ga | sa | aco | pso | best-algorithm] -configuration [default | best] -search_best_configuration
     public static void main(String... args)
     {
-
         String path = Configuration.instance.dataDirectory + Configuration.instance.fileSeparator;
         String suffix = "_default.xml";
         String algorithm = "";
@@ -140,7 +139,6 @@ public class Application
                 Knapsack.allItems[i++] = new Item(attributes[0], attributes[1], attributes[2]);
                 line = f.readLine();
             }
-
         } catch (IOException e)
         {
             e.printStackTrace();

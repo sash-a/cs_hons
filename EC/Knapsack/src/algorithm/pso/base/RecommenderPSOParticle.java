@@ -79,10 +79,10 @@ public class RecommenderPSOParticle extends PSOParticle
 
     public String toString()
     {
-        String out = "";
+        StringBuilder out = new StringBuilder();
         for (Hyperparameter bn : hyperparameters)
-            out += bn.toString() + "\n";
+            out.append(bn.toString()).append("\n");
 
-        return out;
+        return out.toString();
     }
 }

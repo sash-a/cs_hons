@@ -83,12 +83,15 @@ public class Ant implements Comparable<Ant>
                 if (rand < probability)
                 {
                     itr.remove(); // Either item is used or makes knapsack to heavy, therefore remove it
-
-                    // Only add if item is valid
-                    if (!representation.isValid())
-                        continue;
-
                     representation.rep.set(possibleItem, true);
+
+                    // Remove item if it makes knapsack invalid
+                    if (!representation.isValid())
+                    {
+                        representation.rep.set(possibleItem, false);
+                        continue;
+                    }
+
                     currentItem = possibleItem;
                     path.add(currentItem);
                     break;
@@ -120,5 +123,11 @@ public class Ant implements Comparable<Ant>
     public int compareTo(Ant other)
     {
         return Integer.compare(this.knapsackValue, other.knapsackValue);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "value " + knapsackValue + " | weight " + representation.getWeight();
     }
 }

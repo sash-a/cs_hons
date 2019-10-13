@@ -31,7 +31,7 @@ public enum Configuration
 
     public int numGAGens = (int) 1E5;
     public double mutationChance = 0.1;
-    public int populationSize = 50;
+    public int populationSize = 1;
     public int elite = 1;
     public int validAttempts = 1000;
 
@@ -48,7 +48,7 @@ public enum Configuration
 
     // ------------------------ ACO config options ------------------------
 
-    public int numACOGens = 100000;
+    public int numACOGens = 5000;
     public double alpha = 1.5202048288182402;
     public double beta = 0.2804250542223178;
     public double evaporationRate = 0.5980423404081591;
@@ -71,6 +71,6 @@ public enum Configuration
 
     // -------------------- Recommender config options --------------------
 
-    public int repeats = 3;
+    public int repeats = 1;
 
 }

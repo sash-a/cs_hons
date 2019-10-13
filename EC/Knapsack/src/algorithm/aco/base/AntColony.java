@@ -81,9 +81,6 @@ public class AntColony extends Evaluatable
             globalBestAnt = new Ant(bestAnt);
             System.out.println("New best value: " + globalBestAnt.knapsackValue + " | Generation: " + gen);
         }
-
-        if (gen % 250 == 0)
-            System.out.println(System.currentTimeMillis());
     }
 
     public int run()
@@ -91,6 +88,7 @@ public class AntColony extends Evaluatable
         for (int i = 0; i < Configuration.instance.numACOGens; i++)
             step(i);
 
+        System.out.println("Final best knapsack from ACO: " + globalBestAnt);
         return globalBestAnt.knapsackValue;
     }
 }
