@@ -24,7 +24,7 @@ public class SARecommender extends Recommender
 
         System.out.println(optimizer.gbestParticle);
         String path = Configuration.instance.dataDirectory + Configuration.instance.fileSeparator + "sa_best.xml";
-        writeConfig(path, "ga", ((RecommenderPSOParticle) optimizer.gbestParticle));
+        writeConfig(path, "sa", ((RecommenderPSOParticle) optimizer.gbestParticle));
     }
 }
 /*Evaluating 3 times, with hyperparameters:

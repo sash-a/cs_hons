@@ -26,6 +26,24 @@ public class Swarm extends Evaluatable
         this.generations = generations;
     }
 
+    /**
+     * @param hyperparameters: num particles, inertia, cognitive factor, social factor
+     */
+    public Swarm(double[] hyperparameters)
+    {
+        assert hyperparameters.length == 4;
+
+        int numParticles = (int) hyperparameters[0];
+        double inertia = hyperparameters[1];
+        double cog = hyperparameters[2];
+        double social = hyperparameters[3];
+
+        particles = new PSOParticle[numParticles];
+        gbestParticle = new PSOParticle(inertia, cog, social);
+        for (int i = 0; i < numParticles; i++)
+            particles[i] = new PSOParticle(inertia, cog, social);
+    }
+
     public Swarm(int generations, Evaluatable evaluatable, Hyperparameter... bns)
     {
         this.generations = generations;
@@ -43,6 +61,8 @@ public class Swarm extends Evaluatable
     @Override
     public void setHyperparams(Hyperparameter... hyperparameters)
     {
+        assert hyperparameters.length == 4;
+
         int numParticles = (int) hyperparameters[0].value;
         double inertia = hyperparameters[1].value;
         double cog = hyperparameters[2].value;

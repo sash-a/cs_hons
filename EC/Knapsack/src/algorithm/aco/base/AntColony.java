@@ -36,6 +36,11 @@ public class AntColony extends Evaluatable
         init(Configuration.instance.numAnts, Configuration.instance.alpha, Configuration.instance.beta, Configuration.instance.evaporationRate);
     }
 
+    public AntColony(double[] hyperparameters)
+    {
+        init((int) hyperparameters[0], hyperparameters[1], hyperparameters[2], hyperparameters[3]);
+    }
+
     /**
      * @param hyperparameters: num ants, alpha, beta, evaporation rate
      */

@@ -48,6 +48,27 @@ public class Population extends Evaluatable
         selector = new RouletteWheel();
     }
 
+    public Population(double[] hyperparameters)
+    {
+        assert hyperparameters.length == 6;
+
+        size = (int) hyperparameters[0];
+        elite = (int) hyperparameters[1];
+        mutationChance = hyperparameters[5];
+
+        if (hyperparameters[2] < 2)
+            selector = new RouletteWheel();
+        else
+            selector = new Tournament((int) hyperparameters[2]);
+
+        Configuration.instance.crossoverPoints = (int) hyperparameters[3];
+        Configuration.instance.mutationType = Configuration.MutationType.values()[(int) hyperparameters[4]];
+
+        genomes = new LinkedList<>();
+        for (int i = 0; i < size; i++)
+            genomes.add(new Genome());
+    }
+
     /**
      * @param hyperparameters: pop size
      *                         num elite,

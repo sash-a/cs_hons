@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Recommender
+public abstract class Recommender
 {
 
     public void writeConfig(String path, String rootName, List<String> optionNames, List<String> optionValues)

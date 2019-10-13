@@ -26,6 +26,19 @@ public class Annealing extends Evaluatable
         bestSolution = new SAParticle(currentSolution);
     }
 
+    public Annealing(double... hyperparameters)
+    {
+        assert hyperparameters.length == 4;
+
+        this.temp = hyperparameters[0];
+        this.minTemp = hyperparameters[1];
+        this.coolingRate = hyperparameters[2];
+        this.resetChance = hyperparameters[3];
+
+        currentSolution = new SAParticle();
+        bestSolution = new SAParticle(currentSolution);
+    }
+
     /**
      * @param hyperparameters: temp, cooling rate, reset to global chance
      */
