@@ -20,6 +20,7 @@ public class Ant implements Comparable<Ant>
 
     public Ant(double alpha, double beta)
     {
+        representation = new Representation(new ArrayList<>(Arrays.asList(new Boolean[Configuration.instance.numberOfItems])));
         reset();
 
         this.alpha = alpha;
@@ -41,11 +42,7 @@ public class Ant implements Comparable<Ant>
     public void reset()
     {
         path = new ArrayList<>();
-
-        List<Boolean> rep = new ArrayList<>(Arrays.asList(new Boolean[Configuration.instance.numberOfItems]));
-
-        Collections.fill(rep, Boolean.FALSE);
-        this.representation = new Representation(rep);
+        Collections.fill(representation.rep, Boolean.FALSE);
 
         notVisited = new LinkedList<>();
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
@@ -85,16 +82,13 @@ public class Ant implements Comparable<Ant>
 
                 if (rand < probability)
                 {
-                    representation.rep.set(possibleItem, true);
                     itr.remove(); // Either item is used or makes knapsack to heavy, therefore remove it
 
                     // Only add if item is valid
                     if (!representation.isValid())
-                    {
-                        representation.rep.set(possibleItem, false);
                         continue;
-                    }
 
+                    representation.rep.set(possibleItem, true);
                     currentItem = possibleItem;
                     path.add(currentItem);
                     break;

@@ -9,31 +9,38 @@ public class Annealing extends Evaluatable
 {
     public double coolingRate;
     public double temp;
+    private double minTemp;
+    private double resetChance;
 
     public SAParticle currentSolution;
     public SAParticle bestSolution;
 
     public Annealing()
     {
-        Configuration.instance.mutationType = Configuration.MutationType.BITFLIP;
-
         this.temp = Configuration.instance.initialTemp;
+        this.minTemp = Configuration.instance.minTemp;
         this.coolingRate = Configuration.instance.coolingRate;
+        this.resetChance = Configuration.instance.resetToGlobalChance;
 
         currentSolution = new SAParticle();
-        bestSolution = new SAParticle(currentSolution.rep);
+        bestSolution = new SAParticle(currentSolution);
     }
 
     /**
-     * @param hyperparameters: temp, cooling rate
+     * @param hyperparameters: temp, cooling rate, reset to global chance
      */
     @Override
     public void setHyperparams(Hyperparameter... hyperparameters)
     {
-        assert hyperparameters.length == 2;
+        assert hyperparameters.length == 4;
 
         this.temp = hyperparameters[0].value;
-        this.coolingRate = hyperparameters[1].value;
+        this.minTemp = hyperparameters[1].value;
+        this.coolingRate = hyperparameters[2].value;
+        this.resetChance = hyperparameters[3].value;
+
+        currentSolution = new SAParticle();
+        bestSolution = new SAParticle(currentSolution);
     }
 
     public boolean accept(double currentEnergy, double newEnergy)
@@ -70,6 +77,8 @@ public class Annealing extends Evaluatable
 
         if (accept(-(double) currentFitness, -(double) nextFitness))
             currentSolution = nextSolution;
+        else if (Configuration.instance.randomGenerator.nextDouble() < resetChance)
+            currentSolution = new SAParticle(bestSolution.rep);  // small chance to reset current particle to best
 
         if (nextFitness > bestSolution.getValue())
         {
@@ -83,7 +92,7 @@ public class Annealing extends Evaluatable
     public int run()
     {
         int gen = 0;
-        while (temp > Configuration.instance.minTemp)
+        while (temp > minTemp)
             step(gen++);
 
         System.out.println("Ran for " + gen + " generations");

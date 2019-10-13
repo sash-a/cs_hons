@@ -27,6 +27,8 @@ public class AntColony extends Evaluatable
         ants = new Ant[numAnts];
         for (int i = 0; i < numAnts; i++)
             ants[i] = new Ant(alpha, beta);
+
+        globalBestAnt = new Ant(alpha, beta);
     }
 
     public AntColony()
@@ -50,10 +52,11 @@ public class AntColony extends Evaluatable
                 pheromones[i][j] *= evaporationRate;
     }
 
-    public void step(int gens)
+    public void step(int gen)
     {
         Ant bestAnt = ants[0];
         int bestValue = -1;
+
         for (int i = 0; i < numAnts; i++)
         {
             ants[i].reset();
@@ -68,11 +71,14 @@ public class AntColony extends Evaluatable
         bestAnt.placePheromones(pheromones);
         decay();
 
-        if (globalBestAnt == null || bestAnt.knapsackValue > globalBestAnt.knapsackValue)
+        if (bestAnt.knapsackValue > globalBestAnt.knapsackValue)
         {
             globalBestAnt = new Ant(bestAnt);
-            System.out.println("New best value: " + globalBestAnt.knapsackValue + " | Generation: " + gens);
+            System.out.println("New best value: " + globalBestAnt.knapsackValue + " | Generation: " + gen);
         }
+
+        if (gen % 250 == 0)
+            System.out.println(System.currentTimeMillis());
     }
 
     public int run()

@@ -88,7 +88,10 @@ public class Swarm extends Evaluatable
         for (int i = 0; i < generations; i++)
             step(i);
 
-        System.out.println("\n\nFinal best -> value: " + gbestParticle.bestFitness + " weight: " + gbestParticle.getWeight());
+        if (gbestParticle instanceof RecommenderPSOParticle)
+            System.out.println("\n\nBest value found through PSO optimization: " + gbestParticle.bestFitness);
+        else
+            System.out.println("\n\nFinal best -> value: " + gbestParticle.bestFitness + " weight: " + gbestParticle.getWeight());
         return gbestParticle.bestFitness;
     }
 }

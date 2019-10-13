@@ -12,11 +12,23 @@ import algorithm.pso.recommender.PSORecommender;
 import algorithm.sa.main.Annealing;
 import algorithm.aco.base.AntColony;
 import algorithm.sa.recommender.SARecommender;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class Application
@@ -25,18 +37,42 @@ public class Application
     // -algorithm [ga | sa | aco | pso | best-algorithm] -configuration [default | best] -search_best_configuration
     public static void main(String... args)
     {
+        loadConfig(false);
+        String path = Configuration.instance.dataDirectory + Configuration.instance.fileSeparator + "ga_default.xml";
         readItems();
+
         double time = System.currentTimeMillis();
-//        new Population().run();
+        new Population().run();
 //        new Annealing().run();
 //        new AntColony().run();
 //        new Swarm().run();
 
 //        new GARecommender().recommend();
-//        new SARecommender().recommend();
-        new ACORecommender().recommend();
+        new SARecommender().recommend();
+//        new ACORecommender().recommend();
 //        new PSORecommender().recommend();
         System.out.println("Finished in: " + ((System.currentTimeMillis() - time) / 1000) + "s");
+    }
+
+    public static void loadConfig(boolean best)
+    {
+        try
+        {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            File file = new File(Configuration.instance.dataDirectory + Configuration.instance.fileSeparator + "ga_default.xml");
+            Document doc = builder.parse(file);
+//            Element e = doc.getElementById("ga");
+            doc.getDocumentElement().normalize();
+            Element root = doc.getDocumentElement();
+            int pop_size = Integer.parseInt(doc.getElementsByTagName("pop_size").item(0).getTextContent());
+            System.out.println("ps " + pop_size);
+            // Do something with the document here.
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 
     public static void readItems()

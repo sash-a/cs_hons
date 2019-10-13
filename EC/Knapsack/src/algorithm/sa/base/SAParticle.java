@@ -2,13 +2,14 @@ package algorithm.sa.base;
 
 import algorithm.base.Representation;
 import algorithm.ga.evolution.mutation.BitFlip;
+import algorithm.ga.evolution.mutation.Mutator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SAParticle extends Representation
 {
-    BitFlip mover;
+    Mutator mover;
     int value;
 
     public SAParticle()
@@ -23,6 +24,13 @@ public class SAParticle extends Representation
         super(rep);
         mover = new BitFlip();
         value = -1;
+    }
+
+    public SAParticle(SAParticle other)
+    {
+        super(other.rep);
+        mover = new BitFlip();
+        this.value = other.value;
     }
 
     public SAParticle move() { return new SAParticle(mover.mutate(new ArrayList<>(rep))); }

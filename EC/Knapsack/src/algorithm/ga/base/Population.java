@@ -51,7 +51,7 @@ public class Population extends Evaluatable
     /**
      * @param hyperparameters: pop size
      *                         num elite,
-     *                         tournament size (0 = rouletteWheel),
+     *                         tournament size (0, 1 = rouletteWheel),
      *                         crossover (1 or 2),
      *                         mutator (1-5),
      *                         mutation chance
@@ -65,7 +65,7 @@ public class Population extends Evaluatable
         elite = (int) hyperparameters[1].value;
         mutationChance = hyperparameters[5].value;
 
-        if (hyperparameters[2].value == 0.0 || hyperparameters[2].value == 1.0)
+        if (hyperparameters[2].value < 2)
             selector = new RouletteWheel();
         else
             selector = new Tournament((int) hyperparameters[2].value);
