@@ -6,7 +6,8 @@ import main.Configuration;
 
 public class AntColony extends Evaluatable
 {
-    public double[][] pheromones;
+//    public double[][] pheromones;
+    public double[] pheromones;
     public Ant[] ants;
     public Ant globalBestAnt;
 
@@ -18,11 +19,10 @@ public class AntColony extends Evaluatable
         this.numAnts = numAnts;
         this.evaporationRate = evapRate;
 
-        pheromones = new double[Configuration.instance.numberOfItems][Configuration.instance.numberOfItems];
+        pheromones = new double[Configuration.instance.numberOfItems];
 
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
-            for (int j = 0; j < Configuration.instance.numberOfItems; j++)
-                pheromones[i][j] = initialPheromoneValue;
+            pheromones[i] = initialPheromoneValue;
 
         ants = new Ant[numAnts];
         for (int i = 0; i < numAnts; i++)
@@ -58,8 +58,7 @@ public class AntColony extends Evaluatable
     public void decay()
     {
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
-            for (int j = 0; j < Configuration.instance.numberOfItems; j++)
-                pheromones[i][j] *= evaporationRate;
+            pheromones[i] *= evaporationRate;
     }
 
     public void step(int gen)

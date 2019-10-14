@@ -51,7 +51,7 @@ public class Ant implements Comparable<Ant>
         Collections.shuffle(notVisited); // So that no item is biased
     }
 
-    public int search(double[][] pheromones)
+    public int search(double[] pheromones)
     {
         // can take first item in not visited list because it is random
         int currentItem = notVisited.get(0);
@@ -64,7 +64,7 @@ public class Ant implements Comparable<Ant>
             // Calculating the denominator for the probability function
             double totalPheromonesRatio = 0.0;
             for (Integer visitableItem : notVisited)
-                totalPheromonesRatio += Math.pow(pheromones[currentItem][visitableItem], alpha) /
+                totalPheromonesRatio += Math.pow(pheromones[visitableItem], alpha) /
                         Math.pow(Knapsack.allItems[visitableItem].value, beta);
 
             double probability = 0.0;
@@ -76,7 +76,7 @@ public class Ant implements Comparable<Ant>
             {
                 int possibleItem = itr.next();
                 // Probability of choosing this item
-                probability += Math.pow(pheromones[currentItem][possibleItem], alpha) /
+                probability += Math.pow(pheromones[possibleItem], alpha) /
                         Math.pow(Knapsack.allItems[possibleItem].value, beta) /
                         totalPheromonesRatio;
 
@@ -99,24 +99,18 @@ public class Ant implements Comparable<Ant>
             }
 
             // If at max capacity no use in trying anymore
-            if (representation.getWeight() == Configuration.instance.maximumCapacity)
-                break;
+//            if (representation.getWeight() == Configuration.instance.maximumCapacity)
+//                break;
         }
 
         knapsackValue = representation.getValue();
         return knapsackValue;
     }
 
-    public void placePheromones(double[][] pheromones)
+    public void placePheromones(double[] pheromones)
     {
-        // TODO make it bidirectional?
         for (int i = 0; i < path.size() - 1; i++)
-        {
-            pheromones[path.get(i)][path.get(i + 1)] += knapsackValue;
-            pheromones[path.get(i + 1)][path.get(i)] += knapsackValue;
-        }
-        pheromones[path.get(path.size() - 1)][path.get(0)] += knapsackValue;
-        pheromones[path.get(0)][path.get(path.size() - 1)] += knapsackValue;
+            pheromones[path.get(i)] += knapsackValue;
     }
 
     @Override

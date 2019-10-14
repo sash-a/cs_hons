@@ -48,7 +48,7 @@ public enum Configuration
 
     // ------------------------ ACO config options ------------------------
 
-    public int numACOGens = 1000;
+    public int numACOGens = 5000;
     public double alpha = 1.5202048288182402;
     public double beta = 0.2804250542223178;
     public double evaporationRate = 0.5980423404081591;
