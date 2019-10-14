@@ -14,9 +14,9 @@ public class PSOParticle implements Comparable<PSOParticle>
     public int bestFitness;
     public int fitness;
 
-    private double inertia;
-    private double localForce;
-    private double globalForce;
+    protected double inertia;
+    protected double localForce;
+    protected double globalForce;
 
 
     public PSOParticle()

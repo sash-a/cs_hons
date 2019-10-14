@@ -24,6 +24,7 @@ public class Hyperparameter
     public Hyperparameter change(double value)
     {
         value = Utils.clamp(value, min, max);
+//        value = Utils.sig(value, min, max, min / 4, max / 4);
         if (type == Type.INT)
             value = (int) Math.round(value);
 

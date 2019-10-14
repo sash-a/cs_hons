@@ -14,7 +14,7 @@ public class GARecommender extends Recommender
         System.out.println("Running GA recommender");
 
         Population pop = new Population();
-        Swarm GAOptimizer = new Swarm(100, pop,
+        Swarm GAOptimizer = new Swarm(100, 8, pop,
                 new Hyperparameter("pop_size", 20, 20, 100, Hyperparameter.Type.INT),
                 new Hyperparameter("num_elite", 1, 0, 5, Hyperparameter.Type.INT),
                 new Hyperparameter("tournament_size", 0, 0, 30, Hyperparameter.Type.INT),

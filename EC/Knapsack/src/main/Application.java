@@ -99,6 +99,9 @@ public class Application
     {
         try
         {
+            System.out.println("Reading config from: " + path);
+            System.out.println("Collected hyperparameters:");
+
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new File(path));
@@ -120,6 +123,7 @@ public class Application
             ex.printStackTrace();
         }
 
+        System.out.println();
         return new double[0];
     }
 

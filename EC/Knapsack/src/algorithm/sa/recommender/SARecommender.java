@@ -13,7 +13,7 @@ public class SARecommender extends Recommender
     {
         Annealing annealing = new Annealing();
 
-        Swarm optimizer = new Swarm(1, annealing,
+        Swarm optimizer = new Swarm(1000, 15, annealing,
                 new Hyperparameter("initial_temp", Configuration.instance.initialTemp, 1E6, 1E7, Hyperparameter.Type.DOUBLE),
                 new Hyperparameter("min_temp", 1E-5, 1E-20, 1E-10, Hyperparameter.Type.DOUBLE),
                 new Hyperparameter("cooling_rate", Configuration.instance.coolingRate, 0.9999, 1, Hyperparameter.Type.DOUBLE),

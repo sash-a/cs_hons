@@ -44,15 +44,28 @@ public class Swarm extends Evaluatable
             particles[i] = new PSOParticle(inertia, cog, social);
     }
 
-    public Swarm(int generations, Evaluatable evaluatable, Hyperparameter... bns)
+    /**
+     * Swarm that optimizes meta heuristics which inherit from {@link Evaluatable}
+     *
+     * @param generations     number of generations to optimize for
+     * @param numParticles    number of particles the swarm has
+     * @param evaluatable     the meta heuristic to optimize, must be of type {@link Evaluatable}
+     * @param hyperparameters {@link Hyperparameter} of the meta heuristic
+     */
+    public Swarm(int generations, int numParticles, Evaluatable evaluatable, Hyperparameter... hyperparameters)
     {
         this.generations = generations;
-        particles = new RecommenderPSOParticle[Configuration.instance.numParticles];
+        particles = new RecommenderPSOParticle[numParticles];
 
-        for (int i = 0; i < Configuration.instance.numParticles; i++)
-            particles[i] = new RecommenderPSOParticle(bns, evaluatable);
+        // inertia, cognitive factor, social factor
+        double in = 1.2;
+        double lf = 1.1;
+        double gf = 1.3;
 
-        gbestParticle = new RecommenderPSOParticle(bns, evaluatable);
+        for (int i = 0; i < numParticles; i++)
+            particles[i] = new RecommenderPSOParticle(in, lf, gf, hyperparameters, evaluatable);
+
+        gbestParticle = new RecommenderPSOParticle(in, lf, gf, hyperparameters, evaluatable);
     }
 
     /**
@@ -78,8 +91,12 @@ public class Swarm extends Evaluatable
     {
         if (particles[0] instanceof RecommenderPSOParticle)
         {
+            System.out.println("------------------------------------------------------------------------");
             System.out.println("Optimizer generation " + gen);
-            System.out.println("Current best configuration from " + gen + " generations\n" + ((RecommenderPSOParticle) gbestParticle));
+            System.out.println("Current best configuration from " + gen + " generations\n" +
+                    gbestParticle +
+                    "Achieved value of: " + gbestParticle.bestFitness);
+            System.out.println("------------------------------------------------------------------------");
         }
 
         for (PSOParticle p : particles) p.calcFitness();
