@@ -13,7 +13,7 @@ public class AntColony extends Evaluatable
     private int numAnts;
     private double evaporationRate;
 
-    private void init(int numAnts, double alpha, double beta, double evapRate)
+    private void init(int numAnts, double alpha, double beta, double evapRate, double initialPheromoneValue)
     {
         this.numAnts = numAnts;
         this.evaporationRate = evapRate;
@@ -22,7 +22,7 @@ public class AntColony extends Evaluatable
 
         for (int i = 0; i < Configuration.instance.numberOfItems; i++)
             for (int j = 0; j < Configuration.instance.numberOfItems; j++)
-                pheromones[i][j] = Configuration.instance.initialPheromoneValue;
+                pheromones[i][j] = initialPheromoneValue;
 
         ants = new Ant[numAnts];
         for (int i = 0; i < numAnts; i++)
@@ -33,12 +33,16 @@ public class AntColony extends Evaluatable
 
     public AntColony()
     {
-        init(Configuration.instance.numAnts, Configuration.instance.alpha, Configuration.instance.beta, Configuration.instance.evaporationRate);
+        init(Configuration.instance.numAnts, Configuration.instance.alpha, Configuration.instance.beta, Configuration.instance.evaporationRate, Configuration.instance.initialPheromoneValue);
     }
 
+    /**
+     * @param hyperparameters: num ants, alpha, beta, evaporation rate
+     */
     public AntColony(double[] hyperparameters)
     {
-        init((int) hyperparameters[0], hyperparameters[1], hyperparameters[2], hyperparameters[3]);
+        assert hyperparameters.length == 5;
+        init((int) hyperparameters[0], hyperparameters[1], hyperparameters[2], hyperparameters[3], hyperparameters[4]);
     }
 
     /**
@@ -47,7 +51,8 @@ public class AntColony extends Evaluatable
     @Override
     public void setHyperparams(Hyperparameter... hyperparameters)
     {
-        init((int) hyperparameters[0].value, hyperparameters[1].value, hyperparameters[2].value, hyperparameters[3].value);
+        assert hyperparameters.length == 5;
+        init((int) hyperparameters[0].value, hyperparameters[1].value, hyperparameters[2].value, hyperparameters[3].value, hyperparameters[4].value);
     }
 
     public void decay()

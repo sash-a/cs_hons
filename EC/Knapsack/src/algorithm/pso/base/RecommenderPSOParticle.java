@@ -11,21 +11,26 @@ public class RecommenderPSOParticle extends PSOParticle
     public Hyperparameter[] hyperparameters;
     public Evaluatable evaluatable;
 
-    public RecommenderPSOParticle(Hyperparameter[] initialPositions, Evaluatable evaluatable)
+    public RecommenderPSOParticle(Hyperparameter[] hps, Evaluatable evaluatable)
     {
-        this.hyperparameters = new Hyperparameter[initialPositions.length];
-        for (int i = 0; i < initialPositions.length; i++)
+        this.hyperparameters = new Hyperparameter[hps.length];
+        for (int i = 0; i < hps.length; i++)
         {
-            hyperparameters[i] = initialPositions[i].change(Configuration.instance.randomGenerator.nextDouble() *
-                    (initialPositions[i].max - initialPositions[i].min) + initialPositions[i].min);
+            hyperparameters[i] = hps[i].change(Configuration.instance.randomGenerator.nextDouble() *
+                    (hps[i].max - hps[i].min) + hps[i].min);
         }
 
         this.pos = Arrays.stream(hyperparameters).map(x -> x.value).mapToDouble(x -> x).toArray();
-        this.velocity = new double[initialPositions.length];
+        this.velocity = new double[hps.length];
 
-        for (int i = 0; i < initialPositions.length; i++)
+        for (int i = 0; i < hps.length; i++)
+        {
             velocity[i] = Configuration.instance.randomGenerator.nextDouble() *
-                    (initialPositions[i].max - initialPositions[i].min) / 10 + initialPositions[i].min;
+                    (hps[i].max - hps[i].min) + hps[i].min;
+
+            if (Configuration.instance.randomGenerator.nextBoolean())
+                velocity[i] *= -1;
+        }
 
         this.evaluatable = evaluatable;
     }
@@ -51,7 +56,8 @@ public class RecommenderPSOParticle extends PSOParticle
             double t3 = Configuration.instance.globalForce * r2 * (globalBest[i] - pos[i]);
 
             velocity[i] = t1 + t2 + t3;
-            hyperparameters[i].change(pos[i] + velocity[i]);
+            hyperparameters[i] = hyperparameters[i].change(pos[i] + velocity[i]);
+
         }
         this.pos = Arrays.stream(hyperparameters).map(x -> x.value).mapToDouble(x -> x).toArray();
     }
