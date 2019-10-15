@@ -20,12 +20,8 @@ public class RecommenderPSOParticle extends PSOParticle
 
         this.hyperparameters = new Hyperparameter[hps.length];
         for (int i = 0; i < hps.length; i++)
-        {
-            double r = Configuration.instance.randomGenerator.nextDouble() * (hps[i].max - hps[i].min) + hps[i].min;
-            System.out.println("rng: " + r);
-            hyperparameters[i] = hps[i].change(r);
-            System.out.println("Initial hp: " + hyperparameters[i]);
-        }
+            hyperparameters[i] = hps[i].change(Configuration.instance.randomGenerator.nextDouble()
+                    * (hps[i].max - hps[i].min) + hps[i].min);
 
         this.pos = Arrays.stream(hyperparameters).map(x -> x.value).mapToDouble(x -> x).toArray();
         this.velocity = new double[hps.length];
@@ -61,9 +57,8 @@ public class RecommenderPSOParticle extends PSOParticle
             double t2 = super.localForce * r1 * (bestPosition[i] - pos[i]);
             double t3 = super.globalForce * r2 * (globalBest[i] - pos[i]);
 
+            // Forcing velocity to be at max 1/4 of the max value of any hyperparameter
             double boundary = hyperparameters[i].max / 4;
-            // Forcing velocity to be at max 1/2 of the max value of any hyperparameter
-//            velocity[i] = Utils.sig(t1 + t2 + t3, min, max, min / 4, max / 4);
             velocity[i] = Utils.clamp(t1 + t2 + t3, -boundary, boundary);
             hyperparameters[i] = hyperparameters[i].change(pos[i] + velocity[i]);
         }

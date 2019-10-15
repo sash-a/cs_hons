@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><ga><initial_temp>1E6</initial_temp><min_temp>1-15</min_temp><cooling_rate>0.999999</cooling_rate><reset_chance>0.018</reset_chance></ga>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ga><initial_temp>1E8</initial_temp><min_temp>1E-20</min_temp><cooling_rate>0.99999</cooling_rate><reset_chance>0.018</reset_chance></ga>

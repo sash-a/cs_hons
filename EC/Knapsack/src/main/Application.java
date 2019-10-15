@@ -86,7 +86,7 @@ public class Application
                 if (paramSeach)
                     new PSORecommender().recommend();
                 else
-                    new Swarm(hyperparameters).run();
+                    new Swarm(Configuration.instance.numPSOGens, hyperparameters).run();
                 break;
             default:
                 System.out.println("Could not find algorithm with name " + algorithm + ". Options are: ga, sa, aco, pso");

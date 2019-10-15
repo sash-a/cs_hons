@@ -29,9 +29,11 @@ public class Swarm extends Evaluatable
     /**
      * @param hyperparameters: num particles, inertia, cognitive factor, social factor
      */
-    public Swarm(double[] hyperparameters)
+    public Swarm(int generations, double[] hyperparameters)
     {
         assert hyperparameters.length == 4;
+
+        this.generations = generations;
 
         int numParticles = (int) hyperparameters[0];
         double inertia = hyperparameters[1];
@@ -57,7 +59,7 @@ public class Swarm extends Evaluatable
         this.generations = generations;
         particles = new RecommenderPSOParticle[numParticles];
 
-        // inertia, cognitive factor, social factor
+        // inertia, cognitive factor, social factor (these are the default values for PSO)
         double in = 1.2;
         double lf = 1.1;
         double gf = 1.3;
@@ -122,6 +124,7 @@ public class Swarm extends Evaluatable
 
     public int run()
     {
+        System.out.println(generations);
         for (int i = 0; i < generations; i++)
             step(i);
 

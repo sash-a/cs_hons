@@ -29,7 +29,7 @@ public enum Configuration
         INVERSION
     }
 
-    public int numGAGens = (int) 1E5;
+    public int numGAGens = 2500;
     public double mutationChance = 0.1;
     public int populationSize = 1;
     public int elite = 1;
