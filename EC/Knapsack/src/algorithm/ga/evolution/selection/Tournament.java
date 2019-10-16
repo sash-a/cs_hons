@@ -24,6 +24,7 @@ public class Tournament extends Selector
         List<Genome> tournament = new LinkedList<>();
         HashSet<Integer> selected = new HashSet<>();
 
+        int attempts = Configuration.instance.validAttempts;
         for (int i = 0; i < tournamentSize; i++)
         {
             int idx = (int) (Configuration.instance.randomGenerator.nextDouble() * genomes.size());
@@ -35,6 +36,11 @@ public class Tournament extends Selector
 
             selected.add(idx);
             tournament.add(genomes.get(idx));
+
+            // Protects against the case where number of genes in the genome < tournament size
+            attempts--;
+            if (attempts == 0)
+                break;
         }
 
         return (tournament.stream()

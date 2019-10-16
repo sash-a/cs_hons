@@ -103,6 +103,7 @@ public class Application
             System.out.println("Collected hyperparameters:");
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setIgnoringElementContentWhitespace(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new File(path));
 

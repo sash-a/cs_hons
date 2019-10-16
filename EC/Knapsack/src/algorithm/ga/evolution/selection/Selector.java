@@ -12,10 +12,7 @@ public abstract class Selector
 
     public Selector() { this.genomes = new LinkedList<>(); }
 
-    public void beforeSelection(List<Genome> genomes)
-    {
-        this.genomes = genomes;
-    }
+    public void beforeSelection(List<Genome> genomes) { this.genomes = genomes; }
 
     public abstract Genome select();
 }

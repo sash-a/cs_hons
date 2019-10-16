@@ -79,6 +79,7 @@ public class Population extends Evaluatable
      */
     public void setHyperparams(Hyperparameter... hyperparameters)
     {
+        System.out.println("Setting hps");
         assert hyperparameters.length == 6;
         genomes.clear();
 
@@ -101,6 +102,7 @@ public class Population extends Evaluatable
 
     public int run()
     {
+        System.out.println("running");
         Genome bestGenome = genomes.get(0);
 
         // Running evolution
@@ -126,6 +128,7 @@ public class Population extends Evaluatable
 
     public Genome step()
     {
+        System.out.println("Step");
         // Creating children
         List<Genome> children = new LinkedList<>();
         for (int i = 0; i < size - elite; i++)
@@ -144,6 +147,7 @@ public class Population extends Evaluatable
         genomes.clear();
         genomes.addAll(sortedGenomes.subList(0, elite));
         genomes.addAll(children);
+        System.out.println("Done step");
 
         return sortedGenomes.get(0);  // Returning the best elite individual
     }
@@ -152,8 +156,9 @@ public class Population extends Evaluatable
     {
         if (Configuration.instance.randomGenerator.nextDouble() < mutationChance)
         {
+            System.out.println("Actually mutating");
             Genome mutant = child.mutate();
-            boolean valid = mutant.toKnapsack().isValid();
+            boolean valid = mutant.isValid();
 
             for (int i = 0; i < Configuration.instance.validAttempts; i++)
             {
@@ -167,11 +172,13 @@ public class Population extends Evaluatable
                 return mutant;
         }
 
+        System.out.println("Done mutation");
         return child;
     }
 
     private Genome createChild(List<Genome> parents)
     {
+        System.out.println("Creating child");
         Genome child = parents.get(0).crossover(parents.get(1));
         boolean valid = child.toKnapsack().isValid();
         for (int i = 0; i < Configuration.instance.validAttempts; i++) // todo fix
@@ -195,7 +202,7 @@ public class Population extends Evaluatable
 
     private List<Genome> selectParents()
     {
-//        System.out.println("Selecting parents");
+        System.out.println("Selecting parents");
         selector.beforeSelection(genomes);
 
         List<Genome> parents = new ArrayList<>();

@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><aco><num_ants>7.0</num_ants><alpha>1.2994482693828768</alpha><beta>0.786850200425745</beta><evaporation_rate>0.3752275620832477</evaporation_rate></aco>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ga><pop_size>200.0</pop_size><num_elite>3.0</num_elite><tournament_size>0.0</tournament_size><crossover>2.0</crossover><mutator>1.0</mutator><mutation_chance>0.0</mutation_chance></ga>
