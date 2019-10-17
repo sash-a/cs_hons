@@ -15,17 +15,6 @@ public class Annealing extends Evaluatable
     public SAParticle currentSolution;
     public SAParticle bestSolution;
 
-    public Annealing()
-    {
-        this.temp = Configuration.instance.initialTemp;
-        this.minTemp = Configuration.instance.minTemp;
-        this.coolingRate = Configuration.instance.coolingRate;
-        this.resetChance = Configuration.instance.resetToGlobalChance;
-
-        currentSolution = new SAParticle();
-        bestSolution = new SAParticle(currentSolution);
-    }
-
     public Annealing(double... hyperparameters)
     {
         assert hyperparameters.length == 4;

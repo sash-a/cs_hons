@@ -21,9 +21,9 @@ public class PSOParticle implements Comparable<PSOParticle>
 
     public PSOParticle()
     {
-        inertia = Configuration.instance.inertia;
-        localForce = Configuration.instance.localForce;
-        globalForce = Configuration.instance.globalForce;
+//        inertia = Configuration.instance.inertia;
+//        localForce = Configuration.instance.localForce;
+//        globalForce = Configuration.instance.globalForce;
 
         pos = new double[Configuration.instance.numberOfItems];
         velocity = new double[Configuration.instance.numberOfItems];
@@ -63,10 +63,44 @@ public class PSOParticle implements Comparable<PSOParticle>
 
     public PSOParticle(double inertia, double localForce, double globalForce)
     {
-        this();
         this.inertia = inertia;
         this.localForce = localForce;
         this.globalForce = globalForce;
+
+        pos = new double[Configuration.instance.numberOfItems];
+        velocity = new double[Configuration.instance.numberOfItems];
+        bestPosition = new double[Configuration.instance.numberOfItems];
+
+        for (int i = 0; i < Configuration.instance.numberOfItems; i++)
+            pos[i] = Configuration.instance.randomGenerator.nextInt(2);
+
+        for (int i = 0; i < Configuration.instance.numberOfItems; i++)
+            velocity[i] = Configuration.instance.randomGenerator.nextDouble() *
+                    (Configuration.instance.vmax - Configuration.instance.vmin) + Configuration.instance.vmin;
+
+        while (!isValid())
+        {
+            // Remove random genes until weight is acceptable:
+            // Pick a random position in list and random direction (forward or back) and traverse until you find a gene
+            // then remove it to save weight.
+            int startPos = Configuration.instance.randomGenerator.nextInt(Configuration.instance.numberOfItems);
+            int dir = 1;
+            boolean reverse = Configuration.instance.randomGenerator.nextBoolean();
+            if (reverse)
+                dir = -1;
+
+            for (int i = startPos; i < Configuration.instance.numberOfItems && i >= 0; i += dir)
+            {
+                if (pos[i] == 1)
+                {
+                    pos[i] = 0;
+                    break;
+                }
+            }
+        }
+
+        bestPosition = Arrays.copyOf(pos, pos.length);
+        bestFitness = 0;
     }
 
     public PSOParticle(PSOParticle other)

@@ -11,9 +11,10 @@ public class ACORecommender extends Recommender
 {
     public void recommend()
     {
-        AntColony ac = new AntColony();
+        // No values here matter except for generations because they will be overwritten immediately by the optimizer
+        AntColony ac = new AntColony(2500, 0, 0, 0, 0, 0);
 
-        Swarm optimizer = new Swarm(100, 20, ac,
+        Swarm optimizer = new Swarm(100, 10, ac,
                 new Hyperparameter("num_ants", 10, 5, 20, Hyperparameter.Type.INT),
                 new Hyperparameter("alpha", 1, 0, 2, Hyperparameter.Type.DOUBLE),
                 new Hyperparameter("beta", 1, 0, 2, Hyperparameter.Type.DOUBLE),

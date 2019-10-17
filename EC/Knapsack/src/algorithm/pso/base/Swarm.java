@@ -2,7 +2,6 @@ package algorithm.pso.base;
 
 import algorithm.base.Hyperparameter;
 import algorithm.base.Evaluatable;
-import main.Configuration;
 
 public class Swarm extends Evaluatable
 {
@@ -10,20 +9,14 @@ public class Swarm extends Evaluatable
     public PSOParticle gbestParticle;
     private int generations;
 
-    public Swarm()
+    public Swarm(int generations, int numParticles, double inertia, double cognitive, double social)
     {
-        this.generations = Configuration.instance.numPSOGens;
-        particles = new PSOParticle[Configuration.instance.numParticles];
-        for (int i = 0; i < Configuration.instance.numParticles; i++)
-            particles[i] = new PSOParticle();
-
-        gbestParticle = new PSOParticle();
-    }
-
-    public Swarm(int generations)
-    {
-        this();
         this.generations = generations;
+        particles = new PSOParticle[numParticles];
+        for (int i = 0; i < numParticles; i++)
+            particles[i] = new PSOParticle(inertia, cognitive, social);
+
+        gbestParticle = new PSOParticle(inertia, cognitive, social);
     }
 
     /**

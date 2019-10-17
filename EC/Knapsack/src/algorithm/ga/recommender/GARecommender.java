@@ -13,6 +13,7 @@ public class GARecommender extends Recommender
     {
         System.out.println("Running GA recommender");
 
+        // Only generations matter the rest of these values matter, will be overwritten during optimization
         Population pop = new Population(2500,
                 100,
                 1,

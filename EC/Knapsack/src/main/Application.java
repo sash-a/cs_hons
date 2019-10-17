@@ -34,6 +34,7 @@ public class Application
         String suffix = "_default.xml";
         String algorithm = "";
         boolean paramSeach = false;
+        int maxGens = 10000;
 
         readItems();
 
@@ -69,7 +70,7 @@ public class Application
                 if (paramSeach)
                     new GARecommender().recommend();
                 else
-                    new Population(Configuration.instance.numGAGens, hyperparameters).run();
+                    new Population(maxGens, hyperparameters).run();
                 break;
             case "sa":
                 if (paramSeach)
@@ -81,13 +82,13 @@ public class Application
                 if (paramSeach)
                     new ACORecommender().recommend();
                 else
-                    new AntColony(hyperparameters).run();
+                    new AntColony(maxGens, hyperparameters).run();
                 break;
             case "pso":
                 if (paramSeach)
                     new PSORecommender().recommend();
                 else
-                    new Swarm(Configuration.instance.numPSOGens, hyperparameters).run();
+                    new Swarm(maxGens, hyperparameters).run();
                 break;
             default:
                 System.out.println("Could not find algorithm with name " + algorithm + ". Options are: ga, sa, aco, pso");

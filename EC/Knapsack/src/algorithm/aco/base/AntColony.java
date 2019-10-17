@@ -6,16 +6,17 @@ import main.Configuration;
 
 public class AntColony extends Evaluatable
 {
-//    public double[][] pheromones;
     public double[] pheromones;
     public Ant[] ants;
     public Ant globalBestAnt;
 
+    private int generations;
     private int numAnts;
     private double evaporationRate;
 
-    private void init(int numAnts, double alpha, double beta, double evapRate, double initialPheromoneValue)
+    private void init(int generations, int numAnts, double alpha, double beta, double evapRate, double initialPheromoneValue)
     {
+        this.generations = generations;
         this.numAnts = numAnts;
         this.evaporationRate = evapRate;
 
@@ -31,18 +32,18 @@ public class AntColony extends Evaluatable
         globalBestAnt = new Ant(alpha, beta);
     }
 
-    public AntColony()
+    public AntColony(int generations, int numAnts, double alpha, double beta, double evapRate, double initialPheromoneValue)
     {
-        init(Configuration.instance.numAnts, Configuration.instance.alpha, Configuration.instance.beta, Configuration.instance.evaporationRate, Configuration.instance.initialPheromoneValue);
+        init(generations, numAnts, alpha, beta, evapRate, initialPheromoneValue);
     }
 
     /**
      * @param hyperparameters: num ants, alpha, beta, evaporation rate
      */
-    public AntColony(double[] hyperparameters)
+    public AntColony(int generations, double[] hyperparameters)
     {
         assert hyperparameters.length == 5;
-        init((int) hyperparameters[0], hyperparameters[1], hyperparameters[2], hyperparameters[3], hyperparameters[4]);
+        init(generations, (int) hyperparameters[0], hyperparameters[1], hyperparameters[2], hyperparameters[3], hyperparameters[4]);
     }
 
     /**
@@ -52,7 +53,7 @@ public class AntColony extends Evaluatable
     public void setHyperparams(Hyperparameter... hyperparameters)
     {
         assert hyperparameters.length == 5;
-        init((int) hyperparameters[0].value, hyperparameters[1].value, hyperparameters[2].value, hyperparameters[3].value, hyperparameters[4].value);
+        init(generations, (int) hyperparameters[0].value, hyperparameters[1].value, hyperparameters[2].value, hyperparameters[3].value, hyperparameters[4].value);
     }
 
     public void decay()
@@ -89,7 +90,7 @@ public class AntColony extends Evaluatable
 
     public int run()
     {
-        for (int i = 0; i < Configuration.instance.numACOGens; i++)
+        for (int i = 0; i < generations; i++)
             step(i);
 
         System.out.println("Final best knapsack from ACO: " + globalBestAnt);
