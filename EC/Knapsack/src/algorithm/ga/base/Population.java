@@ -179,12 +179,7 @@ public class Population extends Evaluatable
             return child;
 
         // Never found a valid combination of parents so return fittest parent
-        // TODO max
-        List<Integer> fitnesses = parents.stream().map(Genome::getValue).collect(Collectors.toList());
-        if (fitnesses.get(0) > fitnesses.get(1))
-            return parents.get(0);
-        else
-            return parents.get(1);
+        return parents.stream().max(Comparator.comparingInt(Genome::getValue)).get();
     }
 
     private List<Genome> selectParents()
