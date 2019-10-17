@@ -29,14 +29,8 @@ public enum Configuration
         INVERSION
     }
 
-    public int numGAGens = 2500;
-    public double mutationChance = 0.1;
-    public int populationSize = 1;
-    public int elite = 1;
+    public int numGAGens = 10000;
     public int validAttempts = 1000;
-
-    public int crossoverPoints = 2;
-    public MutationType mutationType = MutationType.INVERSION;
 
     // ------------------------ SA config options ------------------------
 

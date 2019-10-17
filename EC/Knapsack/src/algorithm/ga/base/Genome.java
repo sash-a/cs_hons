@@ -15,43 +15,44 @@ public class Genome extends Representation implements Comparable<Genome>
     private Crossover crossover;
     private Mutator mutator;
 
-    public Genome()
+    public Genome(int crossoverPoints, Configuration.MutationType mt)
     {
         super();
-        setMutationAndCrossover();
+        setMutationAndCrossover(crossoverPoints, mt);
     }
 
-    public Genome(List<Boolean> rep)
+    public Genome(Mutator m, Crossover c, List<Boolean> rep)
     {
         super(rep);
-        setMutationAndCrossover();
+        mutator = m;
+        crossover = c;
     }
 
-    private void setMutationAndCrossover()
+    private void setMutationAndCrossover(int crossoverPoints, Configuration.MutationType mt)
     {
-        assert Configuration.instance.crossoverPoints == 1 || Configuration.instance.crossoverPoints == 2;
-        if (Configuration.instance.crossoverPoints == 1)
+        assert crossoverPoints == 1 || crossoverPoints == 2;
+        if (crossoverPoints == 1)
             crossover = new OnePointCrossover();
         else
             crossover = new TwoPointCrossover();
 
-        if (Configuration.instance.mutationType == Configuration.MutationType.BITFLIP)
+        if (mt == Configuration.MutationType.BITFLIP)
             mutator = new BitFlip();
-        else if (Configuration.instance.mutationType == Configuration.MutationType.DISPLACEMENT)
+        else if (mt == Configuration.MutationType.DISPLACEMENT)
             mutator = new Displacement();
-        else if (Configuration.instance.mutationType == Configuration.MutationType.EXCHANGE)
+        else if (mt == Configuration.MutationType.EXCHANGE)
             mutator = new Exchange();
-        else if (Configuration.instance.mutationType == Configuration.MutationType.INSERTION)
+        else if (mt == Configuration.MutationType.INSERTION)
             mutator = new Insertion();
-        else if (Configuration.instance.mutationType == Configuration.MutationType.INVERSION)
+        else if (mt == Configuration.MutationType.INVERSION)
             mutator = new Inversion();
         else
             System.out.println("Error invalid mutation type!");
     }
 
-    public Genome mutate() { return new Genome(mutator.mutate(new LinkedList<>(rep))); }
+    public Genome mutate() { return new Genome(mutator, crossover, mutator.mutate(new LinkedList<>(rep))); }
 
-    public Genome crossover(Representation other) { return new Genome(crossover.crossover(this.rep, other.rep)); }
+    public Genome crossover(Representation other) { return new Genome(mutator, crossover, crossover.crossover(this.rep, other.rep)); }
 
     @Override
     public int compareTo(Genome other) { return Integer.compare(this.getValue(), other.getValue()); }

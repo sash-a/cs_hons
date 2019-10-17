@@ -2,8 +2,6 @@ package algorithm.ga.base;
 
 import algorithm.base.Hyperparameter;
 import algorithm.base.Evaluatable;
-import algorithm.base.Representation;
-import algorithm.base.Knapsack;
 import algorithm.ga.evolution.selection.RouletteWheel;
 import algorithm.ga.evolution.selection.Selector;
 import algorithm.ga.evolution.selection.Tournament;
@@ -15,43 +13,40 @@ import java.util.stream.Collectors;
 public class Population extends Evaluatable
 {
     public List<Genome> genomes;
-    public Selector selector;
+    private Selector selector;
     private int size;
     private int elite;
+    private int generations;
     private double mutationChance;
 
-    // Tournament selection constructor
-    public Population(int k)
+    public Population(int generations, int popSize, int elite, double mutationChance, Configuration.MutationType mutationType, int crossoverPoints, int tournamentSize)
     {
-        elite = Configuration.instance.elite;
-        size = Configuration.instance.populationSize;
-        mutationChance = Configuration.instance.mutationChance;
+        this.generations = generations;
+        this.elite = elite;
+        this.size = popSize;
+        this.mutationChance = mutationChance;
 
         this.genomes = new LinkedList<>();
         for (int i = 0; i < size; i++)
-            genomes.add(new Genome());
+            genomes.add(new Genome(crossoverPoints, mutationType));
 
-        selector = new Tournament(k);
+        if (tournamentSize < 2)
+            selector = new RouletteWheel();
+        else
+            selector = new Tournament(tournamentSize);
     }
 
-    // Roulette wheel constructor
-    public Population()
-    {
-        elite = Configuration.instance.elite;
-        size = Configuration.instance.populationSize;
-        mutationChance = Configuration.instance.mutationChance;
-
-        this.genomes = new LinkedList<>();
-        for (int i = 0; i < size; i++)
-            genomes.add(new Genome());
-
-        selector = new RouletteWheel();
-    }
-
-    public Population(double[] hyperparameters)
+    /**
+     * Must be passed in the correct order
+     *
+     * @param hyperparameters: pop size, num elite, tournament size (0, 1 = rouletteWheel),
+     *                         crossover (1 or 2), mutator (1-5), mutation chance
+     */
+    public Population(int generations, double... hyperparameters)
     {
         assert hyperparameters.length == 6;
 
+        this.generations = generations;
         size = (int) hyperparameters[0];
         elite = (int) hyperparameters[1];
         mutationChance = hyperparameters[5];
@@ -61,25 +56,22 @@ public class Population extends Evaluatable
         else
             selector = new Tournament((int) hyperparameters[2]);
 
-        Configuration.instance.crossoverPoints = (int) hyperparameters[3];
-        Configuration.instance.mutationType = Configuration.MutationType.values()[(int) hyperparameters[4]];
+        int crossoverPoints = (int) hyperparameters[3];
+        Configuration.MutationType mutationType = Configuration.MutationType.values()[(int) hyperparameters[4]];
 
         genomes = new LinkedList<>();
         for (int i = 0; i < size; i++)
-            genomes.add(new Genome());
+            genomes.add(new Genome(crossoverPoints, mutationType));
     }
 
     /**
-     * @param hyperparameters: pop size
-     *                         num elite,
-     *                         tournament size (0, 1 = rouletteWheel),
-     *                         crossover (1 or 2),
-     *                         mutator (1-5),
-     *                         mutation chance
+     * Must be passed in the correct order
+     *
+     * @param hyperparameters: pop size, num elite, tournament size (0, 1 = rouletteWheel),
+     *                         crossover (1 or 2), mutator (1-5), mutation chance
      */
     public void setHyperparams(Hyperparameter... hyperparameters)
     {
-        System.out.println("Setting hps");
         assert hyperparameters.length == 6;
         genomes.clear();
 
@@ -92,21 +84,20 @@ public class Population extends Evaluatable
         else
             selector = new Tournament((int) hyperparameters[2].value);
 
-        Configuration.instance.crossoverPoints = (int) hyperparameters[3].value;
-        Configuration.instance.mutationType = Configuration.MutationType.values()[(int) hyperparameters[4].value];
+        int crossoverPoints = (int) hyperparameters[3].value;
+        Configuration.MutationType mutationType = Configuration.MutationType.values()[(int) hyperparameters[4].value];
 
         this.genomes.clear();
         for (int i = 0; i < size; i++)
-            genomes.add(new Genome());
+            genomes.add(new Genome(crossoverPoints, mutationType));
     }
 
     public int run()
     {
-        System.out.println("running");
         Genome bestGenome = genomes.get(0);
 
         // Running evolution
-        for (int i = 0; i < Configuration.instance.numGAGens; i++)
+        for (int i = 0; i < generations; i++)
         {
             Genome fittest = step();
             if (fittest.getValue() > bestGenome.getValue())
@@ -128,7 +119,6 @@ public class Population extends Evaluatable
 
     public Genome step()
     {
-        System.out.println("Step");
         // Creating children
         List<Genome> children = new LinkedList<>();
         for (int i = 0; i < size - elite; i++)
@@ -147,7 +137,6 @@ public class Population extends Evaluatable
         genomes.clear();
         genomes.addAll(sortedGenomes.subList(0, elite));
         genomes.addAll(children);
-        System.out.println("Done step");
 
         return sortedGenomes.get(0);  // Returning the best elite individual
     }
@@ -156,7 +145,6 @@ public class Population extends Evaluatable
     {
         if (Configuration.instance.randomGenerator.nextDouble() < mutationChance)
         {
-            System.out.println("Actually mutating");
             Genome mutant = child.mutate();
             boolean valid = mutant.isValid();
 
@@ -172,16 +160,14 @@ public class Population extends Evaluatable
                 return mutant;
         }
 
-        System.out.println("Done mutation");
         return child;
     }
 
     private Genome createChild(List<Genome> parents)
     {
-        System.out.println("Creating child");
         Genome child = parents.get(0).crossover(parents.get(1));
         boolean valid = child.toKnapsack().isValid();
-        for (int i = 0; i < Configuration.instance.validAttempts; i++) // todo fix
+        for (int i = 0; i < Configuration.instance.validAttempts; i++)
         {
             child = parents.get(0).crossover(parents.get(1));
 
@@ -193,7 +179,8 @@ public class Population extends Evaluatable
             return child;
 
         // Never found a valid combination of parents so return fittest parent
-        List<Integer> fitnesses = parents.stream().map(Genome::toKnapsack).map(Knapsack::getFitness).collect(Collectors.toList());
+        // TODO max
+        List<Integer> fitnesses = parents.stream().map(Genome::getValue).collect(Collectors.toList());
         if (fitnesses.get(0) > fitnesses.get(1))
             return parents.get(0);
         else
@@ -202,7 +189,6 @@ public class Population extends Evaluatable
 
     private List<Genome> selectParents()
     {
-        System.out.println("Selecting parents");
         selector.beforeSelection(genomes);
 
         List<Genome> parents = new ArrayList<>();

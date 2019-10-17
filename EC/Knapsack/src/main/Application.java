@@ -57,6 +57,7 @@ public class Application
                 paramSeach = true;
         }
 
+        if (paramSeach) suffix = "_best.xml";
         double[] hyperparameters = loadConfig(path + algorithm + suffix);
 
         double time = System.currentTimeMillis();
@@ -68,7 +69,7 @@ public class Application
                 if (paramSeach)
                     new GARecommender().recommend();
                 else
-                    new Population(hyperparameters).run();
+                    new Population(Configuration.instance.numGAGens, hyperparameters).run();
                 break;
             case "sa":
                 if (paramSeach)

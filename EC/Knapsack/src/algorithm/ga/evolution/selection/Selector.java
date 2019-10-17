@@ -1,6 +1,5 @@
 package algorithm.ga.evolution.selection;
 
-import algorithm.base.Representation;
 import algorithm.ga.base.Genome;
 
 import java.util.LinkedList;

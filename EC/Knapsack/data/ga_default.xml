@@ -1,1 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><ga><pop_size>7.0</pop_size><num_elite>1.2994482693828768</num_elite><tournament_size>0.786850200425745</tournament_size><crossover>0.3752275620832477</crossover><mutator>0.3752275620832477</mutator><mutation_chance>0.3752275620832477</mutation_chance></ga>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><ga><pop_size>100.0</pop_size><num_elite>1.0</num_elite><tournament_size>5.0</tournament_size><crossover>2.0</crossover><mutator>2.0</mutator><mutation_chance>0.3</mutation_chance></ga>

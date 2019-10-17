@@ -13,7 +13,14 @@ public class GARecommender extends Recommender
     {
         System.out.println("Running GA recommender");
 
-        Population pop = new Population();
+        Population pop = new Population(2500,
+                100,
+                1,
+                0.1,
+                Configuration.MutationType.DISPLACEMENT,
+                2,
+                7);
+
         Swarm GAOptimizer = new Swarm(50, 8, pop,
                 new Hyperparameter("pop_size", 20, 20, 200, Hyperparameter.Type.INT),
                 new Hyperparameter("num_elite", 1, 0, 5, Hyperparameter.Type.INT),
