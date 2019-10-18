@@ -60,19 +60,20 @@ public class Application
 
         if (paramSeach) suffix = "_best.xml";
         double[] hyperparameters = loadConfig(path + algorithm + suffix);
+        System.out.println("Chosen algorithm: " + algorithm);
 
         double time = System.currentTimeMillis();
         // Running correct algorithm according to CLI
         switch (algorithm)
         {
             case "ga":
-            case "best-algorithm":
                 if (paramSeach)
                     new GARecommender().recommend();
                 else
                     new Population(maxGens, hyperparameters).run();
                 break;
             case "sa":
+            case "best-algorithm":
                 if (paramSeach)
                     new SARecommender().recommend();
                 else
@@ -88,7 +89,7 @@ public class Application
                 if (paramSeach)
                     new PSORecommender().recommend();
                 else
-                    new Swarm(maxGens, hyperparameters).run();
+                    new Swarm(maxGens * 10, hyperparameters).run(); // 10x max gens because PSO is does less per gen and is much faster
                 break;
             default:
                 System.out.println("Could not find algorithm with name " + algorithm + ". Options are: ga, sa, aco, pso");

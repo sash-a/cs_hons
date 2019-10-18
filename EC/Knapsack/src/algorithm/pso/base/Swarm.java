@@ -117,7 +117,6 @@ public class Swarm extends Evaluatable
 
     public int run()
     {
-        System.out.println(generations);
         for (int i = 0; i < generations; i++)
             step(i);
 
